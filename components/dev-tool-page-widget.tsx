@@ -7,8 +7,11 @@ import {
   encodeBase64,
   encodeURL,
   formatJSON,
+  htmlToMarkdown,
+  jsonToYaml,
   minifyJSON,
   validateJSON,
+  yamlToJson,
   type TextMode,
 } from "@/lib/conversion/text";
 
@@ -29,7 +32,10 @@ type SupportedDevMode =
   | "urlDecode"
   | "jsonFormat"
   | "jsonMinify"
-  | "jsonValidate";
+  | "jsonValidate"
+  | "htmlToMarkdown"
+  | "jsonToYaml"
+  | "yamlToJson";
 
 type DevToolConfig = {
   description: string;
@@ -54,6 +60,7 @@ function getDecodeErrorState(
 }
 
 const jsonInvalidState = getDecodeErrorState("Invalid JSON", "Enter valid JSON to continue.");
+const yamlInvalidState = getDecodeErrorState("Invalid YAML", "Enter valid YAML to continue.");
 
 const devToolConfigs: Record<SupportedDevMode, DevToolConfig> = {
   base64Decode: {
@@ -112,6 +119,26 @@ const devToolConfigs: Record<SupportedDevMode, DevToolConfig> = {
     inputLabel: "json input",
     outputLabel: "validation result",
     transformFunction: validateJSON,
+  },
+  htmlToMarkdown: {
+    description: "Convert raw HTML into cleaner Markdown for docs, notes, migrations, and copy workflows.",
+    inputLabel: "html input",
+    outputLabel: "markdown output",
+    transformFunction: htmlToMarkdown,
+  },
+  jsonToYaml: {
+    description: "Convert JSON objects into YAML for config files, infrastructure tooling, and readable developer output.",
+    errorHandling: jsonInvalidState,
+    inputLabel: "json input",
+    outputLabel: "yaml output",
+    transformFunction: jsonToYaml,
+  },
+  yamlToJson: {
+    description: "Convert YAML into formatted JSON for config migrations, API fixtures, and developer tooling.",
+    errorHandling: yamlInvalidState,
+    inputLabel: "yaml input",
+    outputLabel: "json output",
+    transformFunction: yamlToJson,
   },
   urlDecode: {
     description: "Decode percent-encoded URLs and query strings back into readable text.",

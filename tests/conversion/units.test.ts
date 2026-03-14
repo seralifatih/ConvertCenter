@@ -31,6 +31,30 @@ describe("unit conversions", () => {
     expect(convertValue("l", "gal", 3)).toBeCloseTo(0.7925, 4);
   });
 
+  it("converts tablespoons to milliliters", () => {
+    expect(convertValue("tbsp", "ml", 2)).toBeCloseTo(29.5735, 4);
+  });
+
+  it("converts milliliters to tablespoons", () => {
+    expect(convertValue("ml", "tbsp", 30)).toBeCloseTo(2.0288, 4);
+  });
+
+  it("converts milliliters to teaspoons", () => {
+    expect(convertValue("ml", "tsp", 10)).toBeCloseTo(2.0288, 4);
+  });
+
+  it("converts teaspoons to milliliters", () => {
+    expect(convertValue("tsp", "ml", 3)).toBeCloseTo(14.7868, 4);
+  });
+
+  it("converts cups to milliliters", () => {
+    expect(convertValue("cup", "ml", 1)).toBeCloseTo(236.5882, 4);
+  });
+
+  it("converts milliliters to cups", () => {
+    expect(convertValue("ml", "cup", 500)).toBeCloseTo(2.1134, 4);
+  });
+
   it("converts feet to centimeters", () => {
     expect(convertValue("ft", "cm", 6)).toBeCloseTo(182.88, 2);
   });
@@ -45,6 +69,22 @@ describe("unit conversions", () => {
 
   it("converts kilobytes to megabytes", () => {
     expect(convertValue("kb", "mb", 2048)).toBe(2);
+  });
+
+  it("converts bytes to megabytes", () => {
+    expect(convertValue("byte", "mb", 1048576)).toBe(1);
+  });
+
+  it("converts megabytes to bytes", () => {
+    expect(convertValue("mb", "byte", 1)).toBe(1048576);
+  });
+
+  it("converts kilobytes to bytes", () => {
+    expect(convertValue("kb", "byte", 1)).toBe(1024);
+  });
+
+  it("converts bytes to kilobytes", () => {
+    expect(convertValue("byte", "kb", 2048)).toBe(2);
   });
 
   it("converts terabytes to gigabytes", () => {

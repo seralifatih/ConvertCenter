@@ -122,6 +122,120 @@ export const textTransformPages = [
     "tHE QUICK BROWN FOX. jUMPS OVER THE LAZY DOG!",
   ),
   defineTextTransformPage(
+    "reverse-text",
+    "reverse",
+    "Reverse Text Tool – Reverse strings instantly",
+    "Reverse text instantly with this free online tool. Flip characters, sentences, or entire paragraphs in seconds.",
+    "ConvertCenter reverse text example",
+    {
+      aliases: [
+        "reverse text",
+        "text reverser",
+        "reverse string",
+        "flip text",
+      ],
+      metaDescription:
+        "Reverse text instantly with this free online tool. Flip characters, sentences, or entire paragraphs in seconds.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "remove-line-breaks",
+    "removeLineBreaks",
+    "Remove Line Breaks – Clean multiline text instantly",
+    "Remove line breaks from text quickly. Convert multiline content into a single line for emails, forms, and data processing.",
+    "First line\nSecond line\nThird line",
+    {
+      aliases: [
+        "remove line breaks",
+        "remove newlines",
+        "multiline to single line",
+        "strip line breaks",
+      ],
+      metaDescription:
+        "Remove line breaks from text quickly. Convert multiline content into a single line for emails, forms, and data processing.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "remove-extra-spaces",
+    "removeExtraSpaces",
+    "Remove Extra Spaces – Clean up text spacing",
+    "Remove extra spaces from text instantly. Normalize spacing for cleaner documents and code.",
+    "Too    many   spaces    here",
+    {
+      aliases: [
+        "remove extra spaces",
+        "collapse spaces",
+        "clean text spacing",
+        "normalize spacing",
+      ],
+      metaDescription:
+        "Remove extra spaces from text instantly. Normalize spacing for cleaner documents and code.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "word-counter",
+    "wordCount",
+    "Word Counter – Count words instantly",
+    "Count words instantly with a simple online tool for drafts, essays, forms, and content checks.",
+    "Count how many words are in this sentence.",
+    {
+      aliases: [
+        "word counter",
+        "count words",
+        "word count tool",
+        "word count",
+      ],
+      metaDescription:
+        "Count words instantly with a simple online tool for drafts, essays, forms, and content checks.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "character-counter",
+    "characterCount",
+    "Character Counter – Count characters instantly",
+    "Count characters instantly for bios, forms, metadata, and short text limits.",
+    "Count every character in this line.",
+    {
+      aliases: [
+        "character counter",
+        "count characters",
+        "character count tool",
+        "character count",
+      ],
+      metaDescription:
+        "Count characters instantly for bios, forms, metadata, and short text limits.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "slug-generator",
+    "slug",
+    "Slug Generator – Create clean URL slugs",
+    "Generate clean URL slugs from text instantly for CMS entries, blog posts, and filenames.",
+    "ConvertCenter Slug Generator Example",
+    {
+      aliases: [
+        "slug generator",
+        "generate slug",
+        "url slug generator",
+        "slugify text",
+      ],
+      metaDescription:
+        "Generate clean URL slugs from text instantly for CMS entries, blog posts, and filenames.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
     "camelcase-converter",
     "camel",
     "camelCase converter",
@@ -311,6 +425,94 @@ export const textTransformPages = [
       outputStyle: "panel",
       popular: true,
       relatedSlugs: ["json-formatter", "json-minifier"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "markdown-to-html",
+    "markdownToHtml",
+    "Markdown to HTML Converter",
+    "Convert Markdown to HTML instantly with this free online Markdown converter.",
+    "# Hello",
+    {
+      actionLabel: "convert",
+      aliases: [
+        "markdown to html",
+        "md to html",
+        "markdown converter",
+        "convert markdown to html",
+      ],
+      categoryKey: "dev-data",
+      metaDescription:
+        "Convert Markdown to HTML instantly with this free online Markdown converter.",
+      popular: true,
+      relatedSlugs: ["json-formatter", "json-minifier", "json-validator"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "html-to-markdown",
+    "htmlToMarkdown",
+    "HTML to Markdown Converter",
+    "Convert HTML code into clean Markdown format instantly.",
+    "<h1>Hello</h1>",
+    {
+      actionLabel: "convert",
+      aliases: [
+        "html to markdown",
+        "convert html to markdown",
+        "html markdown converter",
+        "html into markdown",
+      ],
+      categoryKey: "dev-data",
+      metaDescription:
+        "Convert HTML code into clean Markdown format instantly.",
+      popular: true,
+      relatedSlugs: ["markdown-to-html", "json-formatter"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "json-to-yaml",
+    "jsonToYaml",
+    "JSON to YAML Converter",
+    "Convert JSON data into YAML format instantly.",
+    '{\n  "name": "test"\n}',
+    {
+      actionLabel: "convert",
+      aliases: [
+        "json to yaml",
+        "convert json to yaml",
+        "json yaml converter",
+        "json into yaml",
+      ],
+      categoryKey: "dev-data",
+      metaDescription:
+        "Convert JSON data into YAML format instantly.",
+      popular: true,
+      relatedSlugs: ["json-formatter", "json-minifier", "json-validator"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "yaml-to-json",
+    "yamlToJson",
+    "YAML to JSON Converter",
+    "Convert YAML data into JSON format instantly.",
+    "name: test",
+    {
+      actionLabel: "convert",
+      aliases: [
+        "yaml to json",
+        "convert yaml to json",
+        "yaml json converter",
+        "yaml into json",
+      ],
+      categoryKey: "dev-data",
+      metaDescription:
+        "Convert YAML data into JSON format instantly.",
+      popular: true,
+      relatedSlugs: ["json-to-yaml", "json-formatter", "json-validator"],
       showCharacterCount: true,
     },
   ),

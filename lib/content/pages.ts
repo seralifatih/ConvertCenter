@@ -20,7 +20,9 @@ import {
   type UnitKey,
 } from "@/lib/config/conversion-registry";
 import { transformText, type TextMode } from "@/lib/conversion/text";
+import { standaloneToolPages } from "@/lib/content/standalone-pages";
 import { convertValue, formatNumber, getUnitFactor, units } from "@/lib/conversion/units";
+import type { SearchEntry } from "@/lib/search";
 
 export type UnitPageDefinition = {
   aliases: string[];
@@ -65,6 +67,11 @@ export type LaunchPage = UnitPageDefinition | TextPageDefinition;
 
 function uniqueStrings(values: readonly string[]) {
   return [...new Set(values)];
+}
+
+function isCookingVolumePage(page: UnitPageDefinition) {
+  const cookingUnits: UnitKey[] = ["cup", "ml", "tbsp", "tsp"];
+  return page.category === "volume" && cookingUnits.includes(page.from) && cookingUnits.includes(page.to);
 }
 
 function adaptUnitPage(page: NumericPairPageSchema): UnitPageDefinition {
@@ -115,7 +122,10 @@ const rawTextPages = launchToolRegistry.filter(
 export const unitPages = rawUnitPages.map(adaptUnitPage);
 export const textPages = rawTextPages.map(adaptTextPage);
 export const launchPages: LaunchPage[] = [...unitPages, ...textPages];
-export const launchPageCount = new Set(launchPages.map((page) => page.slug)).size;
+export const launchPageCount = new Set([
+  ...launchPages.map((page) => page.slug),
+  ...standaloneToolPages.map((page) => page.slug),
+]).size;
 
 const unitPageBySlug = new Map(unitPages.map((page) => [page.slug, page] as const));
 const textPageBySlug = new Map(textPages.map((page) => [page.slug, page] as const));
@@ -152,6 +162,12 @@ export function getUnitPageSearchIntent(page: UnitPageDefinition) {
 }
 
 export function getUnitPageDescription(page: UnitPageDefinition) {
+  if (isCookingVolumePage(page)) {
+    return `Convert ${units[page.from].pluralLabel.toLowerCase()} to ${units[
+      page.to
+    ].pluralLabel.toLowerCase()} for recipes, baking, sauces, and everyday kitchen measurements.`;
+  }
+
   return `Convert ${units[page.from].pluralLabel.toLowerCase()} to ${units[
     page.to
   ].pluralLabel.toLowerCase()} instantly with a fast ${units[page.from].shortLabel.toLowerCase()} to ${units[
@@ -231,16 +247,20 @@ export function getCategoryPages(category: CategoryKey) {
     .filter((page): page is LaunchPage => Boolean(page));
 }
 
+export function getCategoryStandalonePages(category: CategoryKey) {
+  return standaloneToolPages.filter((page) => page.hubCategoryKey === category);
+}
+
 export function getCategoryHighlights(category: CategoryKey) {
   return getConfigCategoryHighlights(category);
 }
 
 export function getTextPageKeywords(page: TextPageDefinition) {
-  if (page.category === "encoding") {
+  if (page.category === "encoding" || page.category === "dev-data") {
     return uniqueStrings([
       ...page.aliases,
       "developer tools",
-      "encoding tools",
+      page.category === "encoding" ? "encoding tools" : "data conversion tools",
       `${page.title.toLowerCase()}`,
     ]);
   }
@@ -302,5 +322,14 @@ export function getLaunchPageSummary(page: LaunchPage) {
 }
 
 export function getSearchEntries() {
-  return getSearchSuggestionEntries();
+  const registryEntries = getSearchSuggestionEntries();
+  const standaloneEntries: SearchEntry[] = standaloneToolPages.map((page) => ({
+    category: page.category,
+    entryType: "page",
+    href: page.route,
+    keywords: page.keywords,
+    title: page.title,
+  }));
+
+  return [...registryEntries, ...standaloneEntries];
 }

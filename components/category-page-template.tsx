@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DevToolPageWidget } from "@/components/dev-tool-page-widget";
+import { DeveloperToolsHub } from "@/components/developer-tools-hub";
 import { FreeUnitConverter } from "@/components/free-unit-converter";
+import { MarkdownToolWidget } from "@/components/markdown-tool-widget";
 import { PageContainer } from "@/components/page-container";
 import { StructuredData } from "@/components/structured-data";
 import { TextTransformWidget } from "@/components/text-transform-widget";
@@ -11,6 +13,7 @@ import { getBrowseCategory } from "@/lib/content/categories";
 import {
   getCategoryHighlights,
   getCategoryPages,
+  getCategoryStandalonePages,
   getLaunchPageLabel,
   getLaunchPageSummary,
   getPageHref,
@@ -26,8 +29,23 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
     return null;
   }
 
+  if (category.key === "dev-data") {
+    return <DeveloperToolsHub />;
+  }
+
   const categoryConfig = getCategoryConfig(category.key);
   const pages = getCategoryPages(category.key);
+  const standalonePages = getCategoryStandalonePages(category.key);
+  const featuredStandalonePages =
+    category.featuredStandaloneSlugs?.length
+      ? category.featuredStandaloneSlugs
+          .map((slug) => standalonePages.find((page) => page.slug === slug))
+          .filter((page): page is (typeof standalonePages)[number] => Boolean(page))
+      : standalonePages.slice(0, 2);
+  const featuredStandaloneSlugSet = new Set(featuredStandalonePages.map((page) => page.slug));
+  const remainingStandalonePages = standalonePages.filter(
+    (page) => !featuredStandaloneSlugSet.has(page.slug),
+  );
   const highlights = getCategoryHighlights(category.key);
   const relevantHighlights = highlights.slice(0, 2);
   const featuredUnitPage =
@@ -79,7 +97,9 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
             />
           ) : null}
           {featuredTextPage ? (
-            featuredTextPage.category === "encoding" ? (
+            featuredTextPage.mode === "markdownToHtml" ? (
+              <MarkdownToolWidget defaultValue={featuredTextPage.exampleInput} />
+            ) : featuredTextPage.category === "encoding" || featuredTextPage.category === "dev-data" ? (
               <DevToolPageWidget
                 actionLabel={featuredTextPage.actionLabel}
                 defaultValue={featuredTextPage.exampleInput}
@@ -97,10 +117,21 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
             )
           ) : null}
           {!featuredUnitPage && !featuredTextPage ? (
-            <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
-              <div className="mono-kicker mb-2">coming soon</div>
-              <p className="text-sm leading-7 text-[color:var(--muted)]">{category.intro}</p>
-            </div>
+            featuredStandalonePages.length ? (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {featuredStandalonePages.map((page) => (
+                  <Link className="link-tile" href={page.route} key={page.route}>
+                    <span className="font-mono text-sm text-[color:var(--text)]">{page.title}</span>
+                    <span className="text-xs text-[color:var(--muted)]">{page.description}</span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--surface)] p-4">
+                <div className="mono-kicker mb-2">coming soon</div>
+                <p className="text-sm leading-7 text-[color:var(--muted)]">{category.intro}</p>
+              </div>
+            )
           ) : null}
         </UtilityCard>
 
@@ -141,48 +172,56 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
         </div>
       </section>
 
-      <section>
-        <UtilityCard>
-          <div className="mb-4 flex items-center gap-3">
-            <h2 className="section-title">Common tools</h2>
-            <span className="section-badge">{pages.length} routes</span>
-          </div>
-          {pages.length > 0 ? (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {pages.map((page) => (
-                <Link className="link-tile" href={getPageHref(page)} key={page.slug}>
-                  <span className="font-mono text-sm text-[color:var(--text)]">
-                    {getLaunchPageLabel(page)}
-                  </span>
-                  <span className="text-xs text-[color:var(--muted)]">
-                    {getLaunchPageSummary(page)}
-                  </span>
-                </Link>
-              ))}
+      {pages.length > 0 || remainingStandalonePages.length > 0 || (categoryConfig.kind === "text" && categoryConfig.futureTools.length > 0) ? (
+        <section>
+          <UtilityCard>
+            <div className="mb-4 flex items-center gap-3">
+              <h2 className="section-title">Common tools</h2>
+              <span className="section-badge">{pages.length + remainingStandalonePages.length} routes</span>
             </div>
-          ) : (
-            <div className="space-y-3">
-              <p className="text-sm leading-7 text-[color:var(--muted)]">
-                This hub is ready, but the first live tools have not launched yet.
-              </p>
-              {categoryConfig.kind === "text" && categoryConfig.futureTools.length > 0 ? (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {categoryConfig.futureTools.map((tool) => (
-                    <div className="link-tile" key={tool.slug}>
-                      <span className="font-mono text-sm text-[color:var(--text)]">
-                        {tool.title}
-                      </span>
-                      <span className="text-xs text-[color:var(--muted)]">
-                        {tool.description}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          )}
-        </UtilityCard>
-      </section>
+            {pages.length > 0 || remainingStandalonePages.length > 0 ? (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {pages.map((page) => (
+                  <Link className="link-tile" href={getPageHref(page)} key={page.slug}>
+                    <span className="font-mono text-sm text-[color:var(--text)]">
+                      {getLaunchPageLabel(page)}
+                    </span>
+                    <span className="text-xs text-[color:var(--muted)]">
+                      {getLaunchPageSummary(page)}
+                    </span>
+                  </Link>
+                ))}
+                {remainingStandalonePages.map((page) => (
+                  <Link className="link-tile" href={page.route} key={page.route}>
+                    <span className="font-mono text-sm text-[color:var(--text)]">{page.title}</span>
+                    <span className="text-xs text-[color:var(--muted)]">{page.description}</span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm leading-7 text-[color:var(--muted)]">
+                  This hub is ready, but the first live tools have not launched yet.
+                </p>
+                {categoryConfig.kind === "text" && categoryConfig.futureTools.length > 0 ? (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {categoryConfig.futureTools.map((tool) => (
+                      <div className="link-tile" key={tool.slug}>
+                        <span className="font-mono text-sm text-[color:var(--text)]">
+                          {tool.title}
+                        </span>
+                        <span className="text-xs text-[color:var(--muted)]">
+                          {tool.description}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            )}
+          </UtilityCard>
+        </section>
+      ) : null}
 
       {relevantHighlights.length ? (
         <section>

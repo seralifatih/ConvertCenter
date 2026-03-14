@@ -180,6 +180,45 @@ A 256 GB drive is 0.25 TB. A 512 GB SSD is 0.5 TB. A 2048 GB storage pool equals
 
 GB to TB is especially helpful for storage planning, backups, media workflows, and server management. Video teams use it to estimate how quickly footage will fill a drive. Developers and IT teams use it when planning snapshots, logs, and deployment artifacts across environments. Home users run into it when comparing disk upgrades or deciding how much cloud storage they actually need. A dedicated converter makes those decisions clearer by translating many smaller gigabyte figures into a terabyte total you can plan around.`;
 
+const cupsToMlCookingStructuredContent = defineStructuredContent(
+  "About converting cups to milliliters",
+  defineContentSection("Why this is a common recipe conversion", [
+    "Cups are used constantly in US recipes, while milliliters are standard on metric measuring jugs, cartons, and many international kitchen tools. That mismatch is why cups to ml is such a common cooking lookup. A recipe may ask for 1.5 cups of milk or stock, but the measuring jug in your kitchen might only show milliliters. This page gives you a quick translation that keeps recipe prep moving.",
+  ]),
+  defineContentSection("Kitchen formula", [
+    "For US cooking measurements, 1 cup is about 236.588 milliliters. Many cooks round that to 240 ml for everyday use, but the more precise number can be useful when you are scaling a baking recipe, portioning liquids more carefully, or comparing a recipe instruction to the label on a bottle or carton.",
+  ]),
+  defineContentSection("Where it helps in the kitchen", [
+    "This conversion is useful for soups, sauces, baking liquids, smoothies, dressings, and any recipe where a cup measure needs to be read on a metric tool. It is also handy when adapting recipes from US blogs or cookbooks for a kitchen that relies on milliliters instead of cups.",
+  ]),
+);
+
+const tbspToMlCookingStructuredContent = defineStructuredContent(
+  "About converting tablespoons to milliliters",
+  defineContentSection("A practical kitchen conversion for small liquids", [
+    "Tablespoons are common in recipes for oil, vinegar, vanilla, soy sauce, syrups, dressings, and other ingredients that are used in smaller amounts than a cup. Milliliters are easier to read on metric measuring tools and bottles, so tablespoons to ml is one of the most useful quick kitchen conversions for cooks who move between recipe styles.",
+  ]),
+  defineContentSection("Kitchen formula", [
+    "This page uses the standard US tablespoon value of about 14.7868 milliliters. In a busy home kitchen, many people round that to 15 ml, which is usually good enough for quick prep. When you want a more exact result for scaling a recipe or comparing bottle quantities, the precise figure is helpful.",
+  ]),
+  defineContentSection("Where it helps in recipes", [
+    "It is especially useful for sauces, marinades, glazes, dressings, and baking ingredients like melted butter or extracts. Instead of juggling spoons and metric markings by eye, you can get a clean milliliter reference that works with measuring jugs, squeeze bottles, and prep containers.",
+  ]),
+);
+
+const tspToMlCookingStructuredContent = defineStructuredContent(
+  "About converting teaspoons to milliliters",
+  defineContentSection("Small measurements can still matter a lot", [
+    "Teaspoons show up in recipes whenever a small amount can have a big effect: vanilla extract, baking powder, lemon juice, syrups, spice blends, and flavor concentrates. Because many kitchen tools outside the US use milliliters instead of teaspoons, tsp to ml is a practical conversion for everyday cooking and baking rather than a niche one.",
+  ]),
+  defineContentSection("Kitchen formula", [
+    "A US teaspoon is about 4.92892 milliliters, which most cooks round to 5 ml. That rounded value is useful for mental estimates, but the exact figure helps when you are scaling several small spoon measurements together or converting a recipe for more precise prep.",
+  ]),
+  defineContentSection("Where it helps in baking and prep", [
+    "This converter is useful for baking ingredients, extracts, syrups, sauces, and drink recipes where small liquid amounts matter. If a recipe calls for 3 teaspoons of vanilla or lemon juice and your measuring tools are marked only in milliliters, this page gives you a quick kitchen-ready answer.",
+  ]),
+);
+
 const kgToLbsStructuredContent = defineStructuredContent(
   "About converting kilograms to pounds",
   defineContentSection("Why this conversion comes up so often", [
@@ -585,36 +624,59 @@ export const lengthPairPages = [
 
 export const volumePairPages = [
   defineNumericPairPage("volume", "ml", "cup", 500, [50, 100, 250, 500, 750, 1000], {
+    aliases: ["ml to cups", "milliliters to cups", "milliliter to cup"],
     faq: defineFaqs(
-      defineFaq("How many cups are in 1 milliliter?", "1 milliliter equals about 0.00422675 cups."),
       defineFaq(
-        "What is the formula to convert ml to cups?",
-        "Divide milliliters by 236.588 to convert them to US cups.",
+        "How many cups are in 1 milliliter for cooking?",
+        "1 milliliter equals about 0.00422675 US cups, which is handy when reading metric liquid amounts in a cup-based recipe workflow.",
       ),
       defineFaq(
-        "When do people use ml to cups conversion?",
-        "It is useful for recipes, beverage prep, and reading packaging across metric and US measurements.",
+        "When would I use ml to cups in a recipe?",
+        "It is useful when a bottle, carton, or measuring jug shows milliliters but the recipe instructions are easier to think about in cups.",
+      ),
+      defineFaq(
+        "Is ml to cups useful for baking and sauces?",
+        "Yes. It helps with milk, water, cream, stock, and other liquids used in baking, soups, sauces, and drink recipes.",
       ),
     ),
+    relatedSlugs: ["cups-to-ml", "tbsp-to-ml", "ml-to-tsp", "tsp-to-ml", "ml-to-tbsp"],
     featured: true,
+    customLongDescription: defineStructuredContent(
+      "About converting milliliters to cups",
+      defineContentSection("Why this matters in recipe prep", [
+        "Milliliters are common on measuring jugs, cartons, bottles, and recipes from metric kitchens, while cups remain familiar in many US cooking instructions. That means ml to cups is a very practical kitchen conversion whenever a liquid ingredient is listed in metric form but you want to think about it in cup-based terms. Instead of approximating by eye, this page gives you a quick answer for recipe prep, baking, and drink mixing.",
+      ]),
+      defineContentSection("Kitchen formula", [
+        "To convert milliliters to US cups, divide by 236.588. In rough kitchen shorthand, 240 ml is often treated as about 1 cup, but the exact figure is still useful when you are scaling a recipe or comparing a package size to an ingredient list.",
+      ]),
+      defineContentSection("Where it helps in the kitchen", [
+        "This conversion is useful for milk, water, broth, cream, juice, and other liquids used in baking and everyday cooking. It is especially handy when a recipe uses metric packaging sizes but your measuring cups are the easiest tools within reach.",
+      ]),
+    ),
     metaDescription:
-      "Convert milliliters to cups for cooking, baking, and packaging checks with a simple ml to cups calculator, formula, and common values.",
+      "Convert ml to cups for recipes, baking liquids, soups, and kitchen prep with a quick metric-to-cup cooking reference.",
     popular: true,
   }),
   defineNumericPairPage("volume", "cup", "ml", 2, [0.25, 0.5, 1, 2, 3, 4], {
+    aliases: ["cups to ml", "cup to ml", "cups to milliliters"],
     faq: defineFaqs(
-      defineFaq("How many milliliters are in 1 cup?", "1 US cup equals 236.588 milliliters."),
       defineFaq(
-        "What is the formula to convert cups to ml?",
-        "Multiply cups by 236.588 to convert them to milliliters.",
+        "How many milliliters are in 1 cup for cooking?",
+        "1 US cup equals about 236.588 milliliters, and many kitchens round that to 240 ml for quick measuring.",
       ),
       defineFaq(
-        "Why convert cups to milliliters?",
-        "This helps when recipes, bottles, or product labels mix US and metric volume units.",
+        "Why do recipes often need cups to ml conversion?",
+        "It helps when a recipe uses cups but your measuring jug, carton label, or kitchen tools are marked in milliliters.",
+      ),
+      defineFaq(
+        "Is cups to ml mostly for liquids?",
+        "Yes. It is most often used for milk, water, cream, broth, oil, and other liquid ingredients in recipes and baking.",
       ),
     ),
+    relatedSlugs: ["ml-to-cups", "tbsp-to-ml", "tsp-to-ml", "ml-to-tsp", "ml-to-tbsp"],
+    customLongDescription: cupsToMlCookingStructuredContent,
     metaDescription:
-      "How many milliliters are in a cup? Use this cups to ml converter for recipes and product sizes, with examples and a quick reference chart.",
+      "Convert cups to ml for recipes, baking liquids, sauces, and everyday kitchen prep with a fast US cup to milliliter guide.",
   }),
   defineNumericPairPage("volume", "floz", "ml", 8, [1, 2, 4, 8, 12, 16], {
     aliases: ["fl oz to ml", "floz to ml", "oz to ml", "fluid ounces to milliliters"],
@@ -720,6 +782,89 @@ export const volumePairPages = [
     metaDescription:
       "Convert gallons to liters for fuel use, liquids, and container sizes with a straightforward calculator and reference conversion table.",
   }),
+  defineNumericPairPage("volume", "tbsp", "ml", 2, [0.5, 1, 2, 4, 8, 16], {
+    aliases: ["tbsp to ml", "tablespoons to ml", "tablespoon to milliliters"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many milliliters are in 1 tablespoon for cooking?",
+        "1 US tablespoon equals about 14.7868 milliliters, which many cooks round to 15 ml for everyday recipe work.",
+      ),
+      defineFaq(
+        "When would I use tbsp to ml in a recipe?",
+        "It is useful for oils, sauces, dressings, extracts, and other liquid ingredients when your kitchen tools are marked in milliliters.",
+      ),
+      defineFaq(
+        "Is tbsp to ml helpful for baking too?",
+        "Yes. It is handy for ingredients like melted butter, vanilla, syrups, and other smaller baking measurements.",
+      ),
+    ),
+    relatedSlugs: ["ml-to-tbsp", "tsp-to-ml", "ml-to-tsp", "cups-to-ml", "ml-to-cups"],
+    customLongDescription: tbspToMlCookingStructuredContent,
+    metaDescription:
+      "Convert tablespoons to ml for recipes, sauces, dressings, and baking ingredients with an easy kitchen-friendly reference.",
+    popular: true,
+  }),
+  defineNumericPairPage("volume", "ml", "tbsp", 30, [5, 10, 15, 30, 45, 60], {
+    aliases: ["ml to tbsp", "milliliters to tablespoons", "milliliter to tablespoon"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many tablespoons are in 1 milliliter?",
+        "1 milliliter equals about 0.067628 tablespoons.",
+      ),
+      defineFaq(
+        "What is the formula to convert ml to tbsp?",
+        "Divide milliliters by 14.7868 to convert them to US tablespoons.",
+      ),
+      defineFaq(
+        "When would I use ml to tbsp conversion?",
+        "It is useful for recipes, sauces, dressings, and liquid ingredients measured with spoons.",
+      ),
+    ),
+    relatedSlugs: ["tbsp-to-ml", "ml-to-tsp", "tsp-to-ml", "cups-to-ml", "ml-to-cups"],
+    metaDescription:
+      "Convert ml to tablespoons for recipes, sauces, and kitchen prep with a quick calculator, formula, and common cooking values.",
+  }),
+  defineNumericPairPage("volume", "tsp", "ml", 3, [0.5, 1, 2, 3, 4, 6], {
+    aliases: ["tsp to ml", "teaspoons to ml", "teaspoon to milliliters"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many milliliters are in 1 teaspoon for cooking?",
+        "1 US teaspoon equals about 4.92892 milliliters, usually rounded to 5 ml in everyday recipe prep.",
+      ),
+      defineFaq(
+        "Why do people search tsp to ml for baking?",
+        "It is common when recipes use teaspoons for extracts, baking ingredients, or syrups but your tools show only milliliters.",
+      ),
+      defineFaq(
+        "Is tsp to ml useful for measuring ingredients accurately?",
+        "Yes. It helps with small liquid amounts where guessing by eye can throw off flavor or texture in baking and cooking.",
+      ),
+    ),
+    relatedSlugs: ["ml-to-tsp", "tbsp-to-ml", "ml-to-tbsp", "cups-to-ml", "ml-to-cups"],
+    customLongDescription: tspToMlCookingStructuredContent,
+    metaDescription:
+      "Convert teaspoons to ml for baking, extracts, syrups, and small recipe measurements with a quick kitchen reference.",
+  }),
+  defineNumericPairPage("volume", "ml", "tsp", 30, [1, 5, 10, 15, 30, 60], {
+    aliases: ["ml to tsp", "milliliters to teaspoons", "milliliter to teaspoon"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many teaspoons are in 1 milliliter?",
+        "1 milliliter equals about 0.202884 teaspoons.",
+      ),
+      defineFaq(
+        "What is the formula to convert ml to tsp?",
+        "Divide milliliters by 4.92892 to convert them to US teaspoons.",
+      ),
+      defineFaq(
+        "When would I use ml to tsp conversion?",
+        "It is useful for recipes, supplements, syrups, and small liquid measurements in the kitchen.",
+      ),
+    ),
+    relatedSlugs: ["tsp-to-ml", "ml-to-tbsp", "tbsp-to-ml", "cups-to-ml", "ml-to-cups"],
+    metaDescription:
+      "Convert ml to tsp quickly for recipe prep, syrups, and kitchen measurements with a simple formula and common reference values.",
+  }),
 ] as const;
 
 export const temperaturePairPages = [
@@ -796,6 +941,44 @@ export const temperaturePairPages = [
 ] as const;
 
 export const dataPairPages = [
+  defineNumericPairPage("data", "byte", "mb", 1048576, [1024, 4096, 65536, 1048576, 5242880], {
+    aliases: ["bytes to mb", "bytes to megabytes", "byte to mb"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many megabytes are in 1 byte?",
+        "1 byte equals about 0.0000009537 megabytes in binary conversion.",
+      ),
+      defineFaq(
+        "What is the formula to convert bytes to MB?",
+        "Divide bytes by 1,048,576 to convert them to megabytes using binary units.",
+      ),
+      defineFaq(
+        "Why does bytes to MB use 1,048,576?",
+        "Because 1 MB equals 1024 KB and each KB equals 1024 bytes, so 1024 x 1024 bytes make 1 MB.",
+      ),
+    ),
+    metaDescription:
+      "Convert bytes to MB with binary data sizing for files, payloads, exports, and storage estimates, including examples and a quick formula.",
+  }),
+  defineNumericPairPage("data", "mb", "byte", 5, [0.25, 0.5, 1, 5, 10, 25], {
+    aliases: ["mb to bytes", "megabytes to bytes", "mb into bytes"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many bytes are in 1 megabyte?",
+        "1 megabyte equals 1,048,576 bytes in binary conversion.",
+      ),
+      defineFaq(
+        "What is the formula to convert MB to bytes?",
+        "Multiply megabytes by 1,048,576 to convert them to bytes.",
+      ),
+      defineFaq(
+        "When is MB to bytes conversion useful?",
+        "It is useful when checking raw file sizes, API limits, exports, and storage calculations that require exact byte counts.",
+      ),
+    ),
+    metaDescription:
+      "Convert MB to bytes for exact file sizes, API payload checks, and binary storage calculations with formula, examples, and reference values.",
+  }),
   defineNumericPairPage("data", "mb", "gb", 5120, [16, 64, 128, 256, 1024, 5120], {
     customLongDescription: mbToGbStructuredContent,
     faq: defineFaqs(
@@ -871,6 +1054,44 @@ export const dataPairPages = [
     metaDescription:
       "Need kilobytes in megabytes? This KB to MB converter helps with small files, attachment limits, and binary size calculations.",
     popular: true,
+  }),
+  defineNumericPairPage("data", "kb", "byte", 64, [1, 64, 128, 512, 1024, 4096], {
+    aliases: ["kb to bytes", "kilobytes to bytes", "kilobyte to bytes"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many bytes are in 1 kilobyte?",
+        "1 kilobyte equals 1024 bytes in binary conversion.",
+      ),
+      defineFaq(
+        "What is the formula to convert KB to bytes?",
+        "Multiply kilobytes by 1024 to convert them to bytes.",
+      ),
+      defineFaq(
+        "Why is KB to bytes useful?",
+        "It helps when checking exact attachment sizes, image exports, and technical file limits that are shown in raw bytes.",
+      ),
+    ),
+    metaDescription:
+      "Convert KB to bytes instantly for exact file-size checks, attachments, and binary storage math with formula and example values.",
+  }),
+  defineNumericPairPage("data", "byte", "kb", 4096, [128, 512, 1024, 4096, 16384, 65536], {
+    aliases: ["bytes to kb", "bytes to kilobytes", "byte to kb"],
+    faq: defineFaqs(
+      defineFaq(
+        "How many kilobytes are in 1 byte?",
+        "1 byte equals 0.000976563 kilobytes in binary conversion.",
+      ),
+      defineFaq(
+        "What is the formula to convert bytes to KB?",
+        "Divide bytes by 1024 to convert them to kilobytes.",
+      ),
+      defineFaq(
+        "When would I convert bytes to KB?",
+        "This is useful for making raw byte counts easier to read when reviewing downloads, logs, exports, or file metadata.",
+      ),
+    ),
+    metaDescription:
+      "Convert bytes to KB for easier file-size reading, storage estimates, and technical data checks with binary formulas and examples.",
   }),
   defineNumericPairPage("data", "gb", "tb", 2048, [256, 512, 1024, 2048, 5120, 10240], {
     customLongDescription: gbToTbStructuredContent,

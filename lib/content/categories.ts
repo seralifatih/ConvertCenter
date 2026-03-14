@@ -14,6 +14,7 @@ export type BrowseCategory = {
   description: string;
   intro: string;
   featuredSlug: string;
+  featuredStandaloneSlugs?: readonly string[];
   metaDescription?: string;
   relatedTopics?: readonly string[];
   useCases?: readonly string[];
@@ -22,6 +23,7 @@ export type BrowseCategory = {
 export const browseCategories: BrowseCategory[] = categoryRegistry.map((category) => ({
   description: category.description,
   featuredSlug: category.featuredSlug,
+  featuredStandaloneSlugs: category.featuredStandaloneSlugs,
   intro: category.intro,
   key: category.key,
   label: category.label,

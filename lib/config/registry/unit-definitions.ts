@@ -138,6 +138,16 @@ export const volumeUnits = [
     "cup",
     "cups",
   ]),
+  defineLinearUnit("tbsp", "Tablespoon", "Tablespoons", "tbsp", "tbsp", 14.78676478125, [
+    "tbsp",
+    "tablespoon",
+    "tablespoons",
+  ]),
+  defineLinearUnit("tsp", "Teaspoon", "Teaspoons", "tsp", "tsp", 4.92892159375, [
+    "tsp",
+    "teaspoon",
+    "teaspoons",
+  ]),
 ] as const;
 
 export const temperatureUnits = [
@@ -174,6 +184,11 @@ export const temperatureUnits = [
 ] as const;
 
 export const dataUnits = [
+  defineLinearUnit("byte", "Byte", "Bytes", "B", "bytes", 1 / (1024 * 1024), [
+    "b",
+    "byte",
+    "bytes",
+  ]),
   defineLinearUnit("kb", "Kilobyte", "Kilobytes", "KB", "kb", 1 / 1024, [
     "kb",
     "kilobyte",

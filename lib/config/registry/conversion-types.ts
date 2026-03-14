@@ -7,18 +7,21 @@ export type NumericCategoryKey =
   | "temperature"
   | "data";
 
-export type TextualCategoryKey = "text" | "encoding";
+export type TextualCategoryKey = "text" | "encoding" | "color" | "dev-data";
 export type LaunchCategoryKey = NumericCategoryKey | TextualCategoryKey;
 export type FutureCategoryKey = "dev";
 export type CategoryKey = LaunchCategoryKey;
 export type ToolCategoryKey = LaunchCategoryKey | FutureCategoryKey;
 
 export type UnitKey =
+  | "byte"
   | "kg"
   | "lb"
   | "g"
   | "oz"
   | "floz"
+  | "tbsp"
+  | "tsp"
   | "km"
   | "mile"
   | "cm"
@@ -41,6 +44,7 @@ export type BaseCategorySchema<K extends ToolCategoryKey, Kind extends string> =
   aliases: readonly string[];
   description: string;
   featuredSlug: string;
+  featuredStandaloneSlugs?: readonly string[];
   intro: string;
   key: K;
   kind: Kind;

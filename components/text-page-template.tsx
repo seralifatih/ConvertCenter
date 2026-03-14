@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DevToolPageWidget } from "@/components/dev-tool-page-widget";
+import { MarkdownToolWidget } from "@/components/markdown-tool-widget";
 import { PageContainer } from "@/components/page-container";
 import { PillButton } from "@/components/pill";
 import { RelatedLinks } from "@/components/related-links";
@@ -72,7 +73,9 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
         </div>
       </section>
 
-      {page.category === "encoding" ? (
+      {page.mode === "markdownToHtml" ? (
+        <MarkdownToolWidget defaultValue={page.exampleInput} />
+      ) : page.category === "encoding" || page.category === "dev-data" ? (
         <DevToolPageWidget
           actionLabel={page.actionLabel}
           defaultValue={page.exampleInput}

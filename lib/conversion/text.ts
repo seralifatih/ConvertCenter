@@ -1,8 +1,19 @@
+import { marked } from "marked";
+import { dump as dumpYaml } from "js-yaml";
+import { load as loadYaml } from "js-yaml";
+import TurndownService from "turndown";
+
 export type TextMode =
   | "uppercase"
   | "lowercase"
   | "title"
   | "sentence"
+  | "reverse"
+  | "removeLineBreaks"
+  | "removeExtraSpaces"
+  | "wordCount"
+  | "characterCount"
+  | "slug"
   | "camel"
   | "snake"
   | "kebab"
@@ -12,7 +23,11 @@ export type TextMode =
   | "urlDecode"
   | "jsonFormat"
   | "jsonMinify"
-  | "jsonValidate";
+  | "jsonValidate"
+  | "markdownToHtml"
+  | "htmlToMarkdown"
+  | "jsonToYaml"
+  | "yamlToJson";
 
 export type TextModeGroupKey = "editorial" | "developer";
 
@@ -57,6 +72,54 @@ export const textModeOptions: readonly TextModeOption[] = [
     label: "Sentence case",
     mode: "sentence",
     sampleValue: "tHE QUICK BROWN FOX. jUMPS OVER THE LAZY DOG!",
+  },
+  {
+    description: "Reverses characters for playful text flips, debugging, and quick string checks.",
+    group: "editorial",
+    helperLabel: "Reverse text",
+    label: "Reverse text",
+    mode: "reverse",
+    sampleValue: "ConvertCenter reverse text example",
+  },
+  {
+    description: "Removes newline characters and joins multiline text into a single line.",
+    group: "editorial",
+    helperLabel: "Remove line breaks",
+    label: "Remove line breaks",
+    mode: "removeLineBreaks",
+    sampleValue: "First line\nSecond line\nThird line",
+  },
+  {
+    description: "Collapses repeated spaces into one clean space for tidier text.",
+    group: "editorial",
+    helperLabel: "Remove extra spaces",
+    label: "Remove extra spaces",
+    mode: "removeExtraSpaces",
+    sampleValue: "Too    many   spaces    here",
+  },
+  {
+    description: "Counts words in pasted text for drafts, limits, and quick content checks.",
+    group: "editorial",
+    helperLabel: "Word count",
+    label: "Word count",
+    mode: "wordCount",
+    sampleValue: "Count how many words are in this sentence.",
+  },
+  {
+    description: "Counts characters instantly for forms, bios, metadata, and length checks.",
+    group: "editorial",
+    helperLabel: "Character count",
+    label: "Character count",
+    mode: "characterCount",
+    sampleValue: "Count every character in this line.",
+  },
+  {
+    description: "Turns text into a clean lowercase slug for URLs, filenames, and CMS fields.",
+    group: "editorial",
+    helperLabel: "Slug generator",
+    label: "Slug generator",
+    mode: "slug",
+    sampleValue: "ConvertCenter Slug Generator Example",
   },
   {
     description: "Builds camelCase names for variables, fields, and JSON keys.",
@@ -138,6 +201,38 @@ export const textModeOptions: readonly TextModeOption[] = [
     mode: "jsonValidate",
     sampleValue: '{"site":"ConvertCenter","tools":["base64","url","json"],"active":true}',
   },
+  {
+    description: "Converts Markdown into HTML with a fast rendered preview for docs, content, and developer workflows.",
+    group: "developer",
+    helperLabel: "Markdown to HTML",
+    label: "Markdown to HTML",
+    mode: "markdownToHtml",
+    sampleValue: "# Hello\n\nConvert **Markdown** into HTML.",
+  },
+  {
+    description: "Converts HTML markup into Markdown for docs, migration work, and cleaner content editing.",
+    group: "developer",
+    helperLabel: "HTML to Markdown",
+    label: "HTML to Markdown",
+    mode: "htmlToMarkdown",
+    sampleValue: "<h1>Hello</h1><p>Convert <strong>HTML</strong> into Markdown.</p>",
+  },
+  {
+    description: "Converts JSON data into YAML for configs, tooling, and developer workflows.",
+    group: "developer",
+    helperLabel: "JSON to YAML",
+    label: "JSON to YAML",
+    mode: "jsonToYaml",
+    sampleValue: '{\n  "name": "test"\n}',
+  },
+  {
+    description: "Converts YAML into formatted JSON for APIs, config migrations, and developer workflows.",
+    group: "developer",
+    helperLabel: "YAML to JSON",
+    label: "YAML to JSON",
+    mode: "yamlToJson",
+    sampleValue: "name: test",
+  },
 ] as const;
 
 export const textModeGroups: ReadonlyArray<{
@@ -158,6 +253,9 @@ export const textSampleHelpers: ReadonlyArray<{
 ] as const;
 
 const sentenceBoundary = /(^\s*[a-z])|([.!?]\s+[a-z])/g;
+const turndownService = new TurndownService({
+  headingStyle: "atx",
+});
 
 function splitWords(value: string) {
   return value
@@ -226,6 +324,63 @@ export function validateJSON(input: string) {
   }
 }
 
+export function markdownToHtml(input: string) {
+  return String(marked.parse(input));
+}
+
+export function htmlToMarkdown(input: string) {
+  return turndownService.turndown(input);
+}
+
+export function jsonToYaml(input: string) {
+  try {
+    return dumpYaml(JSON.parse(input), {
+      lineWidth: -1,
+      noRefs: true,
+    }).trim();
+  } catch {
+    return "Invalid JSON";
+  }
+}
+
+export function yamlToJson(input: string) {
+  try {
+    return JSON.stringify(loadYaml(input), null, 2);
+  } catch {
+    return "Invalid YAML";
+  }
+}
+
+export function reverseText(input: string) {
+  return input.split("").reverse().join("");
+}
+
+export function removeLineBreaks(input: string) {
+  return input.replace(/\r?\n/g, " ");
+}
+
+export function removeExtraSpaces(input: string) {
+  return input.replace(/\s+/g, " ").trim();
+}
+
+export function countWords(input: string) {
+  const normalized = input.trim();
+  return normalized ? normalized.split(/\s+/).length : 0;
+}
+
+export function countCharacters(input: string) {
+  return input.length;
+}
+
+export function generateSlug(input: string) {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/[^\p{L}\p{N}\s-]+/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export function transformText(mode: TextMode, value: string) {
   switch (mode) {
     case "uppercase":
@@ -240,6 +395,18 @@ export function transformText(mode: TextMode, value: string) {
       return value
         .toLowerCase()
         .replace(sentenceBoundary, (match) => match.toUpperCase());
+    case "reverse":
+      return reverseText(value);
+    case "removeLineBreaks":
+      return removeLineBreaks(value);
+    case "removeExtraSpaces":
+      return removeExtraSpaces(value);
+    case "wordCount":
+      return String(countWords(value));
+    case "characterCount":
+      return String(countCharacters(value));
+    case "slug":
+      return generateSlug(value);
     case "camel": {
       const words = splitWords(value).map((word) => word.toLowerCase());
       return words
@@ -270,6 +437,14 @@ export function transformText(mode: TextMode, value: string) {
       return minifyJSON(value);
     case "jsonValidate":
       return validateJSON(value);
+    case "markdownToHtml":
+      return markdownToHtml(value);
+    case "htmlToMarkdown":
+      return htmlToMarkdown(value);
+    case "jsonToYaml":
+      return jsonToYaml(value);
+    case "yamlToJson":
+      return yamlToJson(value);
     default:
       return value;
   }

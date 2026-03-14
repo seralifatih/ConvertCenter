@@ -25,7 +25,11 @@ import { plannedDevToolPages, textTransformPages } from "./text-transform-pages"
 
 const textCasePages = textTransformPages.filter((page) => page.categoryKey === "text");
 const encodingToolPages = textTransformPages.filter((page) => page.categoryKey === "encoding");
+const colorToolPages = textTransformPages.filter((page) => page.categoryKey === "color");
+const devDataToolPages = textTransformPages.filter((page) => page.categoryKey === "dev-data");
 const featuredEncodingPage = encodingToolPages[0];
+const featuredColorPage = colorToolPages[0];
+const featuredDevDataPage = devDataToolPages[0];
 
 function uniqueStrings(values: readonly string[]) {
   return [...new Set(values)];
@@ -223,6 +227,90 @@ export const categoryRegistry: LaunchCategorySchema[] = [
     title: "Encoding & Decoding Tools",
     transforms: encodingToolPages,
   },
+  {
+    aliases: [
+      "color",
+      "color tools",
+      "hex",
+      "rgb",
+      "hsl",
+      "hex rgb hsl",
+      "designer color tools",
+      "frontend color tools",
+    ],
+    description: "Convert color values between HEX, RGB, and HSL formats.",
+    featuredSlug: featuredColorPage?.slug ?? "hex-to-rgb",
+    featuredStandaloneSlugs: [
+      "hex-to-rgb",
+      "rgb-to-hex",
+      "hex-to-hsl",
+      "hsl-to-hex",
+      "color-picker",
+    ],
+    futureTools: [],
+    intro:
+      "Color tools become useful the moment a visual choice needs to turn into production-ready values. Designers often start with a picked shade in a mockup, while frontend work may need HEX for CSS variables, RGB for graphics APIs, or HSL for more intuitive hue and lightness adjustments. This hub keeps those day-to-day conversions together in one lightweight place so you can move from a swatch or channel value to a copy-ready output without interrupting your workflow. It is built for UI work, design systems, prototypes, and handoff moments where speed matters, but clarity matters too. Instead of opening a full design app just to translate a color, you can jump straight to the format you need and keep working.",
+    key: "color",
+    kind: "text",
+    label: "color",
+    metaDescription:
+      "Color tools for HEX, RGB, HSL, and live color picking. Useful for CSS work, design systems, UI handoff, and frontend styling workflows.",
+    relatedCategoryKeys: ["text", "encoding"],
+    relatedTopics: ["design systems", "CSS tokens", "UI handoff", "frontend styling"],
+    route: "/color-tools",
+    slug: "color-tools",
+    title: "Color Conversion Tools",
+    transforms: colorToolPages,
+    useCases: [
+      "Convert color values between design files, browser tools, and CSS code.",
+      "Check HEX and RGB formats while working on themes, tokens, and UI states.",
+      "Translate colors quickly during design handoff and frontend implementation.",
+    ],
+  },
+  {
+    aliases: [
+      "developer tools",
+      "developer utilities",
+      "data conversion tools",
+      "unix timestamp converter",
+      "date to unix",
+      "unix to date",
+      "time zone converter",
+      "markdown to html",
+      "html to markdown",
+      "json to yaml",
+      "yaml to json",
+      "programming tools",
+    ],
+    description:
+      "Tools for converting data formats, units used in programming, and developer utilities.",
+    featuredSlug: featuredDevDataPage?.slug ?? "",
+    featuredStandaloneSlugs: [
+      "unix-timestamp-converter",
+      "date-to-unix",
+      "unix-to-date",
+      "time-zone-converter",
+    ],
+    futureTools: plannedDevToolPages,
+    intro:
+      "Developer workflows often involve small but repetitive conversion tasks that do not fit neatly into a general unit converter. You might need to turn a date into a Unix timestamp for an API, check a timestamp returned by logs, or compare time values across zones while debugging scheduling issues. This hub groups those practical developer and data utilities into one place so you can move faster between raw values and readable output. It is designed for frontend work, backend debugging, data handling, and quick programming tasks where a focused browser tool is often faster than opening a terminal or writing one-off code.",
+    key: "dev-data",
+    kind: "text",
+    label: "dev-data",
+    metaDescription:
+      "Developer and data conversion tools for Unix timestamps, time zones, and related programming utilities.",
+    relatedCategoryKeys: ["encoding", "data", "text"],
+    relatedTopics: ["API debugging", "timestamps", "time zones", "developer workflows"],
+    route: "/developer-tools",
+    slug: "developer-tools",
+    title: "Developer & Data Conversion Tools",
+    transforms: devDataToolPages,
+    useCases: [
+      "Convert Unix timestamps while testing APIs, logs, and webhook payloads.",
+      "Translate local time values between time zones for scheduling, releases, and debugging.",
+      "Handle common developer-side date and data checks without leaving the browser.",
+    ],
+  },
 ];
 
 const categoryConfigByKey = categoryRegistry.reduce(
@@ -253,6 +341,22 @@ const toolConfigBySlug = Object.fromEntries(
 export const homepageConfig: HomePageConfig = {
   exampleQueries: [
     "kg to lbs",
+    "cups to grams",
+    "grams to cups",
+    "teaspoons to grams",
+    "tbsp to ml",
+    "tsp to ml",
+    "hex to rgb",
+    "rgb to hex",
+    "hex to hsl",
+    "hsl to hex",
+    "color picker",
+    "reverse text",
+    "remove line breaks",
+    "remove extra spaces",
+    "word counter",
+    "character counter",
+    "slug generator",
     "base64 encode",
     "base64 decode",
     "url encode",
@@ -260,6 +364,10 @@ export const homepageConfig: HomePageConfig = {
     "json formatter",
     "json minifier",
     "json validator",
+    "markdown to html",
+    "html to markdown",
+    "json to yaml",
+    "yaml to json",
   ],
   featuredConverter: {
     categoryKey: "weight",
@@ -268,18 +376,38 @@ export const homepageConfig: HomePageConfig = {
     value: 75,
   },
   filterCategoryKeys: ["weight", "length", "volume", "data", "text"],
-  hubCategoryKeys: ["weight", "length", "volume", "temperature", "data", "text", "encoding"],
+  hubCategoryKeys: [
+    "weight",
+    "length",
+    "volume",
+    "temperature",
+    "data",
+    "text",
+    "encoding",
+    "color",
+    "dev-data",
+  ],
   popularToolSlugs: [
     buildUnitPairSlug("kg", "lb"),
     buildUnitPairSlug("cm", "inch"),
     buildUnitPairSlug("km", "mile"),
     buildUnitPairSlug("m", "ft"),
     buildUnitPairSlug("l", "gal"),
+    buildUnitPairSlug("tbsp", "ml"),
     buildUnitPairSlug("mb", "gb"),
     buildUnitPairSlug("kb", "mb"),
     "uppercase-converter",
+    "reverse-text",
+    "remove-line-breaks",
+    "remove-extra-spaces",
+    "word-counter",
+    "character-counter",
+    "slug-generator",
     "snake-case-converter",
     "title-case-converter",
+    "markdown-to-html",
+    "yaml-to-json",
+    "json-to-yaml",
   ],
 };
 

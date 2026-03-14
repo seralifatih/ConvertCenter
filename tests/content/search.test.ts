@@ -12,6 +12,11 @@ describe("search ranking", () => {
     expect(results[0]?.entry.entryType).toBe("page");
   });
 
+  it("finds standalone cooking and color tools", () => {
+    expect(findExactSearchMatch(searchEntries, "cups to grams")?.href).toBe("/cups-to-grams");
+    expect(findExactSearchMatch(searchEntries, "hex to rgb")?.href).toBe("/hex-to-rgb");
+  });
+
   it("ranks partial and intent-style matches correctly", () => {
     const results = rankSearchEntries(searchEntries, "kilogram pound");
 
