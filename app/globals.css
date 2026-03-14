@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+:root,
+html[data-theme="dark"] {
+  --page: #0f1115;
+  --card: #171b22;
+  --input: #1d2129;
+  --surface: #222730;
+  --border: #2a2f3a;
+  --border-strong: #363c4a;
+  --text: #e8e9ec;
+  --muted: #9399a5;
+  --muted-strong: #5d6370;
+  --accent: #5dcaa5;
+  --accent-surface: #0d3a2d;
+  --accent-text: #8eecc8;
+  --shadow: 0 28px 100px rgba(3, 5, 10, 0.46);
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  --page: #f5f5f3;
+  --card: #ffffff;
+  --input: #f0f0ee;
+  --surface: #e8e8e5;
+  --border: #d4d4d0;
+  --border-strong: #c0c0bb;
+  --text: #1a1a1a;
+  --muted: #6b6b6b;
+  --muted-strong: #9a9a9a;
+  --accent: #1d9e75;
+  --accent-surface: #e1f5ee;
+  --accent-text: #085041;
+  --shadow: 0 28px 80px rgba(46, 47, 50, 0.08);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-card: var(--card);
+  --color-input: var(--input);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-accent: var(--accent);
+  --color-accent-surface: var(--accent-surface);
+  --color-accent-text: var(--accent-text);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--page);
+  color: var(--text);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, color-mix(in oklab, var(--accent) 12%, transparent) 0%, transparent 34%),
+    linear-gradient(180deg, color-mix(in oklab, var(--page) 94%, var(--surface)) 0%, var(--page) 100%);
+  color: var(--text);
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease,
+    opacity 140ms ease;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 34%, transparent);
+  color: var(--text);
+}
+
+@layer base {
+  a {
+    @apply outline-offset-4;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--page)];
+  }
+}
+
+@layer components {
+  .shell-card {
+    @apply rounded-[26px] border border-[color:var(--border)] bg-[color:var(--card)];
+    box-shadow: var(--shadow);
+  }
+
+  .panel-card {
+    @apply rounded-3xl border border-[color:var(--border)] bg-[color:var(--card)];
+  }
+
+  .input-surface {
+    @apply rounded-2xl border border-[color:var(--border)] bg-[color:var(--input)] text-[color:var(--text)];
+  }
+
+  .utility-chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-[color:var(--border)] bg-transparent px-3 py-1.5 text-[11px] text-[color:var(--muted)] hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-surface)] hover:text-[color:var(--accent-text)];
+  }
+
+  .utility-chip-active {
+    @apply border-transparent bg-[color:var(--accent-surface)] text-[color:var(--accent-text)];
+  }
+
+  .mono-kicker {
+    @apply font-mono text-[10px] uppercase tracking-[0.28em] text-[color:var(--muted-strong)];
+  }
+
+  .section-title {
+    @apply flex items-center gap-3 text-sm font-medium tracking-tight text-[color:var(--text)] sm:text-base;
+  }
+
+  .section-badge {
+    @apply rounded-full bg-[color:var(--accent-surface)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--accent-text)];
+  }
+
+  .link-tile {
+    @apply flex min-h-20 flex-col justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-4 hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-surface)];
+  }
+}
