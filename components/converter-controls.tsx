@@ -48,7 +48,7 @@ export function ConverterSelect<T extends string>({
       aria-label={ariaLabel}
       className={clsx(
         "input-surface min-w-0 w-full text-sm",
-        compact ? "px-3 py-2" : "px-3 py-2.5",
+        compact ? "px-3.5 py-2.5 text-[15px]" : "px-3 py-2.5",
       )}
       id={id}
       onChange={(event) => onChange(event.target.value as T)}
@@ -83,7 +83,7 @@ export function ConverterNumberInput({
       aria-label={ariaLabel}
       className={clsx(
         "input-surface min-w-0 w-full px-3 font-mono font-medium",
-        compact ? "py-2.5 text-[18px]" : "py-3 text-[22px]",
+        compact ? "py-3 text-[20px]" : "py-3 text-[22px]",
       )}
       id={id}
       inputMode="decimal"
@@ -113,8 +113,8 @@ export function ConverterReadout({
     <div
       aria-label={ariaLabel}
       className={clsx(
-        "flex min-w-0 w-full items-end gap-2 overflow-hidden rounded-[16px] border-2 border-[color:var(--accent)] bg-[color:var(--accent-surface)] px-4",
-        compact ? "min-h-[50px] py-2.5" : "min-h-[62px] py-3",
+        "flex min-w-0 w-full items-end gap-2 rounded-[16px] border-2 border-[color:var(--accent)] bg-[color:var(--accent-surface)] px-4",
+        compact ? "min-h-[56px] py-3" : "min-h-[62px] py-3",
         className,
       )}
       id={id}
@@ -122,8 +122,8 @@ export function ConverterReadout({
     >
       <span
         className={clsx(
-          "min-w-0 truncate font-mono font-medium leading-none text-[color:var(--accent)]",
-          compact ? "text-[24px]" : "text-3xl",
+          "min-w-0 flex-1 whitespace-nowrap font-mono font-medium leading-none text-[color:var(--accent)]",
+          compact ? "text-[28px]" : "text-3xl",
         )}
       >
         {value}

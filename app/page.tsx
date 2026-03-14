@@ -53,7 +53,7 @@ export default function Home() {
       />
 
       <section className="homepage-hero shell-card px-5 py-5 sm:px-7 sm:py-6">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(320px,0.74fr)] lg:items-start">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(420px,0.92fr)] lg:items-start">
           <div className="max-w-2xl">
             <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
               <Image
