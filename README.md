@@ -107,10 +107,34 @@ For Cloudflare, keep the deployment simple:
 
 - Build with `npm run build`
 - Use the generated Next.js app with a Cloudflare-compatible Next deployment flow
+- A baseline Wrangler config now exists in `wrangler.jsonc` with `nodejs_compat` enabled
 - Set the production domain in [lib/site.ts](./lib/site.ts) if `https://convertcenter.org` is not the final canonical URL
+
+Recommended command-line flow:
+
+```bash
+npm install
+npm run verify
+npm install -D wrangler
+npx wrangler login
+npx wrangler pages download config <YOUR_PAGES_PROJECT_NAME>
+```
+
+After downloading your Pages config, merge or keep the `compatibility_flags` entry from `wrangler.jsonc`:
+
+```jsonc
+"compatibility_flags": ["nodejs_compat"]
+```
+
+Then deploy:
+
+```bash
+npx wrangler pages deploy
+```
 
 Notes:
 
 - The app is static-first, but it is still a Next.js App Router project rather than a plain exported static site.
 - If you deploy to Cloudflare Pages or Workers, use the platform's current Next.js-compatible adapter/runtime rather than `next export`.
+- The `no nodejs_compat compatibility flag set` error means Cloudflare is running the generated Next adapter output without the required Node compatibility runtime enabled.
 - Canonical URLs, sitemap, robots, and structured data are already wired to the configured site URL.
