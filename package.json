@@ -12,6 +12,7 @@
     "verify": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"

@@ -138,3 +138,4 @@ Notes:
 - If you deploy to Cloudflare Pages or Workers, use the platform's current Next.js-compatible adapter/runtime rather than `next export`.
 - The `no nodejs_compat compatibility flag set` error means Cloudflare is running the generated Next adapter output without the required Node compatibility runtime enabled.
 - Canonical URLs, sitemap, robots, and structured data are already wired to the configured site URL.
+- To enable Cloudflare Web Analytics from the app shell, set `NEXT_PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN` in production. The script is injected from the root layout, so it loads across all pages without blocking initial rendering.

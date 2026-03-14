@@ -37,6 +37,7 @@ export function TextTransformWidget({
         <div className="flex flex-wrap gap-2">
           {modes.map((entry) => (
             <PillButton
+              aria-label={`Switch text transform to ${entry.label}`}
               active={mode === entry.mode}
               className="font-mono"
               key={entry.mode}
@@ -72,12 +73,21 @@ export function TextTransformWidget({
           sample:
         </span>
         {textSampleHelpers.map((item) => (
-          <PillButton className="font-mono" key={item.label} onClick={() => setInput(item.value)}>
+          <PillButton
+            aria-label={`Use sample text ${item.label}`}
+            className="font-mono"
+            key={item.label}
+            onClick={() => setInput(item.value)}
+          >
             {item.label}
           </PillButton>
         ))}
         {activeMode ? (
-          <PillButton className="font-mono" onClick={() => setInput(activeMode.sampleValue)}>
+          <PillButton
+            aria-label={`Use ${activeMode.helperLabel} sample text`}
+            className="font-mono"
+            onClick={() => setInput(activeMode.sampleValue)}
+          >
             use {activeMode.helperLabel}
           </PillButton>
         ) : null}
@@ -109,7 +119,9 @@ export function TextTransformWidget({
       ) : null}
       <div className="mt-4 flex flex-wrap gap-2">
         <CopyButton text={output} />
-        <PillButton onClick={() => setInput("")}>clear</PillButton>
+        <PillButton aria-label="Clear text input" onClick={() => setInput("")}>
+          clear
+        </PillButton>
       </div>
     </section>
   );

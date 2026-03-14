@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useId, useState } from "react";
 import { PillButton } from "@/components/pill";
 
 type SearchEntry = {
@@ -20,8 +19,10 @@ type HomeSearchProps = {
 
 export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
   const router = useRouter();
+  const listboxId = useId();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const deferredQuery = useDeferredValue(query);
   const normalized = deferredQuery.trim().toLowerCase();
   const parts = normalized.split(/\s+/).filter(Boolean);
@@ -51,6 +52,8 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
         .slice(0, 6)
     : [];
   const dropdownIsOpen = isFocused && matches.length > 0;
+  const activeOptionId =
+    dropdownIsOpen && activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined;
 
   function findExactMatch(value: string) {
     const normalizedValue = value.trim().toLowerCase();
@@ -71,10 +74,12 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
 
     setQuery(value);
     setIsFocused(true);
+    setActiveIndex(-1);
   }
 
-  function handleSubmit() {
-    const directMatch = findExactMatch(query) ?? matches[0]?.entry;
+  function handleSubmit(index = activeIndex) {
+    const directMatch =
+      (index >= 0 ? matches[index]?.entry : undefined) ?? findExactMatch(query) ?? matches[0]?.entry;
 
     if (directMatch) {
       router.push(directMatch.href);
@@ -91,36 +96,73 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
           {"\u2315"}
         </span>
         <input
+          aria-activedescendant={activeOptionId}
           aria-label="Search converters"
+          aria-autocomplete="list"
+          aria-controls={dropdownIsOpen ? listboxId : undefined}
+          aria-expanded={dropdownIsOpen}
           autoComplete="off"
           className="input-surface w-full px-11 py-4 text-base placeholder:text-[color:var(--muted-strong)]"
           onBlur={() => {
             window.setTimeout(() => setIsFocused(false), 120);
           }}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setActiveIndex(-1);
+          }}
           onFocus={() => setIsFocused(true)}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
               event.preventDefault();
               handleSubmit();
             }
+
+            if (event.key === "ArrowDown" && matches.length > 0) {
+              event.preventDefault();
+              setIsFocused(true);
+              setActiveIndex((current) => (current + 1) % matches.length);
+            }
+
+            if (event.key === "ArrowUp" && matches.length > 0) {
+              event.preventDefault();
+              setIsFocused(true);
+              setActiveIndex((current) => (current <= 0 ? matches.length - 1 : current - 1));
+            }
+
+            if (event.key === "Escape") {
+              setIsFocused(false);
+              setActiveIndex(-1);
+            }
           }}
           placeholder="Search converters..."
+          role="combobox"
           value={query}
         />
         {dropdownIsOpen ? (
-          <div className="panel-card absolute inset-x-0 top-[calc(100%+0.35rem)] z-10 overflow-hidden">
-            {matches.map(({ entry }) => (
-              <Link
-                className="flex items-center justify-between border-b border-[color:var(--border)] px-4 py-3 text-xs last:border-b-0 hover:bg-[color:var(--input)]"
-                href={entry.href}
+          <div
+            className="panel-card absolute inset-x-0 top-[calc(100%+0.35rem)] z-10 overflow-hidden"
+            id={listboxId}
+            role="listbox"
+          >
+            {matches.map(({ entry }, index) => (
+              <button
+                aria-selected={activeIndex === index}
+                className="flex w-full items-center justify-between border-b border-[color:var(--border)] px-4 py-3 text-left text-xs last:border-b-0 hover:bg-[color:var(--input)]"
+                id={`${listboxId}-option-${index}`}
                 key={entry.href}
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                  router.push(entry.href);
+                }}
+                onMouseEnter={() => setActiveIndex(index)}
+                role="option"
+                type="button"
               >
                 <span className="font-mono text-[color:var(--text)]">{entry.title}</span>
                 <span className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
                   {entry.category}
                 </span>
-              </Link>
+              </button>
             ))}
           </div>
         ) : null}
@@ -130,7 +172,12 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
           try:
         </span>
         {quickSearches.map((item) => (
-          <PillButton className="font-mono" key={item} onClick={() => handleExampleChip(item)}>
+          <PillButton
+            aria-label={`Try search example ${item}`}
+            className="font-mono"
+            key={item}
+            onClick={() => handleExampleChip(item)}
+          >
             {item}
           </PillButton>
         ))}

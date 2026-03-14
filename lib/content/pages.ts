@@ -16,15 +16,21 @@ import {
   type UnitKey,
 } from "@/lib/config/conversion-registry";
 import { transformText, type TextMode } from "@/lib/conversion/text";
-import { convertValue, formatNumber, getUnitFactor, getUnitFormula, units } from "@/lib/conversion/units";
+import { convertValue, formatNumber, getUnitFactor, units } from "@/lib/conversion/units";
 
 export type UnitPageDefinition = {
   aliases: string[];
   category: Exclude<CategoryKey, "text">;
   exampleValue: number;
+  faq: Array<{
+    answer: string;
+    question: string;
+  }>;
   formulaLabel?: string;
   from: UnitKey;
   kind: "unit";
+  longDescription?: string;
+  metaDescription?: string;
   sampleValues: number[];
   slug: string;
   to: UnitKey;
@@ -35,7 +41,12 @@ export type TextPageDefinition = {
   category: "text";
   description: string;
   exampleInput: string;
+  faq: Array<{
+    answer: string;
+    question: string;
+  }>;
   kind: "text";
+  metaDescription?: string;
   mode: TextMode;
   slug: string;
   title: string;
@@ -48,9 +59,12 @@ function adaptUnitPage(page: NumericPairPageSchema): UnitPageDefinition {
     aliases: [...page.aliases],
     category: page.categoryKey,
     exampleValue: page.exampleValue,
+    faq: page.faq ? [...page.faq] : [],
     formulaLabel: page.formulaLabel,
     from: page.fromUnitKey,
     kind: "unit",
+    longDescription: page.longDescription,
+    metaDescription: page.metaDescription,
     sampleValues: [...page.sampleValues],
     slug: page.slug,
     to: page.toUnitKey,
@@ -63,7 +77,9 @@ function adaptTextPage(page: TextTransformPageSchema): TextPageDefinition {
     category: "text",
     description: page.description,
     exampleInput: page.exampleInput,
+    faq: page.faq ? [...page.faq] : [],
     kind: "text",
+    metaDescription: page.metaDescription,
     mode: page.mode,
     slug: page.slug,
     title: page.title,
@@ -125,6 +141,10 @@ export function getUnitPageMetaTitle(page: UnitPageDefinition) {
 }
 
 export function getUnitPageMetaDescription(page: UnitPageDefinition) {
+  if (page.metaDescription) {
+    return page.metaDescription;
+  }
+
   return `Convert ${getUnitPageSearchIntent(page)} instantly with a fast calculator, formula, examples, and reference table.`;
 }
 
@@ -159,22 +179,7 @@ export function getUnitPageExample(page: UnitPageDefinition) {
 }
 
 export function getUnitPageFaqs(page: UnitPageDefinition) {
-  const oneUnit = convertValue(page.from, page.to, 1);
-
-  return [
-    {
-      question: `What is 1 ${units[page.from].shortLabel} in ${units[page.to].shortLabel}?`,
-      answer: `1 ${units[page.from].shortLabel} equals ${formatNumber(oneUnit, 6)} ${units[
-        page.to
-      ].shortLabel}.`,
-    },
-    {
-      question: `What formula does this ${units[page.from].shortLabel} to ${units[
-        page.to
-      ].shortLabel} converter use?`,
-      answer: getUnitFormula(page.from, page.to),
-    },
-  ];
+  return page.faq;
 }
 
 export function getUnitTableRows(page: UnitPageDefinition) {
@@ -218,7 +223,7 @@ export function getTextPageMetaTitle(page: TextPageDefinition) {
 }
 
 export function getTextPageMetaDescription(page: TextPageDefinition) {
-  return page.description;
+  return page.metaDescription ?? page.description;
 }
 
 export function getTextPageOutput(page: TextPageDefinition) {
@@ -226,17 +231,7 @@ export function getTextPageOutput(page: TextPageDefinition) {
 }
 
 export function getTextPageFaqs(page: TextPageDefinition) {
-  return [
-    {
-      question: `What does the ${page.title.toLowerCase()} do?`,
-      answer: page.description,
-    },
-    {
-      question: "Can I switch to other case styles from this page?",
-      answer:
-        "Yes. The widget keeps all supported text styles available while the surrounding copy stays focused on the selected route.",
-    },
-  ];
+  return page.faq;
 }
 
 export function getRelatedTextPages(page: TextPageDefinition) {

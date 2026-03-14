@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { startTransition, useState } from "react";
+import { ConverterErrorBoundary } from "@/components/converter-error-boundary";
 import {
   ConverterField,
   ConverterNumberInput,
@@ -42,7 +43,77 @@ export function UnitConverter({
   const [toUnit, setToUnit] = useState(defaultTo);
   const [rawValue, setRawValue] = useState(String(defaultValue));
 
-  const numericValue = Number(rawValue || 0);
+  function resetConverter() {
+    setFromUnit(defaultFrom);
+    setToUnit(defaultTo);
+    setRawValue(String(defaultValue));
+  }
+
+  return (
+    <ConverterErrorBoundary
+      onReset={resetConverter}
+      resetKeys={[category, fromUnit, toUnit, rawValue, variant]}
+    >
+      <UnitConverterContent
+        category={category}
+        defaultValue={defaultValue}
+        fromUnit={fromUnit}
+        onChangeFromUnit={setFromUnit}
+        onChangeRawValue={setRawValue}
+        onChangeToUnit={setToUnit}
+        rawValue={rawValue}
+        routerPush={router.push.bind(router)}
+        swapHref={swapHref}
+        toUnit={toUnit}
+        variant={variant}
+      />
+    </ConverterErrorBoundary>
+  );
+}
+
+type UnitConverterContentProps = {
+  category: Exclude<CategoryKey, "text">;
+  defaultValue: number;
+  fromUnit: UnitKey;
+  onChangeFromUnit: (value: UnitKey) => void;
+  onChangeRawValue: (value: string) => void;
+  onChangeToUnit: (value: UnitKey) => void;
+  rawValue: string;
+  routerPush: (href: string) => void;
+  swapHref?: string;
+  toUnit: UnitKey;
+  variant: "free" | "pair";
+};
+
+function UnitConverterContent({
+  category,
+  defaultValue,
+  fromUnit,
+  onChangeFromUnit,
+  onChangeRawValue,
+  onChangeToUnit,
+  rawValue,
+  routerPush,
+  swapHref,
+  toUnit,
+  variant,
+}: UnitConverterContentProps) {
+  const fromUnitControlId = `converter-from-unit-${category}-${variant}`;
+  const fromValueControlId = `converter-from-value-${category}-${variant}`;
+  const toUnitControlId = `converter-to-unit-${category}-${variant}`;
+  const toValueControlId = `converter-to-value-${category}-${variant}`;
+  const trimmedValue = rawValue.trim();
+
+  if (!trimmedValue) {
+    throw new Error("Enter a valid number.");
+  }
+
+  const numericValue = Number(trimmedValue);
+
+  if (!Number.isFinite(numericValue)) {
+    throw new Error("Enter a valid number.");
+  }
+
   const result = convertValue(fromUnit, toUnit, numericValue);
   const formulaLine = getUnitReferenceLine(fromUnit, toUnit, variant === "pair" ? "formula" : "auto");
   const selectOptions = categoryUnits[category].map((unit) => ({
@@ -51,58 +122,95 @@ export function UnitConverter({
   }));
 
   function handleSwap() {
+    const nextFromUnit = toUnit;
+    const nextToUnit = fromUnit;
+
+    onChangeFromUnit(nextFromUnit);
+    onChangeToUnit(nextToUnit);
+
     if (variant === "pair" && swapHref) {
-      router.push(swapHref);
+      startTransition(() => {
+        routerPush(swapHref);
+      });
       return;
     }
-
-    setFromUnit(toUnit);
-    setToUnit(fromUnit);
   }
 
   return (
     <section className="shell-card p-4 sm:p-5">
-      <div className="grid gap-3 min-[480px]:grid-cols-[1fr_auto_1fr] min-[480px]:items-end">
-        <ConverterField label="from">
+      <div className="grid gap-3 min-[520px]:grid-cols-[1fr_auto_1fr] min-[520px]:items-end">
+        <ConverterField htmlFor={variant === "free" ? fromUnitControlId : fromValueControlId} label="from">
           {variant === "free" ? (
-            <ConverterSelect onChange={setFromUnit} options={selectOptions} value={fromUnit} />
+            <ConverterSelect
+              ariaLabel="From unit"
+              id={fromUnitControlId}
+              onChange={onChangeFromUnit}
+              options={selectOptions}
+              value={fromUnit}
+            />
           ) : (
-            <div className="input-surface px-3 py-3 text-sm text-[color:var(--text)]">
+            <div
+              aria-label="From unit"
+              className="input-surface px-3 py-3 text-sm text-[color:var(--text)]"
+              id={fromUnitControlId}
+            >
               {units[fromUnit].pluralLabel}
             </div>
           )}
-          <ConverterNumberInput onChange={setRawValue} value={rawValue} />
+          <ConverterNumberInput
+            ariaLabel={`Value in ${units[fromUnit].pluralLabel.toLowerCase()}`}
+            id={fromValueControlId}
+            onChange={onChangeRawValue}
+            value={rawValue}
+          />
         </ConverterField>
 
         <button
           aria-label="Swap units"
-          className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface)] text-lg text-[color:var(--muted)] hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-surface)] hover:text-[color:var(--accent)] min-[480px]:mt-6"
+          className="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--input)] text-xl text-[color:var(--text)] hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-surface)] hover:text-[color:var(--accent)] min-[520px]:mt-7"
           onClick={handleSwap}
           type="button"
         >
           {"\u2194"}
         </button>
 
-        <ConverterField label="to">
+        <ConverterField htmlFor={variant === "free" ? toUnitControlId : toValueControlId} label="to">
           {variant === "free" ? (
-            <ConverterSelect onChange={setToUnit} options={selectOptions} value={toUnit} />
+            <ConverterSelect
+              ariaLabel="To unit"
+              id={toUnitControlId}
+              onChange={onChangeToUnit}
+              options={selectOptions}
+              value={toUnit}
+            />
           ) : (
-            <div className="input-surface px-3 py-3 text-sm text-[color:var(--text)]">
+            <div
+              aria-label="To unit"
+              className="input-surface px-3 py-3 text-sm text-[color:var(--text)]"
+              id={toUnitControlId}
+            >
               {units[toUnit].pluralLabel}
             </div>
           )}
           <ConverterReadout
+            ariaLabel={`Converted value in ${units[toUnit].pluralLabel.toLowerCase()}`}
+            id={toValueControlId}
             unit={units[toUnit].shortLabel}
             value={formatNumber(result, category === "data" ? 6 : 4)}
           />
         </ConverterField>
       </div>
 
-      <div className="mt-3 flex flex-col gap-3 rounded-[14px] bg-[color:var(--surface)] px-4 py-3 text-sm text-[color:var(--muted)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-3 flex flex-col gap-3 border-t border-[color:var(--border)] pt-3 text-sm text-[color:var(--muted)] sm:flex-row sm:items-center sm:justify-between">
         <span className="font-mono text-xs">{formulaLine}</span>
         <div className="flex flex-wrap gap-2">
           <CopyButton text={formatNumber(result, category === "data" ? 6 : 4)} />
-          <PillButton onClick={() => setRawValue("")}>clear</PillButton>
+          <PillButton
+            aria-label="Clear converter value"
+            onClick={() => onChangeRawValue(String(defaultValue))}
+          >
+            clear
+          </PillButton>
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { cx } from "@/lib/cx";
+import clsx from "clsx";
 
 export function PageContainer({
   children,
@@ -7,5 +7,5 @@ export function PageContainer({
   children: React.ReactNode;
   className?: string;
 }>) {
-  return <div className={cx("mx-auto w-full max-w-[1060px]", className)}>{children}</div>;
+  return <div className={clsx("mx-auto w-full max-w-[1060px]", className)}>{children}</div>;
 }

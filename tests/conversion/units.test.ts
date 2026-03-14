@@ -31,12 +31,28 @@ describe("unit conversions", () => {
     expect(convertValue("l", "gal", 3)).toBeCloseTo(0.7925, 4);
   });
 
+  it("converts feet to centimeters", () => {
+    expect(convertValue("ft", "cm", 6)).toBeCloseTo(182.88, 2);
+  });
+
+  it("converts fluid ounces to milliliters", () => {
+    expect(convertValue("floz", "ml", 8)).toBeCloseTo(236.5882, 4);
+  });
+
+  it("converts fahrenheit to kelvin", () => {
+    expect(convertValue("f", "k", 72)).toBeCloseTo(295.3722, 4);
+  });
+
   it("converts kilobytes to megabytes", () => {
     expect(convertValue("kb", "mb", 2048)).toBe(2);
   });
 
   it("converts terabytes to gigabytes", () => {
     expect(convertValue("tb", "gb", 2)).toBe(2048);
+  });
+
+  it("converts megabytes to kilobytes", () => {
+    expect(convertValue("mb", "kb", 2)).toBe(2048);
   });
 
   it("returns custom formulas for temperature pairs", () => {

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import Script from "next/script";
+import appleTouchIcon from "@/app/assets/apple-touch-icon.png";
+import faviconIco from "@/app/assets/favicon.ico";
 import "./globals.css";
 import { AppFooter } from "@/components/app-footer";
 import { SiteNav } from "@/components/site-nav";
@@ -21,6 +24,11 @@ export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
+  },
+  icons: {
+    icon: faviconIco.src,
+    shortcut: faviconIco.src,
+    apple: appleTouchIcon.src,
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
@@ -48,6 +56,10 @@ const themeScript = `
 })();
 `;
 
+const cloudflareAnalyticsToken = process.env.NEXT_PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN;
+const shouldLoadCloudflareAnalytics =
+  process.env.NODE_ENV === "production" && Boolean(cloudflareAnalyticsToken);
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -66,6 +78,16 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <AppFooter />
         </div>
+        {shouldLoadCloudflareAnalytics ? (
+          <Script
+            data-cf-beacon={JSON.stringify({
+              token: cloudflareAnalyticsToken,
+            })}
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+          />
+        ) : null}
       </body>
     </html>
   );

@@ -81,20 +81,24 @@ export function SiteNav() {
             );
           })}
           <button
-            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            aria-label={`Activate ${theme === "dark" ? "light" : "dark"} theme`}
+            aria-pressed={theme === "light"}
             className="ml-1 flex items-center gap-1.5 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--input)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--muted-strong)]"
             onClick={toggleTheme}
             type="button"
           >
-            <span>light</span>
-            <span className="relative inline-flex h-[18px] w-8 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface)]">
+            <span aria-hidden="true">light</span>
+            <span
+              aria-hidden="true"
+              className="relative inline-flex h-[18px] w-8 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface)]"
+            >
               <span
                 className={`absolute top-[2px] h-[12px] w-[12px] rounded-full bg-[color:var(--accent)] transition-transform ${
                   theme === "dark" ? "translate-x-[16px]" : "translate-x-[2px]"
                 }`}
               />
             </span>
-            <span>dark</span>
+            <span aria-hidden="true">dark</span>
           </button>
         </div>
       </div>

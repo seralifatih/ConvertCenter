@@ -1,4 +1,4 @@
-import { cx } from "@/lib/cx";
+import clsx from "clsx";
 
 export function UtilityCard({
   children,
@@ -10,7 +10,7 @@ export function UtilityCard({
 }> &
   React.HTMLAttributes<HTMLElement>) {
   return (
-    <section className={cx("panel-card p-5 sm:p-6", className)} {...props}>
+    <section className={clsx("panel-card p-4 sm:p-5", className)} {...props}>
       {children}
     </section>
   );

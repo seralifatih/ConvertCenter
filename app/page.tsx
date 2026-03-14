@@ -1,11 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import faviconIco from "@/app/assets/favicon.ico";
 import { HomeSearch } from "@/components/home-search";
 import { HomeUniversalConverter } from "@/components/home-universal-converter";
 import { PageContainer } from "@/components/page-container";
 import { PillLink } from "@/components/pill";
 import { StructuredData } from "@/components/structured-data";
-import { UtilityCard } from "@/components/utility-card";
 import {
   browseCategories,
   homePopularSlugs,
@@ -21,7 +22,7 @@ import {
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Convert anything instantly",
+  title: "Unit Converter, Text Case Converter & Data Size Calculator",
   description:
     "Universal conversion hub for units, text case, data sizes, and lightweight developer-friendly transforms with fast static pages and clean converter widgets.",
   path: "/",
@@ -51,14 +52,25 @@ export default function Home() {
 
       <section className="shell-card px-5 py-6 text-center sm:px-8 sm:py-8">
         <div className="mx-auto max-w-3xl">
+          <div className="mb-4 flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
+            <Image
+              alt=""
+              aria-hidden="true"
+              className="h-5 w-5 rounded-[6px]"
+              height={20}
+              src={faviconIco}
+              width={20}
+            />
+            <span>convertcenter</span>
+          </div>
           <h1 className="text-4xl font-medium tracking-[-0.05em] sm:text-[58px]">
             Convert anything, instantly
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
-            Units, text, data. Paste, convert, copy. No sign-up.
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
+            Units, text, data. Paste, convert, copy.
           </p>
         </div>
-        <div className="mx-auto mt-5 max-w-4xl text-left">
+        <div className="mx-auto mt-4 max-w-4xl text-left">
           <HomeSearch
             quickSearches={homeQuickSearches}
             searchEntries={getSearchEntries()}
@@ -78,8 +90,8 @@ export default function Home() {
         ))}
       </div>
 
-      <UtilityCard id="popular">
-        <div className="mb-4 flex items-center gap-3">
+      <section className="space-y-4" id="popular">
+        <div className="flex items-center gap-3">
           <h2 className="section-title">Popular conversions</h2>
           <span className="section-badge">{launchPages.length} pages</span>
         </div>
@@ -103,10 +115,10 @@ export default function Home() {
             );
           })}
         </div>
-      </UtilityCard>
+      </section>
 
-      <UtilityCard id="category-hubs">
-        <div className="mb-4 flex items-center gap-3">
+      <section className="space-y-4" id="category-hubs">
+        <div className="flex items-center gap-3">
           <h2 className="section-title">Category hubs</h2>
           <span className="section-badge">{browseCategories.length} hubs</span>
         </div>
@@ -122,7 +134,7 @@ export default function Home() {
             </Link>
           ))}
         </div>
-      </UtilityCard>
+      </section>
     </PageContainer>
   );
 }

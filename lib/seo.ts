@@ -6,6 +6,7 @@ type BuildMetadataInput = {
   description: string;
   path: string;
   keywords?: string[];
+  imagePath?: string;
 };
 
 export function buildMetadata({
@@ -13,8 +14,10 @@ export function buildMetadata({
   description,
   path,
   keywords,
+  imagePath,
 }: BuildMetadataInput): Metadata {
   const url = `${siteConfig.url}${path}`;
+  const imageUrl = imagePath ? `${siteConfig.url}${imagePath}` : undefined;
 
   return {
     title,
@@ -26,6 +29,7 @@ export function buildMetadata({
     openGraph: {
       title,
       description,
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630, alt: title }] : undefined,
       url,
       siteName: siteConfig.name,
       type: "website",
@@ -34,6 +38,7 @@ export function buildMetadata({
       card: "summary_large_image",
       title,
       description,
+      images: imageUrl ? [imageUrl] : undefined,
     },
   };
 }

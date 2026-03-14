@@ -30,7 +30,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
           { name: page.title, path: getPageHref(page) },
         ])}
       />
-      <StructuredData data={makeFaqSchema(faqs)} />
+      {faqs.length ? <StructuredData data={makeFaqSchema(faqs)} /> : null}
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">
@@ -98,14 +98,16 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
           {modeOption ? (
             <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">{modeOption.description}</p>
           ) : null}
-          <div className="mt-4 space-y-4">
-            {faqs.map((item) => (
-              <div key={item.question}>
-                <h3 className="text-sm font-medium text-[color:var(--text)]">{item.question}</h3>
-                <p className="mt-1 text-sm leading-7 text-[color:var(--muted)]">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          {faqs.length ? (
+            <div className="mt-4 space-y-4">
+              {faqs.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-sm font-medium text-[color:var(--text)]">{item.question}</h3>
+                  <p className="mt-1 text-sm leading-7 text-[color:var(--muted)]">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </UtilityCard>
       </section>
 

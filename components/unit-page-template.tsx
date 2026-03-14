@@ -20,6 +20,36 @@ import {
 import { getUnitFormula, units } from "@/lib/conversion/units";
 import { makeBreadcrumbSchema, makeFaqSchema } from "@/lib/seo";
 
+function renderLongDescription(content: string) {
+  return content
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("<!--"))
+    .map((line, index) => {
+      if (line.startsWith("## ")) {
+        return (
+          <h2 className="section-title text-base sm:text-lg" key={`${line}-${index}`}>
+            {line.replace("## ", "")}
+          </h2>
+        );
+      }
+
+      if (line.startsWith("### ")) {
+        return (
+          <h3 className="text-sm font-medium text-[color:var(--text)] sm:text-base" key={`${line}-${index}`}>
+            {line.replace("### ", "")}
+          </h3>
+        );
+      }
+
+      return (
+        <p className="text-sm leading-7 text-[color:var(--muted)]" key={`${line}-${index}`}>
+          {line}
+        </p>
+      );
+    });
+}
+
 export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
   const category = getBrowseCategory(page.category);
   const faqs = getUnitPageFaqs(page);
@@ -36,7 +66,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
           { name: getUnitPageTitle(page), path: getPageHref(page) },
         ])}
       />
-      <StructuredData data={makeFaqSchema(faqs)} />
+      {faqs.length ? <StructuredData data={makeFaqSchema(faqs)} /> : null}
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">
@@ -67,6 +97,12 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
         swapHref={reverseSlug ? `/${reverseSlug}` : undefined}
         variant="pair"
       />
+
+      {page.longDescription ? (
+        <UtilityCard>
+          <div className="space-y-4">{renderLongDescription(page.longDescription)}</div>
+        </UtilityCard>
+      ) : null}
 
       <section className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <UtilityCard>
@@ -150,14 +186,16 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
           <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
             {getUnitPageIntro(page)}
           </p>
-          <div className="mt-5 space-y-4">
-            {faqs.map((item) => (
-              <div key={item.question}>
-                <h3 className="text-sm font-medium text-[color:var(--text)]">{item.question}</h3>
-                <p className="mt-1 text-sm leading-7 text-[color:var(--muted)]">{item.answer}</p>
-              </div>
-            ))}
-          </div>
+          {faqs.length ? (
+            <div className="mt-5 space-y-4">
+              {faqs.map((item) => (
+                <div key={item.question}>
+                  <h3 className="text-sm font-medium text-[color:var(--text)]">{item.question}</h3>
+                  <p className="mt-1 text-sm leading-7 text-[color:var(--muted)]">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </UtilityCard>
       </section>
 
