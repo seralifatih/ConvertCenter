@@ -29,14 +29,19 @@ export function formatConverterOutput(category: NumericCategoryKey, value: numbe
 }
 
 export function SwapButton({
+  compact = false,
   onClick,
 }: Readonly<{
+  compact?: boolean;
   onClick: () => void;
 }>) {
   return (
     <button
       aria-label="Swap units"
-      className="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--input)] text-xl text-[color:var(--text)] hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-surface)] hover:text-[color:var(--accent)] min-[520px]:mt-7"
+      className={clsx(
+        "mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-strong)] bg-[color:var(--input)] text-xl text-[color:var(--text)] hover:border-[color:var(--accent)] hover:bg-[color:var(--accent-surface)] hover:text-[color:var(--accent)]",
+        compact ? "min-[720px]:mt-6" : "min-[520px]:mt-7",
+      )}
       onClick={onClick}
       type="button"
     >

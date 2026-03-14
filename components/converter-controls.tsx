@@ -12,7 +12,7 @@ export function ConverterField({
   label: string;
 }>) {
   return (
-    <div className={clsx("flex flex-col", compact ? "gap-1.5" : "gap-2")}>
+    <div className={clsx("flex min-w-0 flex-col", compact ? "gap-1.5" : "gap-2")}>
       <label className="mono-kicker" htmlFor={htmlFor}>
         {label}
       </label>
@@ -46,7 +46,10 @@ export function ConverterSelect<T extends string>({
   return (
     <select
       aria-label={ariaLabel}
-      className={clsx("input-surface text-sm", compact ? "px-3 py-2" : "px-3 py-2.5")}
+      className={clsx(
+        "input-surface min-w-0 w-full text-sm",
+        compact ? "px-3 py-2" : "px-3 py-2.5",
+      )}
       id={id}
       onChange={(event) => onChange(event.target.value as T)}
       value={value}
@@ -79,7 +82,7 @@ export function ConverterNumberInput({
     <input
       aria-label={ariaLabel}
       className={clsx(
-        "input-surface px-3 font-mono font-medium",
+        "input-surface min-w-0 w-full px-3 font-mono font-medium",
         compact ? "py-2.5 text-[18px]" : "py-3 text-[22px]",
       )}
       id={id}
@@ -110,7 +113,7 @@ export function ConverterReadout({
     <div
       aria-label={ariaLabel}
       className={clsx(
-        "flex items-end gap-2 rounded-[16px] border-2 border-[color:var(--accent)] bg-[color:var(--accent-surface)] px-4",
+        "flex min-w-0 w-full items-end gap-2 overflow-hidden rounded-[16px] border-2 border-[color:var(--accent)] bg-[color:var(--accent-surface)] px-4",
         compact ? "min-h-[50px] py-2.5" : "min-h-[62px] py-3",
         className,
       )}
@@ -119,13 +122,18 @@ export function ConverterReadout({
     >
       <span
         className={clsx(
-          "font-mono font-medium leading-none text-[color:var(--accent)]",
+          "min-w-0 truncate font-mono font-medium leading-none text-[color:var(--accent)]",
           compact ? "text-[24px]" : "text-3xl",
         )}
       >
         {value}
       </span>
-      <span className={clsx("font-mono text-[color:var(--accent-text)]/90", compact ? "pb-0.5 text-xs" : "pb-1 text-sm")}>
+      <span
+        className={clsx(
+          "shrink-0 font-mono text-[color:var(--accent-text)]/90",
+          compact ? "pb-0.5 text-xs" : "pb-1 text-sm",
+        )}
+      >
         {unit}
       </span>
     </div>

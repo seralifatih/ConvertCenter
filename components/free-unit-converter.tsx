@@ -127,7 +127,10 @@ function FreeUnitConverterContent({
     <section className={clsx("shell-card", compact ? "p-3.5 sm:p-4" : "p-4 sm:p-5")}>
       <div
         className={clsx(
-          "grid min-[520px]:grid-cols-[1fr_auto_1fr] min-[520px]:items-end",
+          "grid min-w-0",
+          compact
+            ? "min-[720px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[720px]:items-end"
+            : "min-[520px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[520px]:items-end",
           compact ? "gap-2.5" : "gap-3",
         )}
       >
@@ -141,7 +144,7 @@ function FreeUnitConverterContent({
           onChangeRawValue={onChangeRawValue}
           rawValue={rawValue}
         />
-        <SwapButton onClick={handleSwap} />
+        <SwapButton compact={compact} onClick={handleSwap} />
         <FreeToField
           category={category}
           compact={compact}
