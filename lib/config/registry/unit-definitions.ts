@@ -122,8 +122,9 @@ export const volumeUnits = [
     "millilitre",
     "millilitres",
   ]),
-  defineLinearUnit("floz", "Fluid Ounce", "Fluid Ounces", "oz", "oz", 29.5735295625, [
+  defineLinearUnit("floz", "Fluid Ounce", "Fluid Ounces", "fl oz", "floz", 29.5735295625, [
     "oz",
+    "floz",
     "fluid ounce",
     "fluid ounces",
     "fl oz",

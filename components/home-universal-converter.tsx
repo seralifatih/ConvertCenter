@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { FreeUnitConverter } from "@/components/free-unit-converter";
 import { PillButton } from "@/components/pill";
-import { UnitConverter } from "@/components/unit-converter";
 import {
   getCategoryConfig,
   homepageConfig,
@@ -29,12 +29,11 @@ export function HomeUniversalConverter() {
 
   return (
     <div className="space-y-3">
-      <UnitConverter
+      <FreeUnitConverter
         category={featuredPage.category}
         defaultFrom={featuredPage.from}
         defaultTo={featuredPage.to}
         defaultValue={featuredPage.exampleValue}
-        key={featuredPage.slug}
       />
       <div className="flex flex-wrap gap-2">
         {numericHomeCategories.map((categoryKey) => {

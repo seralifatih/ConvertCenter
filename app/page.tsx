@@ -14,17 +14,17 @@ import {
 } from "@/lib/content/categories";
 import {
   getLaunchPage,
+  getLaunchPageCount,
   getLaunchPageLabel,
   getPageHref,
   getSearchEntries,
-  launchPages,
 } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
   title: "Unit Converter, Text Case Converter & Data Size Calculator",
   description:
-    "Universal conversion hub for units, text case, data sizes, and lightweight developer-friendly transforms with fast static pages and clean converter widgets.",
+    "Free online converter for units, text case, and data sizes. Convert kg to lbs, cm to inches, MB to GB, and more — instantly, no sign-up needed.",
   path: "/",
   keywords: [
     "convert anything instantly",
@@ -37,6 +37,8 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function Home() {
+  const launchPageTotal = getLaunchPageCount();
+
   return (
     <PageContainer className="space-y-5 pb-4">
       <StructuredData
@@ -93,7 +95,7 @@ export default function Home() {
       <section className="space-y-4" id="popular">
         <div className="flex items-center gap-3">
           <h2 className="section-title">Popular conversions</h2>
-          <span className="section-badge">{launchPages.length} pages</span>
+          <span className="section-badge">{launchPageTotal} pages</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {homePopularSlugs.map((slug) => {

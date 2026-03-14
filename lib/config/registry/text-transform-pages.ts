@@ -1,5 +1,59 @@
 import type { DevToolPageSchema } from "./conversion-types";
-import { defineTextTransformPage } from "./registry-helpers";
+import {
+  defineContentSection,
+  defineFaq,
+  defineFaqs,
+  defineStructuredContent,
+  defineTextTransformPage,
+} from "./registry-helpers";
+
+const uppercaseLongDescription = defineStructuredContent(
+  "About converting text to uppercase",
+  defineContentSection("What uppercase conversion actually does", [
+    'Uppercase conversion changes every alphabetical character in your text to its capital form. The content itself does not become shorter or more complex, but the tone changes immediately. A plain sentence like "system maintenance starts at midnight" becomes "SYSTEM MAINTENANCE STARTS AT MIDNIGHT." That makes the text feel stronger, louder, and more visible at a glance.',
+  ]),
+  defineContentSection("Where uppercase is genuinely useful", [
+    "This transformation is useful when you need emphasis, consistency, or quick cleanup. Teams often use uppercase for short labels, status chips, button copy, warning text, navigation elements, and spreadsheet headers. It is also common in design systems where interface tokens or category labels need a uniform visual style. Instead of retyping a phrase manually, an uppercase converter lets you paste the source text and get a ready-to-use version instantly.",
+  ]),
+  defineContentSection("A few practical examples", [
+    'If you start with "new feature available now," the uppercase result becomes "NEW FEATURE AVAILABLE NOW." A label such as "shipping status" turns into "SHIPPING STATUS." Even small UI strings like "save draft" can be converted into "SAVE DRAFT" when a design calls for that presentation. The change is simple, but it saves time when you are working through many labels or updating content in bulk.',
+  ]),
+  defineContentSection("Things to keep in mind", [
+    "Uppercase is best for short text. It works well for headings, calls to action, and interface elements, but it can hurt readability in long paragraphs. That is why this tool is most helpful when you need fast formatting for compact pieces of copy rather than full documents.",
+  ]),
+);
+
+const titleCaseLongDescription = defineStructuredContent(
+  "About converting text to title case",
+  defineContentSection("Why title case is a presentation tool, not just a style trick", [
+    'Title case capitalizes the important words in a phrase so the result looks polished and intentional. It is commonly used for article titles, cards, navigation labels, presentation headings, and product names. If you paste in "how to improve api response times," the output becomes "How To Improve Api Response Times" in this tool\'s straightforward title-case style.',
+  ]),
+  defineContentSection("When title case helps most", [
+    "This converter is useful when draft copy comes from inconsistent sources. Maybe a headline was written in all lowercase, maybe it came out of a spreadsheet, or maybe multiple teammates formatted titles differently. Title case gives you a fast cleanup step before publishing. It is especially handy for CMS work, marketing pages, internal dashboards, and content libraries where headings need to look consistent across dozens of entries.",
+  ]),
+  defineContentSection("Examples and practical use", [
+    'A card title like "customer onboarding checklist" becomes "Customer Onboarding Checklist." A knowledge base entry such as "resetting your account password" turns into "Resetting Your Account Password." Even internal labels like "monthly sales summary" become easier to scan once they are normalized into a heading-style format.',
+  ]),
+  defineContentSection("Why people use a converter instead of editing by hand", [
+    "Manually capitalizing title text is easy once or twice, but error-prone when you are working through a long list. A converter is faster, more consistent, and better for repetitive formatting tasks. It helps editors, marketers, and product teams standardize headings without slowing down the rest of the workflow.",
+  ]),
+);
+
+const snakeCaseLongDescription = defineStructuredContent(
+  "About converting text to snake_case",
+  defineContentSection("Built for identifiers, not prose", [
+    'snake_case is a text format where words are lowercase and joined with underscores. Instead of spaces or punctuation, the underscore acts as the separator: "Customer account status" becomes "customer_account_status". This pattern is common in backend systems, database columns, environment variables, analytics keys, and configuration files where readable but machine-friendly naming matters.',
+  ]),
+  defineContentSection("Why developers reach for snake_case", [
+    "The main advantage of snake_case is clarity. It is easy to read, easy to diff, and works well in places where spaces are not allowed. Some teams prefer it for schema fields and SQL columns because the word boundaries stay visible even in longer names. Compared with camelCase, it can feel more explicit. Compared with kebab-case, it avoids the hyphen characters that may conflict with certain parsers, flags, or code conventions.",
+  ]),
+  defineContentSection("Example transformations", [
+    'Take the phrase "User Profile Image" and convert it to "user_profile_image". A label like "order total amount" becomes "order_total_amount". Even mixed strings such as "customer-account status history" can be normalized into a clean snake_case identifier. That makes the tool useful when source text comes from documentation, spreadsheets, ticket titles, or UI copy rather than from code.',
+  ]),
+  defineContentSection("When this tool is useful", [
+    "This converter is most useful during API design, database work, event naming, and content migration. It saves time when you need to turn human-readable phrases into consistent field names without manually replacing every space and capitalization pattern. For repetitive developer workflows, that small speed gain adds up quickly.",
+  ]),
+);
 
 export const textTransformPages = [
   defineTextTransformPage(
@@ -8,7 +62,25 @@ export const textTransformPages = [
     "Uppercase converter",
     "Convert pasted text to uppercase instantly and copy the result with one click.",
     "The quick brown fox jumps over the lazy dog.",
-    { featured: true, popular: true },
+    {
+      faq: defineFaqs(
+        defineFaq(
+          "When should I use uppercase instead of title case?",
+          "Uppercase works best for short labels, alerts, buttons, and headings that need strong emphasis. Title case is usually better for polished editorial headings.",
+        ),
+        defineFaq(
+          "Will an uppercase converter change numbers or punctuation?",
+          "No. It only changes alphabetic characters to capital letters, so numbers, symbols, and punctuation stay the same.",
+        ),
+        defineFaq(
+          "Why does uppercase text feel harder to read in long paragraphs?",
+          "All-caps text removes the usual word shapes readers rely on, so it is fine for short UI strings but tiring for longer blocks of content.",
+        ),
+      ),
+      featured: true,
+      longDescription: uppercaseLongDescription,
+      popular: true,
+    },
   ),
   defineTextTransformPage(
     "lowercase-converter",
@@ -23,7 +95,24 @@ export const textTransformPages = [
     "Title case converter",
     "Turn messy text into polished title case for headings, cards, and content blocks.",
     "the quick brown fox jumps over the lazy dog",
-    { popular: true },
+    {
+      faq: defineFaqs(
+        defineFaq(
+          "What kinds of text are usually converted to title case?",
+          "Title case is commonly used for article titles, page headings, cards, presentation slides, and product names that need a cleaner display style.",
+        ),
+        defineFaq(
+          "Does title case follow every editorial style guide?",
+          "Not necessarily. Different style guides treat small words differently, so this converter is best for fast cleanup rather than strict publication-specific rules.",
+        ),
+        defineFaq(
+          "Why use a title case converter instead of fixing capitalization by hand?",
+          "It is faster and more consistent, especially when you are formatting many headings from spreadsheets, CMS exports, or rough draft copy.",
+        ),
+      ),
+      longDescription: titleCaseLongDescription,
+      popular: true,
+    },
   ),
   defineTextTransformPage(
     "sentence-case-converter",
@@ -45,7 +134,24 @@ export const textTransformPages = [
     "snake_case converter",
     "Create snake_case output for backend fields, constants, and migration work.",
     "The quick brown fox jumps over the lazy dog",
-    { popular: true },
+    {
+      faq: defineFaqs(
+        defineFaq(
+          "Where is snake_case commonly used?",
+          "It is common in database columns, API fields, analytics event names, config keys, and backend codebases that prefer readable identifiers with underscores.",
+        ),
+        defineFaq(
+          "How is snake_case different from camelCase?",
+          "snake_case uses lowercase words separated by underscores, while camelCase removes separators and capitalizes each word after the first.",
+        ),
+        defineFaq(
+          "Can this tool clean up text that already includes dashes or mixed capitalization?",
+          "Yes. It normalizes mixed separators and casing patterns into a consistent lowercase snake_case result.",
+        ),
+      ),
+      longDescription: snakeCaseLongDescription,
+      popular: true,
+    },
   ),
   defineTextTransformPage(
     "kebab-case-converter",
@@ -53,6 +159,160 @@ export const textTransformPages = [
     "kebab-case converter",
     "Convert strings to kebab-case for URLs, slugs, and CSS-friendly identifiers.",
     "The quick brown fox jumps over the lazy dog",
+  ),
+  defineTextTransformPage(
+    "base64-encode",
+    "base64Encode",
+    "Base64 Encoder \u2013 Encode text to Base64",
+    "Encode text to Base64 instantly with this free online Base64 encoder. Works entirely in your browser.",
+    "ConvertCenter Base64 example",
+    {
+      actionLabel: "encode",
+      aliases: [
+        "base64 encode",
+        "base64 encoder",
+        "encode text to base64",
+        "plain text to base64",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Encode text to Base64 instantly with this free online Base64 encoder. Works entirely in your browser.",
+      popular: true,
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "base64-decode",
+    "base64Decode",
+    "Base64 Decoder \u2013 Decode Base64 strings",
+    "Decode Base64 strings instantly with this free online Base64 decoder.",
+    "Q29udmVydENlbnRlciBCYXNlNjQgZXhhbXBsZQ==",
+    {
+      actionLabel: "decode",
+      aliases: [
+        "base64 decode",
+        "base64 decoder",
+        "decode base64",
+        "base64 to text",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Decode Base64 strings instantly with this free online Base64 decoder.",
+      popular: true,
+      relatedSlugs: ["base64-encode"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "url-encode",
+    "urlEncode",
+    "URL Encoder \u2013 Encode URLs and query parameters",
+    "Encode URLs safely for query strings, APIs, and web applications using this free URL encoder.",
+    "https://convertcenter.org/search?q=kg to lbs&source=app",
+    {
+      actionLabel: "encode",
+      aliases: [
+        "url encode",
+        "url encoder",
+        "encode url",
+        "encode query parameters",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Encode URLs safely for query strings, APIs, and web applications using this free URL encoder.",
+      popular: true,
+      relatedSlugs: ["base64-encode", "base64-decode"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "url-decode",
+    "urlDecode",
+    "URL Decoder \u2013 Decode percent-encoded URLs",
+    "Decode URL encoded strings instantly. Convert percent-encoded text back into readable URLs.",
+    "https%3A%2F%2Fconvertcenter.org%2Fsearch%3Fq%3Dkg%2520to%2520lbs%26source%3Dapp",
+    {
+      actionLabel: "decode",
+      aliases: [
+        "url decode",
+        "url decoder",
+        "decode url",
+        "decode percent encoded url",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Decode URL encoded strings instantly. Convert percent-encoded text back into readable URLs.",
+      popular: true,
+      relatedSlugs: ["url-encode", "base64-decode"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "json-formatter",
+    "jsonFormat",
+    "JSON Formatter \u2013 Format and validate JSON",
+    "Format, beautify, and validate JSON instantly with this free JSON formatter.",
+    '{"site":"ConvertCenter","tools":["base64","url","json"],"active":true}',
+    {
+      actionLabel: "format",
+      aliases: [
+        "json formatter",
+        "format json",
+        "validate json",
+        "pretty print json",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Format, beautify, and validate JSON instantly with this free JSON formatter.",
+      popular: true,
+      relatedSlugs: ["url-encode", "url-decode"],
+      secondaryActionLabel: "minify",
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "json-minifier",
+    "jsonMinify",
+    "JSON Minifier \u2013 Compress JSON instantly",
+    "Minify JSON by removing whitespace and formatting. Useful for APIs and production data.",
+    '{\n  "site": "ConvertCenter",\n  "tools": ["base64", "url", "json"],\n  "active": true\n}',
+    {
+      actionLabel: "minify",
+      aliases: [
+        "json minifier",
+        "minify json",
+        "compress json",
+        "json compressor",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Minify JSON by removing whitespace and formatting. Useful for APIs and production data.",
+      popular: true,
+      relatedSlugs: ["json-formatter"],
+      showCharacterCount: true,
+    },
+  ),
+  defineTextTransformPage(
+    "json-validator",
+    "jsonValidate",
+    "JSON Validator \u2013 Check if JSON is valid",
+    "Validate JSON syntax instantly with this free online JSON validator.",
+    '{"site":"ConvertCenter","tools":["base64","url","json"],"active":true}',
+    {
+      aliases: [
+        "json validator",
+        "validate json",
+        "check json syntax",
+        "json syntax checker",
+      ],
+      categoryKey: "encoding",
+      metaDescription:
+        "Validate JSON syntax instantly with this free online JSON validator.",
+      outputStyle: "panel",
+      popular: true,
+      relatedSlugs: ["json-formatter", "json-minifier"],
+      showCharacterCount: true,
+    },
   ),
 ] as const;
 

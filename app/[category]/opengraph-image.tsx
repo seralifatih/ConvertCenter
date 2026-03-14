@@ -20,7 +20,7 @@ type OpenGraphImageProps = {
   }>;
 };
 
-function getImageCopy(slugOrCategory: string) {
+export function getImageCopy(slugOrCategory: string) {
   const browseCategory = getBrowseCategory(`/${slugOrCategory}`);
 
   if (browseCategory) {

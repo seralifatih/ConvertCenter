@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CopyButton } from "@/components/copy-button";
 import { PillButton } from "@/components/pill";
 import {
@@ -13,23 +13,40 @@ import {
 } from "@/lib/conversion/text";
 
 type TextTransformWidgetProps = {
+  actionLabel?: string;
+  allowedModes?: readonly TextMode[];
   defaultMode: TextMode;
   defaultValue: string;
+  showCharacterCount?: boolean;
 };
 
 export function TextTransformWidget({
+  actionLabel,
+  allowedModes,
   defaultMode,
   defaultValue,
+  showCharacterCount = false,
 }: TextTransformWidgetProps) {
   const [mode, setMode] = useState<TextMode>(defaultMode);
   const [input, setInput] = useState(defaultValue);
-
-  const output = transformText(mode, input);
+  const [output, setOutput] = useState(() => transformText(defaultMode, defaultValue));
   const activeMode = getTextModeOption(mode);
+  const availableModes =
+    allowedModes?.length
+      ? textModeOptions.filter((option) => allowedModes.includes(option.mode))
+      : textModeOptions;
+
+  useEffect(() => {
+    setOutput(transformText(mode, input));
+  }, [input, mode]);
+
+  function applyTransform(nextMode = mode, nextInput = input) {
+    setOutput(transformText(nextMode, nextInput));
+  }
 
   function renderModeGroup(
     label: string,
-    modes: ReadonlyArray<(typeof textModeOptions)[number]>,
+    modes: ReadonlyArray<(typeof availableModes)[number]>,
   ) {
     return (
       <div>
@@ -41,7 +58,10 @@ export function TextTransformWidget({
               active={mode === entry.mode}
               className="font-mono"
               key={entry.mode}
-              onClick={() => setMode(entry.mode)}
+              onClick={() => {
+                setMode(entry.mode);
+                applyTransform(entry.mode, input);
+              }}
             >
               {entry.label}
             </PillButton>
@@ -64,10 +84,19 @@ export function TextTransformWidget({
       <textarea
         id="text-transform-input"
         className="input-surface min-h-28 w-full resize-y px-3 py-3 font-mono text-sm"
-        onChange={(event) => setInput(event.target.value)}
+        onChange={(event) => {
+          const nextValue = event.target.value;
+          setInput(nextValue);
+          applyTransform(mode, nextValue);
+        }}
         placeholder="Paste text here..."
         value={input}
       />
+      {showCharacterCount ? (
+        <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
+          {input.length} characters
+        </div>
+      ) : null}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted-strong)]">
           sample:
@@ -77,7 +106,10 @@ export function TextTransformWidget({
             aria-label={`Use sample text ${item.label}`}
             className="font-mono"
             key={item.label}
-            onClick={() => setInput(item.value)}
+            onClick={() => {
+              setInput(item.value);
+              applyTransform(mode, item.value);
+            }}
           >
             {item.label}
           </PillButton>
@@ -86,20 +118,25 @@ export function TextTransformWidget({
           <PillButton
             aria-label={`Use ${activeMode.helperLabel} sample text`}
             className="font-mono"
-            onClick={() => setInput(activeMode.sampleValue)}
+            onClick={() => {
+              setInput(activeMode.sampleValue);
+              applyTransform(mode, activeMode.sampleValue);
+            }}
           >
             use {activeMode.helperLabel}
           </PillButton>
         ) : null}
       </div>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
-        {textModeGroups.map((group) =>
-          renderModeGroup(
-            group.label,
-            textModeOptions.filter((option) => option.group === group.key),
-          ),
-        )}
-      </div>
+      {availableModes.length > 1 ? (
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {textModeGroups.map((group) =>
+            renderModeGroup(
+              group.label,
+              availableModes.filter((option) => option.group === group.key),
+            ),
+          )}
+        </div>
+      ) : null}
       <div className="mb-2 mt-4 flex items-center justify-between gap-3">
         <label className="mono-kicker block" htmlFor="text-transform-output">
           output
@@ -119,7 +156,18 @@ export function TextTransformWidget({
       ) : null}
       <div className="mt-4 flex flex-wrap gap-2">
         <CopyButton text={output} />
-        <PillButton aria-label="Clear text input" onClick={() => setInput("")}>
+        {actionLabel ? (
+          <PillButton aria-label={actionLabel} onClick={() => applyTransform()}>
+            {actionLabel}
+          </PillButton>
+        ) : null}
+        <PillButton
+          aria-label="Clear text input"
+          onClick={() => {
+            setInput("");
+            applyTransform(mode, "");
+          }}
+        >
           clear
         </PillButton>
       </div>

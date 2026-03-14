@@ -1,10 +1,13 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { DevToolPageWidget } from "@/components/dev-tool-page-widget";
 import { PageContainer } from "@/components/page-container";
 import { PillButton } from "@/components/pill";
 import { RelatedLinks } from "@/components/related-links";
+import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
 import { TextTransformWidget } from "@/components/text-transform-widget";
 import { UtilityCard } from "@/components/utility-card";
+import { getBrowseCategory } from "@/lib/content/categories";
 import {
   getPageHref,
   getRelatedTextPages,
@@ -14,23 +17,27 @@ import {
   type TextPageDefinition,
 } from "@/lib/content/pages";
 import { getTextModeOption, textSampleHelpers } from "@/lib/conversion/text";
-import { makeBreadcrumbSchema, makeFaqSchema } from "@/lib/seo";
+import { makeBreadcrumbSchema, makeFaqSchemaIfPresent } from "@/lib/seo";
 
 export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
   const faqs = getTextPageFaqs(page);
+  const faqSchema = makeFaqSchemaIfPresent(faqs);
   const relatedPages = getRelatedTextPages(page);
   const modeOption = getTextModeOption(page.mode);
+  const category = getBrowseCategory(page.category);
+  const categoryTitle = category?.title ?? "Text converter";
+  const categoryHref = category?.route ?? "/text-converter";
 
   return (
     <PageContainer className="space-y-5 pb-4">
       <StructuredData
         data={makeBreadcrumbSchema([
           { name: "ConvertCenter", path: "/" },
-          { name: "Text converter", path: "/text-converter" },
+          { name: categoryTitle, path: categoryHref },
           { name: page.title, path: getPageHref(page) },
         ])}
       />
-      {faqs.length ? <StructuredData data={makeFaqSchema(faqs)} /> : null}
+      {faqSchema ? <StructuredData data={faqSchema} /> : null}
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">
@@ -38,7 +45,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
           <Breadcrumbs
             items={[
               { label: "ConvertCenter", href: "/" },
-              { label: "Text converter", href: "/text-converter" },
+              { label: categoryTitle, href: categoryHref },
               { label: page.slug },
             ]}
           />
@@ -65,7 +72,31 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
         </div>
       </section>
 
-      <TextTransformWidget defaultMode={page.mode} defaultValue={page.exampleInput} />
+      {page.category === "encoding" ? (
+        <DevToolPageWidget
+          actionLabel={page.actionLabel}
+          defaultValue={page.exampleInput}
+          mode={page.mode}
+          outputStyle={page.outputStyle}
+          secondaryActionLabel={page.secondaryActionLabel}
+          showCharacterCount={page.showCharacterCount}
+          title={page.title}
+        />
+      ) : (
+        <TextTransformWidget
+          actionLabel={page.actionLabel}
+          allowedModes={[page.mode]}
+          defaultMode={page.mode}
+          defaultValue={page.exampleInput}
+          showCharacterCount={page.showCharacterCount}
+        />
+      )}
+
+      {page.longDescription ? (
+        <UtilityCard>
+          <StructuredContentView content={page.longDescription} />
+        </UtilityCard>
+      ) : null}
 
       <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
         <UtilityCard>

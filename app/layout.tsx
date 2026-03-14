@@ -21,6 +21,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+  manifest: "/site.webmanifest",
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
@@ -67,12 +68,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body
         className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} antialiased`}
       >
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeScript}
+        </Script>
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 py-3 sm:px-4 lg:px-6">
           <SiteNav />
           <main className="flex-1">{children}</main>

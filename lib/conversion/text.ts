@@ -5,7 +5,14 @@ export type TextMode =
   | "sentence"
   | "camel"
   | "snake"
-  | "kebab";
+  | "kebab"
+  | "base64Encode"
+  | "base64Decode"
+  | "urlEncode"
+  | "urlDecode"
+  | "jsonFormat"
+  | "jsonMinify"
+  | "jsonValidate";
 
 export type TextModeGroupKey = "editorial" | "developer";
 
@@ -75,6 +82,62 @@ export const textModeOptions: readonly TextModeOption[] = [
     mode: "kebab",
     sampleValue: "The quick brown fox jumps over the lazy dog",
   },
+  {
+    description: "Encodes plain text into Base64 for transport, testing, and quick developer workflows.",
+    group: "developer",
+    helperLabel: "Base64 encode",
+    label: "Base64 encode",
+    mode: "base64Encode",
+    sampleValue: "ConvertCenter Base64 example",
+  },
+  {
+    description: "Decodes Base64 back into plain text in the browser with quick validation feedback.",
+    group: "developer",
+    helperLabel: "Base64 decode",
+    label: "Base64 decode",
+    mode: "base64Decode",
+    sampleValue: "Q29udmVydENlbnRlciBCYXNlNjQgZXhhbXBsZQ==",
+  },
+  {
+    description: "Encodes URLs and query parameters safely for links, APIs, and browser-based tooling.",
+    group: "developer",
+    helperLabel: "URL encode",
+    label: "URL encode",
+    mode: "urlEncode",
+    sampleValue: "https://convertcenter.org/search?q=kg to lbs&source=app",
+  },
+  {
+    description: "Decodes percent-encoded URLs back into readable text for debugging, APIs, and query-string checks.",
+    group: "developer",
+    helperLabel: "URL decode",
+    label: "URL decode",
+    mode: "urlDecode",
+    sampleValue: "https%3A%2F%2Fconvertcenter.org%2Fsearch%3Fq%3Dkg%2520to%2520lbs%26source%3Dapp",
+  },
+  {
+    description: "Formats, validates, and beautifies JSON for APIs, configs, and developer workflows.",
+    group: "developer",
+    helperLabel: "JSON format",
+    label: "JSON format",
+    mode: "jsonFormat",
+    sampleValue: '{"site":"ConvertCenter","tools":["base64","url","json"],"active":true}',
+  },
+  {
+    description: "Minifies JSON by removing whitespace for APIs, payloads, and production-ready data.",
+    group: "developer",
+    helperLabel: "JSON minify",
+    label: "JSON minify",
+    mode: "jsonMinify",
+    sampleValue: '{\n  "site": "ConvertCenter",\n  "tools": ["base64", "url", "json"],\n  "active": true\n}',
+  },
+  {
+    description: "Checks whether JSON syntax is valid and returns a quick validation result.",
+    group: "developer",
+    helperLabel: "JSON validate",
+    label: "JSON validate",
+    mode: "jsonValidate",
+    sampleValue: '{"site":"ConvertCenter","tools":["base64","url","json"],"active":true}',
+  },
 ] as const;
 
 export const textModeGroups: ReadonlyArray<{
@@ -104,6 +167,63 @@ function splitWords(value: string) {
     .trim()
     .split(/\s+/)
     .filter(Boolean);
+}
+
+export function encodeBase64(input: string) {
+  if (typeof window !== "undefined" && typeof window.btoa === "function") {
+    return window.btoa(unescape(encodeURIComponent(input)));
+  }
+
+  return Buffer.from(input, "utf8").toString("base64");
+}
+
+export function decodeBase64(input: string) {
+  try {
+    if (typeof window !== "undefined" && typeof window.atob === "function") {
+      return decodeURIComponent(escape(window.atob(input)));
+    }
+
+    return Buffer.from(input, "base64").toString("utf8");
+  } catch {
+    return "Invalid Base64 string";
+  }
+}
+
+export function encodeURL(input: string) {
+  return encodeURIComponent(input);
+}
+
+export function decodeURL(input: string) {
+  try {
+    return decodeURIComponent(input);
+  } catch {
+    return "Invalid encoded URL";
+  }
+}
+
+export function formatJSON(input: string) {
+  try {
+    return JSON.stringify(JSON.parse(input), null, 2);
+  } catch {
+    return "Invalid JSON";
+  }
+}
+
+export function minifyJSON(input: string) {
+  try {
+    return JSON.stringify(JSON.parse(input));
+  } catch {
+    return "Invalid JSON";
+  }
+}
+
+export function validateJSON(input: string) {
+  try {
+    JSON.parse(input);
+    return "Valid JSON";
+  } catch (error) {
+    return error instanceof Error ? error.message : "Invalid JSON";
+  }
 }
 
 export function transformText(mode: TextMode, value: string) {
@@ -136,6 +256,20 @@ export function transformText(mode: TextMode, value: string) {
       return splitWords(value)
         .map((word) => word.toLowerCase())
         .join("-");
+    case "base64Encode":
+      return encodeBase64(value);
+    case "base64Decode":
+      return decodeBase64(value);
+    case "urlEncode":
+      return encodeURL(value);
+    case "urlDecode":
+      return decodeURL(value);
+    case "jsonFormat":
+      return formatJSON(value);
+    case "jsonMinify":
+      return minifyJSON(value);
+    case "jsonValidate":
+      return validateJSON(value);
     default:
       return value;
   }

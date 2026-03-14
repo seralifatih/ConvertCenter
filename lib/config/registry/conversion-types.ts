@@ -7,7 +7,8 @@ export type NumericCategoryKey =
   | "temperature"
   | "data";
 
-export type LaunchCategoryKey = NumericCategoryKey | "text";
+export type TextualCategoryKey = "text" | "encoding";
+export type LaunchCategoryKey = NumericCategoryKey | TextualCategoryKey;
 export type FutureCategoryKey = "dev";
 export type CategoryKey = LaunchCategoryKey;
 export type ToolCategoryKey = LaunchCategoryKey | FutureCategoryKey;
@@ -44,14 +45,29 @@ export type BaseCategorySchema<K extends ToolCategoryKey, Kind extends string> =
   key: K;
   kind: Kind;
   label: string;
+  metaDescription?: string;
+  relatedTopics?: readonly string[];
   relatedCategoryKeys: readonly LaunchCategoryKey[];
   route: `/${string}`;
+  slug: string;
   title: string;
+  useCases?: readonly string[];
 };
 
 export type FaqEntry = {
   answer: string;
   question: string;
+};
+
+export type StructuredContentSection = {
+  heading: string;
+  listItems?: readonly string[];
+  paragraphs: readonly string[];
+};
+
+export type StructuredContent = {
+  sections: readonly StructuredContentSection[];
+  title: string;
 };
 
 export type LinearUnitSchema = {
@@ -82,13 +98,15 @@ export type NumericUnitSchema = LinearUnitSchema | FormulaUnitSchema;
 export type NumericPairPageSchema = {
   aliases: readonly string[];
   categoryKey: NumericCategoryKey;
+  customLongDescription?: StructuredContent;
+  customLongDescriptionSections?: readonly StructuredContentSection[];
   exampleValue: number;
   faq?: readonly FaqEntry[];
   featured?: boolean;
   formulaLabel?: string;
   fromUnitKey: UnitKey;
   kind: "numeric-pair";
-  longDescription?: string;
+  longDescription?: StructuredContent;
   metaDescription?: string;
   popular?: boolean;
   relatedSlugs?: readonly string[];
@@ -98,17 +116,22 @@ export type NumericPairPageSchema = {
 };
 
 export type TextTransformPageSchema = {
+  actionLabel?: string;
   aliases: readonly string[];
-  categoryKey: "text";
+  categoryKey: TextualCategoryKey;
   description: string;
   exampleInput: string;
   faq?: readonly FaqEntry[];
   featured?: boolean;
   kind: "text-transform";
+  longDescription?: StructuredContent;
   metaDescription?: string;
   mode: TextMode;
+  outputStyle?: "panel" | "textarea";
   popular?: boolean;
   relatedSlugs?: readonly string[];
+  secondaryActionLabel?: string;
+  showCharacterCount?: boolean;
   slug: string;
   title: string;
 };
@@ -131,10 +154,11 @@ export type NumericCategorySchema<K extends NumericCategoryKey = NumericCategory
     units: readonly NumericUnitSchema[];
   };
 
-export type TextCategorySchema = BaseCategorySchema<"text", "text"> & {
+export type TextCategorySchema<K extends TextualCategoryKey = TextualCategoryKey> =
+  BaseCategorySchema<K, "text"> & {
   futureTools: readonly DevToolPageSchema[];
   transforms: readonly TextTransformPageSchema[];
-};
+  };
 
 export type LaunchCategorySchema = NumericCategorySchema | TextCategorySchema;
 export type LaunchToolPageSchema = NumericPairPageSchema | TextTransformPageSchema;

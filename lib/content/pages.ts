@@ -1,6 +1,7 @@
 import {
   buildUnitPairSlug,
   getCategoryConfig,
+  getCategoryTools,
   getCategoryHighlights as getConfigCategoryHighlights,
   getLaunchToolConfig,
   getNumericPairConfig,
@@ -11,7 +12,10 @@ import {
   getToolPath,
   launchToolRegistry,
   type CategoryKey,
+  type NumericCategoryKey,
   type NumericPairPageSchema,
+  type StructuredContent,
+  type TextualCategoryKey,
   type TextTransformPageSchema,
   type UnitKey,
 } from "@/lib/config/conversion-registry";
@@ -20,7 +24,7 @@ import { convertValue, formatNumber, getUnitFactor, units } from "@/lib/conversi
 
 export type UnitPageDefinition = {
   aliases: string[];
-  category: Exclude<CategoryKey, "text">;
+  category: NumericCategoryKey;
   exampleValue: number;
   faq: Array<{
     answer: string;
@@ -29,7 +33,7 @@ export type UnitPageDefinition = {
   formulaLabel?: string;
   from: UnitKey;
   kind: "unit";
-  longDescription?: string;
+  longDescription?: StructuredContent;
   metaDescription?: string;
   sampleValues: number[];
   slug: string;
@@ -37,8 +41,9 @@ export type UnitPageDefinition = {
 };
 
 export type TextPageDefinition = {
+  actionLabel?: string;
   aliases: string[];
-  category: "text";
+  category: TextualCategoryKey;
   description: string;
   exampleInput: string;
   faq: Array<{
@@ -46,17 +51,25 @@ export type TextPageDefinition = {
     question: string;
   }>;
   kind: "text";
+  longDescription?: StructuredContent;
   metaDescription?: string;
   mode: TextMode;
+  outputStyle?: "panel" | "textarea";
+  showCharacterCount?: boolean;
   slug: string;
+  secondaryActionLabel?: string;
   title: string;
 };
 
 export type LaunchPage = UnitPageDefinition | TextPageDefinition;
 
+function uniqueStrings(values: readonly string[]) {
+  return [...new Set(values)];
+}
+
 function adaptUnitPage(page: NumericPairPageSchema): UnitPageDefinition {
   return {
-    aliases: [...page.aliases],
+    aliases: uniqueStrings(page.aliases),
     category: page.categoryKey,
     exampleValue: page.exampleValue,
     faq: page.faq ? [...page.faq] : [],
@@ -73,15 +86,20 @@ function adaptUnitPage(page: NumericPairPageSchema): UnitPageDefinition {
 
 function adaptTextPage(page: TextTransformPageSchema): TextPageDefinition {
   return {
-    aliases: [...page.aliases],
-    category: "text",
+    actionLabel: page.actionLabel,
+    aliases: uniqueStrings(page.aliases),
+    category: page.categoryKey,
     description: page.description,
     exampleInput: page.exampleInput,
     faq: page.faq ? [...page.faq] : [],
     kind: "text",
+    longDescription: page.longDescription,
     metaDescription: page.metaDescription,
     mode: page.mode,
+    outputStyle: page.outputStyle,
+    showCharacterCount: page.showCharacterCount,
     slug: page.slug,
+    secondaryActionLabel: page.secondaryActionLabel,
     title: page.title,
   };
 }
@@ -97,6 +115,7 @@ const rawTextPages = launchToolRegistry.filter(
 export const unitPages = rawUnitPages.map(adaptUnitPage);
 export const textPages = rawTextPages.map(adaptTextPage);
 export const launchPages: LaunchPage[] = [...unitPages, ...textPages];
+export const launchPageCount = new Set(launchPages.map((page) => page.slug)).size;
 
 const unitPageBySlug = new Map(unitPages.map((page) => [page.slug, page] as const));
 const textPageBySlug = new Map(textPages.map((page) => [page.slug, page] as const));
@@ -111,6 +130,10 @@ export function getTextPage(slug: string) {
 
 export function getLaunchPage(slug: string) {
   return getUnitPage(slug) ?? getTextPage(slug);
+}
+
+export function getLaunchPageCount() {
+  return launchPageCount;
 }
 
 export function getReverseUnitPageSlug(page: UnitPageDefinition) {
@@ -149,13 +172,13 @@ export function getUnitPageMetaDescription(page: UnitPageDefinition) {
 }
 
 export function getUnitPageKeywords(page: UnitPageDefinition) {
-  return [
+  return uniqueStrings([
     ...page.aliases,
     ...units[page.from].aliases,
     ...units[page.to].aliases,
     `${units[page.from].shortLabel.toLowerCase()} to ${units[page.to].shortLabel.toLowerCase()}`,
     `${units[page.from].label.toLowerCase()} to ${units[page.to].label.toLowerCase()}`,
-  ];
+  ]);
 }
 
 export function getUnitPageIntro(page: UnitPageDefinition) {
@@ -203,11 +226,9 @@ export function getRelatedUnitPages(page: UnitPageDefinition) {
 }
 
 export function getCategoryPages(category: CategoryKey) {
-  if (category === "text") {
-    return textPages;
-  }
-
-  return unitPages.filter((page) => page.category === category);
+  return getCategoryTools(category)
+    .map((tool) => getLaunchPage(tool.slug))
+    .filter((page): page is LaunchPage => Boolean(page));
 }
 
 export function getCategoryHighlights(category: CategoryKey) {
@@ -215,7 +236,21 @@ export function getCategoryHighlights(category: CategoryKey) {
 }
 
 export function getTextPageKeywords(page: TextPageDefinition) {
-  return [...page.aliases, "text case converter", `${page.mode} case`, "developer text tools"];
+  if (page.category === "encoding") {
+    return uniqueStrings([
+      ...page.aliases,
+      "developer tools",
+      "encoding tools",
+      `${page.title.toLowerCase()}`,
+    ]);
+  }
+
+  return uniqueStrings([
+    ...page.aliases,
+    "text case converter",
+    `${page.mode} case`,
+    "developer text tools",
+  ]);
 }
 
 export function getTextPageMetaTitle(page: TextPageDefinition) {

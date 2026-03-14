@@ -28,6 +28,7 @@ const navItems = [
         "/volume-converter",
         "/temperature-converter",
         "/data-converter",
+        "/encoding-tools",
       ].includes(pathname),
   },
   {

@@ -3,14 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useDeferredValue, useId, useState } from "react";
 import { PillButton } from "@/components/pill";
-
-type SearchEntry = {
-  title: string;
-  href: string;
-  category: string;
-  entryType: "page" | "category";
-  keywords: string[];
-};
+import {
+  findExactSearchMatch,
+  rankSearchEntries,
+  type SearchEntry,
+} from "@/lib/search";
 
 type HomeSearchProps = {
   quickSearches: readonly string[];
@@ -24,48 +21,13 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const deferredQuery = useDeferredValue(query);
-  const normalized = deferredQuery.trim().toLowerCase();
-  const parts = normalized.split(/\s+/).filter(Boolean);
-  const matches = normalized
-    ? searchEntries
-        .map((entry) => {
-          let score = 0;
-          const title = entry.title.toLowerCase();
-          const keywords = entry.keywords.map((keyword) => keyword.toLowerCase());
-
-          for (const part of parts) {
-            if (title.includes(part)) {
-              score += 4;
-            }
-
-            for (const keyword of keywords) {
-              if (keyword.includes(part)) {
-                score += 1;
-              }
-            }
-          }
-
-          return { entry, score };
-        })
-        .filter((item) => item.score > 0)
-        .sort((left, right) => right.score - left.score)
-        .slice(0, 6)
-    : [];
+  const matches = rankSearchEntries(searchEntries, deferredQuery);
   const dropdownIsOpen = isFocused && matches.length > 0;
   const activeOptionId =
     dropdownIsOpen && activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined;
 
-  function findExactMatch(value: string) {
-    const normalizedValue = value.trim().toLowerCase();
-    return searchEntries.find(
-      (entry) =>
-        entry.title.toLowerCase() === normalizedValue ||
-        entry.keywords.some((keyword) => keyword.toLowerCase() === normalizedValue),
-    );
-  }
-
   function handleExampleChip(value: string) {
-    const directMatch = findExactMatch(value);
+    const directMatch = findExactSearchMatch(searchEntries, value);
 
     if (directMatch) {
       router.push(directMatch.href);
@@ -79,7 +41,9 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
 
   function handleSubmit(index = activeIndex) {
     const directMatch =
-      (index >= 0 ? matches[index]?.entry : undefined) ?? findExactMatch(query) ?? matches[0]?.entry;
+      (index >= 0 ? matches[index]?.entry : undefined) ??
+      findExactSearchMatch(searchEntries, query) ??
+      matches[0]?.entry;
 
     if (directMatch) {
       router.push(directMatch.href);

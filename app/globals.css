@@ -14,7 +14,7 @@ html[data-theme="dark"] {
   --accent: #5dcaa5;
   --accent-surface: #0d3a2d;
   --accent-text: #8eecc8;
-  --shadow: 0 12px 40px rgba(3, 5, 10, 0.22);
+  --shadow: 0 8px 24px rgba(3, 5, 10, 0.14);
   color-scheme: dark;
 }
 
@@ -31,7 +31,7 @@ html[data-theme="light"] {
   --accent: #1d9e75;
   --accent-surface: #e1f5ee;
   --accent-text: #085041;
-  --shadow: 0 10px 30px rgba(46, 47, 50, 0.06);
+  --shadow: 0 6px 18px rgba(46, 47, 50, 0.05);
   color-scheme: light;
 }
 
@@ -110,6 +110,7 @@ select {
 
   .panel-card {
     @apply rounded-[22px] border border-[color:var(--border)] bg-[color:var(--card)];
+    box-shadow: none;
   }
 
   .input-surface {

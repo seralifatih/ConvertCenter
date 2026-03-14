@@ -1,8 +1,9 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { PageContainer } from "@/components/page-container";
+import { PairUnitConverter } from "@/components/pair-unit-converter";
 import { RelatedLinks } from "@/components/related-links";
+import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
-import { UnitConverter } from "@/components/unit-converter";
 import { UtilityCard } from "@/components/utility-card";
 import { getBrowseCategory } from "@/lib/content/categories";
 import {
@@ -18,41 +19,12 @@ import {
   type UnitPageDefinition,
 } from "@/lib/content/pages";
 import { getUnitFormula, units } from "@/lib/conversion/units";
-import { makeBreadcrumbSchema, makeFaqSchema } from "@/lib/seo";
-
-function renderLongDescription(content: string) {
-  return content
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith("<!--"))
-    .map((line, index) => {
-      if (line.startsWith("## ")) {
-        return (
-          <h2 className="section-title text-base sm:text-lg" key={`${line}-${index}`}>
-            {line.replace("## ", "")}
-          </h2>
-        );
-      }
-
-      if (line.startsWith("### ")) {
-        return (
-          <h3 className="text-sm font-medium text-[color:var(--text)] sm:text-base" key={`${line}-${index}`}>
-            {line.replace("### ", "")}
-          </h3>
-        );
-      }
-
-      return (
-        <p className="text-sm leading-7 text-[color:var(--muted)]" key={`${line}-${index}`}>
-          {line}
-        </p>
-      );
-    });
-}
+import { makeBreadcrumbSchema, makeFaqSchemaIfPresent } from "@/lib/seo";
 
 export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
   const category = getBrowseCategory(page.category);
   const faqs = getUnitPageFaqs(page);
+  const faqSchema = makeFaqSchemaIfPresent(faqs);
   const reverseSlug = getReverseUnitPageSlug(page);
   const relatedPages = getRelatedUnitPages(page);
   const formulaLabel = page.formulaLabel ?? getUnitFormula(page.from, page.to);
@@ -66,7 +38,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
           { name: getUnitPageTitle(page), path: getPageHref(page) },
         ])}
       />
-      {faqs.length ? <StructuredData data={makeFaqSchema(faqs)} /> : null}
+      {faqSchema ? <StructuredData data={faqSchema} /> : null}
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">
@@ -89,18 +61,17 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
         </div>
       </section>
 
-      <UnitConverter
+      <PairUnitConverter
         category={page.category}
         defaultFrom={page.from}
         defaultTo={page.to}
         defaultValue={page.exampleValue}
         swapHref={reverseSlug ? `/${reverseSlug}` : undefined}
-        variant="pair"
       />
 
       {page.longDescription ? (
         <UtilityCard>
-          <div className="space-y-4">{renderLongDescription(page.longDescription)}</div>
+          <StructuredContentView content={page.longDescription} />
         </UtilityCard>
       ) : null}
 

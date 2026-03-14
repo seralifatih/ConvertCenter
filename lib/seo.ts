@@ -80,3 +80,12 @@ export function makeFaqSchema(
     })),
   };
 }
+
+export function makeFaqSchemaIfPresent(
+  entries: Array<{
+    question: string;
+    answer: string;
+  }>,
+) {
+  return entries.length ? makeFaqSchema(entries) : null;
+}
