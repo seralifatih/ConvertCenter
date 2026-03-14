@@ -1,0 +1,33 @@
+
+> convertcenter@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+
+✓ Starting...
+Creating turbopack project {
+  dir: 'C:\\Users\\fatih\\Desktop\\Programming\\convertcenter',
+  testMode: true
+}
+✓ Ready in 2.4s
+○ Compiling / ...
+ GET / 200 in 11.3s (compile: 10.0s, render: 1319ms)
+ GET / 200 in 401ms (compile: 9ms, render: 393ms)
+ GET / 200 in 1372ms (compile: 62ms, render: 1310ms)
+✓ Compiled in 118ms
+✓ Compiled in 672ms
+✓ Compiled in 278ms
+✓ Compiled in 138ms
+✓ Compiled in 147ms
+✓ Compiled in 122ms
+✓ Compiled in 212ms
+✓ Compiled in 129ms
+✓ Compiled in 55ms
+✓ Compiled in 137ms
+✓ Compiled in 112ms
+✓ Compiled in 73ms
+✓ Compiled in 108ms
+✓ Compiled in 61ms
+^C

@@ -27,6 +27,7 @@ import type { SearchEntry } from "@/lib/search";
 export type UnitPageDefinition = {
   aliases: string[];
   category: NumericCategoryKey;
+  crossLinks?: string[];
   exampleValue: number;
   faq: Array<{
     answer: string;
@@ -46,6 +47,7 @@ export type TextPageDefinition = {
   actionLabel?: string;
   aliases: string[];
   category: TextualCategoryKey;
+  crossLinks?: string[];
   description: string;
   exampleInput: string;
   faq: Array<{
@@ -74,10 +76,15 @@ function isCookingVolumePage(page: UnitPageDefinition) {
   return page.category === "volume" && cookingUnits.includes(page.from) && cookingUnits.includes(page.to);
 }
 
+function usesFluidOunce(page: Pick<UnitPageDefinition, "from" | "to">) {
+  return page.from === "floz" || page.to === "floz";
+}
+
 function adaptUnitPage(page: NumericPairPageSchema): UnitPageDefinition {
   return {
     aliases: uniqueStrings(page.aliases),
     category: page.categoryKey,
+    crossLinks: page.crossLinks ? [...page.crossLinks] : undefined,
     exampleValue: page.exampleValue,
     faq: page.faq ? [...page.faq] : [],
     formulaLabel: page.formulaLabel,
@@ -96,6 +103,7 @@ function adaptTextPage(page: TextTransformPageSchema): TextPageDefinition {
     actionLabel: page.actionLabel,
     aliases: uniqueStrings(page.aliases),
     category: page.categoryKey,
+    crossLinks: page.crossLinks ? [...page.crossLinks] : undefined,
     description: page.description,
     exampleInput: page.exampleInput,
     faq: page.faq ? [...page.faq] : [],
@@ -156,6 +164,10 @@ export function getUnitPageTitle(page: UnitPageDefinition) {
 }
 
 export function getUnitPageSearchIntent(page: UnitPageDefinition) {
+  if (usesFluidOunce(page)) {
+    return `${units[page.from].pluralLabel.toLowerCase()} to ${units[page.to].pluralLabel.toLowerCase()}`;
+  }
+
   return page.aliases[0] ?? `${units[page.from].shortLabel.toLowerCase()} to ${units[
     page.to
   ].shortLabel.toLowerCase()}`;
@@ -251,6 +263,61 @@ export function getCategoryStandalonePages(category: CategoryKey) {
   return standaloneToolPages.filter((page) => page.hubCategoryKey === category);
 }
 
+function uniqueLinkTargets(
+  entries: Array<{
+    href: `/${string}`;
+    label: string;
+  }>,
+) {
+  const seenHrefs = new Set<string>();
+
+  return entries.filter((entry) => {
+    if (seenHrefs.has(entry.href)) {
+      return false;
+    }
+
+    seenHrefs.add(entry.href);
+    return true;
+  });
+}
+
+function resolveCrossLinkEntry(slug: string) {
+  const launchPage = getLaunchPage(slug);
+
+  if (launchPage) {
+    return {
+      href: getPageHref(launchPage),
+      label: launchPage.kind === "text" ? launchPage.title : getUnitPageTitle(launchPage),
+    };
+  }
+
+  const standalonePage = standaloneToolPages.find((page) => page.slug === slug);
+
+  if (standalonePage) {
+    return {
+      href: standalonePage.route,
+      label: standalonePage.title,
+    };
+  }
+
+  return null;
+}
+
+export function getCrossLinkEntries(page: LaunchPage) {
+  const entries = (page.crossLinks ?? [])
+    .map((slug) => resolveCrossLinkEntry(slug))
+    .filter(
+      (
+        entry,
+      ): entry is {
+        href: `/${string}`;
+        label: string;
+      } => Boolean(entry),
+    );
+
+  return uniqueLinkTargets(entries);
+}
+
 export function getCategoryHighlights(category: CategoryKey) {
   return getConfigCategoryHighlights(category);
 }
@@ -309,6 +376,22 @@ export function getPageHref(page: LaunchPage) {
 export function getLaunchPageLabel(page: LaunchPage) {
   const rawPage = getLaunchToolConfig(page.slug);
   return rawPage ? getToolLabel(rawPage) : page.kind === "text" ? page.title : page.slug;
+}
+
+export function getHomepagePopularLabel(page: LaunchPage) {
+  if (page.kind === "text") {
+    return page.title;
+  }
+
+  return page.aliases[0] ?? getLaunchPageLabel(page);
+}
+
+export function getUnitPageRelatedLabel(page: UnitPageDefinition) {
+  if (usesFluidOunce(page)) {
+    return `${units[page.from].pluralLabel.toLowerCase()} to ${units[page.to].pluralLabel.toLowerCase()}`;
+  }
+
+  return `${units[page.from].shortLabel.toLowerCase()} to ${units[page.to].shortLabel.toLowerCase()}`;
 }
 
 export function getLaunchPageSummary(page: LaunchPage) {

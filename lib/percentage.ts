@@ -4,6 +4,22 @@ export type PercentageChangeResult = {
   percentage: number;
 };
 
+export function percentOf(x: number, y: number) {
+  if (!Number.isFinite(x) || !Number.isFinite(y)) {
+    return null;
+  }
+
+  return (x / 100) * y;
+}
+
+export function whatPercentOf(x: number, y: number) {
+  if (!Number.isFinite(x) || !Number.isFinite(y) || y === 0) {
+    return null;
+  }
+
+  return (x / y) * 100;
+}
+
 export function calculatePercentageChange(oldValue: number, newValue: number) {
   if (!Number.isFinite(oldValue) || !Number.isFinite(newValue) || oldValue === 0) {
     return null;

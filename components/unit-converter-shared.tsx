@@ -1,5 +1,6 @@
 "use client";
 
+import clsx from "clsx";
 import {
   ConverterField,
   ConverterNumberInput,
@@ -45,19 +46,37 @@ export function SwapButton({
 }
 
 export function ConverterActions({
+  compact = false,
   copyText,
   defaultValue,
   formulaLine,
+  helperMessage,
   onClear,
 }: Readonly<{
+  compact?: boolean;
   copyText?: string;
   defaultValue: string;
   formulaLine: string;
+  helperMessage?: string;
   onClear: () => void;
 }>) {
   return (
-    <div className="mt-3 flex flex-col gap-3 border-t border-[color:var(--border)] pt-3 text-sm text-[color:var(--muted)] sm:flex-row sm:items-center sm:justify-between">
-      <span className="font-mono text-xs">{formulaLine}</span>
+    <div
+      className={clsx(
+        "flex flex-col border-t border-[color:var(--border)] text-sm text-[color:var(--muted)] sm:flex-row sm:items-center sm:justify-between",
+        compact ? "mt-2 gap-2 pt-2.5" : "mt-3 gap-3 pt-3",
+      )}
+    >
+      <div className="space-y-1">
+        <span className={clsx("block font-mono", compact ? "text-[11px]" : "text-xs")}>
+          {formulaLine}
+        </span>
+        {helperMessage ? (
+          <p className={clsx("text-[color:var(--muted)]", compact ? "text-[11px]" : "text-xs")}>
+            {helperMessage}
+          </p>
+        ) : null}
+      </div>
       <div className="flex flex-wrap gap-2">
         <CopyButton text={copyText ?? defaultValue} />
         <PillButton aria-label="Clear converter value" onClick={onClear}>
@@ -70,6 +89,7 @@ export function ConverterActions({
 
 export function FreeFromField({
   category,
+  compact = false,
   fromUnit,
   fromUnitControlId,
   fromValueControlId,
@@ -78,6 +98,7 @@ export function FreeFromField({
   rawValue,
 }: Readonly<{
   category: NumericCategoryKey;
+  compact?: boolean;
   fromUnit: UnitKey;
   fromUnitControlId: string;
   fromValueControlId: string;
@@ -88,9 +109,10 @@ export function FreeFromField({
   const selectOptions = getConverterSelectOptions(category);
 
   return (
-    <ConverterField htmlFor={fromUnitControlId} label="from">
+    <ConverterField compact={compact} htmlFor={fromUnitControlId} label="from">
       <ConverterSelect
         ariaLabel="From unit"
+        compact={compact}
         id={fromUnitControlId}
         onChange={onChangeFromUnit}
         options={selectOptions}
@@ -98,6 +120,7 @@ export function FreeFromField({
       />
       <ConverterNumberInput
         ariaLabel={`Value in ${units[fromUnit].pluralLabel.toLowerCase()}`}
+        compact={compact}
         id={fromValueControlId}
         onChange={onChangeRawValue}
         value={rawValue}
@@ -108,6 +131,7 @@ export function FreeFromField({
 
 export function FreeToField({
   category,
+  compact = false,
   onChangeToUnit,
   readoutValue,
   toUnit,
@@ -115,6 +139,7 @@ export function FreeToField({
   toValueControlId,
 }: Readonly<{
   category: NumericCategoryKey;
+  compact?: boolean;
   onChangeToUnit: (value: UnitKey) => void;
   readoutValue: string;
   toUnit: UnitKey;
@@ -124,9 +149,10 @@ export function FreeToField({
   const selectOptions = getConverterSelectOptions(category);
 
   return (
-    <ConverterField htmlFor={toUnitControlId} label="to">
+    <ConverterField compact={compact} htmlFor={toUnitControlId} label="to">
       <ConverterSelect
         ariaLabel="To unit"
+        compact={compact}
         id={toUnitControlId}
         onChange={onChangeToUnit}
         options={selectOptions}
@@ -134,9 +160,11 @@ export function FreeToField({
       />
       <ConverterReadout
         ariaLabel={`Converted value in ${units[toUnit].pluralLabel.toLowerCase()}`}
+        className={!readoutValue ? "border-[color:var(--border)] bg-[color:var(--surface)]" : undefined}
+        compact={compact}
         id={toValueControlId}
         unit={units[toUnit].shortLabel}
-        value={readoutValue}
+        value={readoutValue || "—"}
       />
     </ConverterField>
   );

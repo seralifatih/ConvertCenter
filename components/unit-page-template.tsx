@@ -7,7 +7,9 @@ import { StructuredData } from "@/components/structured-data";
 import { UtilityCard } from "@/components/utility-card";
 import { getBrowseCategory } from "@/lib/content/categories";
 import {
+  getCrossLinkEntries,
   getPageHref,
+  getUnitPageRelatedLabel,
   getRelatedUnitPages,
   getReverseUnitPageSlug,
   getUnitPageDescription,
@@ -27,6 +29,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
   const faqSchema = makeFaqSchemaIfPresent(faqs);
   const reverseSlug = getReverseUnitPageSlug(page);
   const relatedPages = getRelatedUnitPages(page);
+  const crossLinkEntries = getCrossLinkEntries(page);
   const formulaLabel = page.formulaLabel ?? getUnitFormula(page.from, page.to);
 
   return (
@@ -174,9 +177,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
         links={[
           ...relatedPages.map((related) => ({
             href: getPageHref(related),
-            label: `${units[related.from].shortLabel.toLowerCase()} to ${units[
-              related.to
-            ].shortLabel.toLowerCase()}`,
+            label: getUnitPageRelatedLabel(related),
           })),
           ...(category ? [{ href: category.route, label: `all ${category.label}` }] : []),
           { href: "/", label: "all converters" },
@@ -186,6 +187,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
 
       <RelatedLinks
         links={[
+          ...crossLinkEntries,
           ...(category ? [{ href: category.route, label: category.title }] : []),
           ...relatedPages.slice(0, 3).map((related) => ({
             href: getPageHref(related),

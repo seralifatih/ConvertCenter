@@ -28,9 +28,10 @@ export function HomeUniversalConverter() {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       <FreeUnitConverter
         category={featuredPage.category}
+        compact
         defaultFrom={featuredPage.from}
         defaultTo={featuredPage.to}
         defaultValue={featuredPage.exampleValue}

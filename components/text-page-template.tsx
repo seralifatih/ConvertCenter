@@ -10,6 +10,7 @@ import { TextTransformWidget } from "@/components/text-transform-widget";
 import { UtilityCard } from "@/components/utility-card";
 import { getBrowseCategory } from "@/lib/content/categories";
 import {
+  getCrossLinkEntries,
   getPageHref,
   getRelatedTextPages,
   getTextPageFaqs,
@@ -24,6 +25,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
   const faqs = getTextPageFaqs(page);
   const faqSchema = makeFaqSchemaIfPresent(faqs);
   const relatedPages = getRelatedTextPages(page);
+  const crossLinkEntries = getCrossLinkEntries(page);
   const modeOption = getTextModeOption(page.mode);
   const category = getBrowseCategory(page.category);
   const categoryTitle = category?.title ?? "Text converter";
@@ -147,6 +149,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
 
       <RelatedLinks
         links={[
+          ...crossLinkEntries,
           ...relatedPages.map((related) => ({
             href: getPageHref(related),
             label: related.title,

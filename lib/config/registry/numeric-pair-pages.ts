@@ -5,6 +5,22 @@ import {
   defineNumericPairPage,
   defineStructuredContent,
 } from "./registry-helpers";
+import {
+  fahrenheitToCelsiusFaqs,
+  fahrenheitToCelsiusStructuredContent,
+  feetToMetersFaqs,
+  feetToMetersStructuredContent,
+  gbToMbFaqs,
+  gbToMbStructuredContent,
+  inchesToCmFaqs,
+  inchesToCmStructuredContent,
+  lbsToKgFaqs,
+  lbsToKgStructuredContent,
+  metersToFeetFaqs,
+  metersToFeetStructuredContent,
+  milesToKmFaqs,
+  milesToKmStructuredContent,
+} from "./priority-numeric-content";
 
 const kgToLbsLongDescription = defineStructuredContent(
   "About converting kilograms to pounds",
@@ -334,7 +350,7 @@ const inchesToFeetStructuredContent = defineStructuredContent(
 const cupsToOzStructuredContent = defineStructuredContent(
   "About converting cups to fluid ounces",
   defineContentSection("Kitchen measurements often shift depending on the recipe source", [
-    "Cups and fluid ounces are both common in US cooking, but recipes, drink labels, and mixing instructions do not always use the same unit. One recipe may call for 2 cups of broth, while a bottle is marked in ounces. Another might list a serving size in fluid ounces even though your measuring tools are cup-based. That is where a cups to oz converter becomes genuinely useful rather than just convenient.",
+    "Cups and fluid ounces are both common in US cooking, but recipes, drink labels, and mixing instructions do not always use the same unit. One recipe may call for 2 cups of broth, while a bottle is marked in fluid ounces. Another might list a serving size in fluid ounces even though your measuring tools are cup-based. That is where a cups to fluid ounces converter becomes genuinely useful rather than just convenient.",
   ]),
   defineContentSection("Conversion formula", [
     "For US volume measurements, the rule is direct: multiply cups by 8 to get fluid ounces. One cup equals 8 fluid ounces, half a cup equals 4 fluid ounces, and 2 cups equals 16 fluid ounces. The important detail is that this page refers to fluid ounces, which measure volume, not weight ounces used for solids on a scale.",
@@ -350,7 +366,7 @@ const cupsToOzStructuredContent = defineStructuredContent(
 const ozToMlStructuredContent = defineStructuredContent(
   "About converting fluid ounces to milliliters",
   defineContentSection("Packaging and recipes frequently cross US and metric volume units", [
-    "Fluid ounces are common on US drink labels, cosmetics, and recipes, while milliliters are the standard on most international packaging and measuring tools. That makes oz to ml one of the most useful volume conversions for everyday life. Whether you are reading a bottle, following a cocktail recipe, or comparing skincare product sizes from different markets, this conversion helps translate the label into a unit you can use right away.",
+    "Fluid ounces are common on US drink labels, cosmetics, and recipes, while milliliters are the standard on most international packaging and measuring tools. That makes fluid ounces to milliliters one of the most useful volume conversions for everyday life. Whether you are reading a bottle, following a cocktail recipe, or comparing skincare product sizes from different markets, this conversion helps translate the label into a unit you can use right away.",
   ]),
   defineContentSection("Conversion formula", [
     "This page uses US fluid ounces. To convert them to milliliters, multiply by 29.5735. That means 1 fluid ounce is about 29.57 ml, 8 fluid ounces is about 236.59 ml, and 16 fluid ounces is roughly 473.18 ml. The word fluid matters here because these ounces measure volume, not weight.",
@@ -412,17 +428,8 @@ export const weightPairPages = [
     popular: true,
   }),
   defineNumericPairPage("weight", "lb", "kg", 165, [1, 5, 10, 25, 50, 100], {
-    faq: defineFaqs(
-      defineFaq("How many kilograms are in 1 pound?", "1 pound equals 0.453592 kilograms."),
-      defineFaq(
-        "What is the formula to convert lbs to kg?",
-        "Multiply pounds by 0.45359237 to convert them to kilograms.",
-      ),
-      defineFaq(
-        "When do people use lbs to kg conversions?",
-        "This conversion is common for body weight, gym tracking, shipping, and international product specs.",
-      ),
-    ),
+    customLongDescription: lbsToKgStructuredContent,
+    faq: lbsToKgFaqs,
     metaDescription:
       "Need pounds in kilograms? Use this lbs to kg converter for body weight, shipping, and training numbers with formula help and reference values.",
     popular: true,
@@ -458,6 +465,38 @@ export const weightPairPages = [
     metaDescription:
       "See how many grams are in an ounce with a simple oz to grams calculator, conversion formula, and common values for food and shipping use.",
   }),
+  defineNumericPairPage("weight", "kg", "g", 2, [0.25, 0.5, 1, 2, 5, 10], {
+    aliases: ["kg to grams", "kilograms to grams", "kilos to grams"],
+    faq: defineFaqs(
+      defineFaq("How many grams are in 1 kilogram?", "1 kilogram equals 1000 grams."),
+      defineFaq(
+        "What is the formula to convert kilograms to grams?",
+        "Multiply kilograms by 1000 to convert them to grams.",
+      ),
+      defineFaq(
+        "When is kg to grams conversion useful?",
+        "It is useful for recipes, nutrition labels, lab work, shipping, and product packaging.",
+      ),
+    ),
+    metaDescription:
+      "Convert kilograms to grams quickly for recipes, product weights, lab work, and packaging checks with a simple metric formula.",
+  }),
+  defineNumericPairPage("weight", "g", "kg", 750, [100, 250, 500, 750, 1000, 2000], {
+    aliases: ["grams to kg", "grams to kilograms", "grams into kilograms"],
+    faq: defineFaqs(
+      defineFaq("How many kilograms are in 1 gram?", "1 gram equals 0.001 kilograms."),
+      defineFaq(
+        "What is the formula to convert grams to kilograms?",
+        "Divide grams by 1000 to convert them to kilograms.",
+      ),
+      defineFaq(
+        "Why would I convert grams to kilograms?",
+        "People use it for food prep, shipping totals, science work, and comparing product weights at a larger scale.",
+      ),
+    ),
+    metaDescription:
+      "Convert grams to kilograms for food prep, shipping totals, and product specs with a fast metric calculator and reference values.",
+  }),
 ] as const;
 
 export const lengthPairPages = [
@@ -480,17 +519,8 @@ export const lengthPairPages = [
     popular: true,
   }),
   defineNumericPairPage("length", "inch", "cm", 12, [1, 5, 10, 25, 50, 100], {
-    faq: defineFaqs(
-      defineFaq("How many centimeters are in 1 inch?", "1 inch equals 2.54 centimeters."),
-      defineFaq(
-        "What is the formula to convert inches to cm?",
-        "Multiply inches by 2.54 to convert them to centimeters.",
-      ),
-      defineFaq(
-        "Why is 2.54 used in the inches to cm conversion?",
-        "The inch is internationally defined as exactly 2.54 centimeters.",
-      ),
-    ),
+    customLongDescription: inchesToCmStructuredContent,
+    faq: inchesToCmFaqs,
     metaDescription:
       "Use this inches to cm converter for screens, product sizes, and DIY measurements, with the exact formula and common inch-to-centimeter values.",
   }),
@@ -527,33 +557,15 @@ export const lengthPairPages = [
       "Find out how many feet are in a centimeter with a fast cm to feet calculator, formula walkthrough, and common reference conversions.",
   }),
   defineNumericPairPage("length", "m", "ft", 10, [1, 2, 5, 10, 25, 50], {
-    faq: defineFaqs(
-      defineFaq("How many feet are in 1 meter?", "1 meter equals about 3.28084 feet."),
-      defineFaq(
-        "What is the formula to convert meters to feet?",
-        "Multiply meters by 3.28084 to convert them to feet.",
-      ),
-      defineFaq(
-        "Why use meters to feet conversion?",
-        "It helps compare room sizes, travel distances, and sports measurements across different systems.",
-      ),
-    ),
+    customLongDescription: metersToFeetStructuredContent,
+    faq: metersToFeetFaqs,
     metaDescription:
       "Convert meters to feet for building plans, sports distances, and room sizes using a simple calculator with formula notes and lookup values.",
     popular: true,
   }),
   defineNumericPairPage("length", "ft", "m", 25, [1, 5, 10, 25, 50, 100], {
-    faq: defineFaqs(
-      defineFaq("How many meters are in 1 foot?", "1 foot equals 0.3048 meters."),
-      defineFaq(
-        "What is the formula to convert feet to meters?",
-        "Multiply feet by 0.3048 to convert them to meters.",
-      ),
-      defineFaq(
-        "Why is 0.3048 the feet to meters factor?",
-        "The international foot is defined as exactly 0.3048 meters.",
-      ),
-    ),
+    customLongDescription: feetToMetersStructuredContent,
+    faq: feetToMetersFaqs,
     metaDescription:
       "Use this feet to meters converter for travel, architecture, and training distances, with exact math, examples, and a quick reference table.",
   }),
@@ -606,19 +618,74 @@ export const lengthPairPages = [
     popular: true,
   }),
   defineNumericPairPage("length", "mile", "km", 3.1, [1, 3, 5, 10, 26.2, 50], {
+    customLongDescription: milesToKmStructuredContent,
+    faq: milesToKmFaqs,
+    metaDescription:
+      "Convert miles to kilometers for races, road trips, and route planning using a quick calculator, worked example, and handy lookup table.",
+  }),
+  defineNumericPairPage("length", "m", "cm", 2, [0.25, 0.5, 1, 2, 5, 10], {
+    aliases: ["meters to cm", "meters to centimeters", "m to cm"],
     faq: defineFaqs(
-      defineFaq("How many kilometers are in 1 mile?", "1 mile equals 1.60934 kilometers."),
+      defineFaq("How many centimeters are in 1 meter?", "1 meter equals 100 centimeters."),
       defineFaq(
-        "What is the formula to convert miles to km?",
-        "Multiply miles by 1.60934 to convert them to kilometers.",
+        "What is the formula to convert meters to centimeters?",
+        "Multiply meters by 100 to convert them to centimeters.",
       ),
       defineFaq(
-        "Why convert miles to kilometers?",
-        "It helps with race distances, road trips, maps, and international travel planning.",
+        "When is meters to centimeters conversion useful?",
+        "It is useful for room planning, school work, product dimensions, and construction measurements.",
       ),
     ),
     metaDescription:
-      "Convert miles to kilometers for races, road trips, and route planning using a quick calculator, worked example, and handy lookup table.",
+      "Convert meters to centimeters for layouts, school work, and product measurements with a fast metric reference table.",
+  }),
+  defineNumericPairPage("length", "cm", "m", 250, [10, 25, 50, 100, 180, 250], {
+    aliases: ["cm to meters", "centimeters to meters", "cm to m"],
+    faq: defineFaqs(
+      defineFaq("How many meters are in 1 centimeter?", "1 centimeter equals 0.01 meters."),
+      defineFaq(
+        "What is the formula to convert centimeters to meters?",
+        "Divide centimeters by 100 to convert them to meters.",
+      ),
+      defineFaq(
+        "Why convert centimeters to meters?",
+        "It helps when small metric measurements need to be compared with room sizes, layouts, or larger plans.",
+      ),
+    ),
+    metaDescription:
+      "Convert centimeters to meters for layouts, height checks, and larger metric comparisons with a simple formula and examples.",
+  }),
+  defineNumericPairPage("length", "km", "m", 2, [0.5, 1, 2, 5, 10, 25], {
+    aliases: ["km to meters", "kilometers to meters", "km into meters"],
+    faq: defineFaqs(
+      defineFaq("How many meters are in 1 kilometer?", "1 kilometer equals 1000 meters."),
+      defineFaq(
+        "What is the formula to convert kilometers to meters?",
+        "Multiply kilometers by 1000 to convert them to meters.",
+      ),
+      defineFaq(
+        "When is km to meters conversion useful?",
+        "It is useful for route planning, race distances, mapping, and technical measurements.",
+      ),
+    ),
+    metaDescription:
+      "Convert kilometers to meters for routes, races, and mapping work with a quick metric calculator and reference values.",
+  }),
+  defineNumericPairPage("length", "m", "km", 2500, [100, 250, 500, 1000, 2500, 5000], {
+    aliases: ["meters to km", "meters to kilometers", "m to km"],
+    faq: defineFaqs(
+      defineFaq("How many kilometers are in 1 meter?", "1 meter equals 0.001 kilometers."),
+      defineFaq(
+        "What is the formula to convert meters to kilometers?",
+        "Divide meters by 1000 to convert them to kilometers.",
+      ),
+      defineFaq(
+        "Why would I convert meters to kilometers?",
+        "It helps when detailed route or project distances need to be expressed in larger metric units.",
+      ),
+    ),
+    metaDescription:
+      "Convert meters to kilometers for route planning, mapping, and distance summaries with fast metric reference values.",
   }),
 ] as const;
 
@@ -659,6 +726,7 @@ export const volumePairPages = [
   }),
   defineNumericPairPage("volume", "cup", "ml", 2, [0.25, 0.5, 1, 2, 3, 4], {
     aliases: ["cups to ml", "cup to ml", "cups to milliliters"],
+    crossLinks: ["cooking-converter", "cups-to-grams-flour", "cups-to-grams-sugar"],
     faq: defineFaqs(
       defineFaq(
         "How many milliliters are in 1 cup for cooking?",
@@ -679,7 +747,7 @@ export const volumePairPages = [
       "Convert cups to ml for recipes, baking liquids, sauces, and everyday kitchen prep with a fast US cup to milliliter guide.",
   }),
   defineNumericPairPage("volume", "floz", "ml", 8, [1, 2, 4, 8, 12, 16], {
-    aliases: ["fl oz to ml", "floz to ml", "oz to ml", "fluid ounces to milliliters"],
+    aliases: ["fluid ounces to milliliters", "fl oz to ml", "floz to ml", "oz to ml"],
     customLongDescription: ozToMlStructuredContent,
     faq: defineFaqs(
       defineFaq(
@@ -696,11 +764,11 @@ export const volumePairPages = [
       ),
     ),
     metaDescription:
-      "Change fl oz to ml in seconds. Great for drink recipes, nutrition labels, and bottle sizes, with formula and lookup values.",
+      "Convert fluid ounces to milliliters for drink recipes, bottle sizes, nutrition labels, and clear volume comparisons.",
     popular: true,
   }),
   defineNumericPairPage("volume", "ml", "floz", 500, [30, 50, 100, 250, 500, 1000], {
-    aliases: ["ml to fl oz", "ml to floz", "ml to oz", "milliliters to fluid ounces"],
+    aliases: ["milliliters to fluid ounces", "ml to fl oz", "ml to floz", "ml to oz"],
     faq: defineFaqs(
       defineFaq(
         "How many fluid ounces are in 1 milliliter?",
@@ -716,10 +784,10 @@ export const volumePairPages = [
       ),
     ),
     metaDescription:
-      "Find fluid ounces from milliliters with a quick ml to fl oz converter for cooking, packaging, and beverage prep, plus formula and examples.",
+      "Convert milliliters to fluid ounces for cooking, bottle sizing, packaging, and beverage prep with formula and examples.",
   }),
   defineNumericPairPage("volume", "cup", "floz", 2, [0.25, 0.5, 1, 2, 3, 4], {
-    aliases: ["cups to fl oz", "cups to floz", "cups to oz", "cups to fluid ounces"],
+    aliases: ["cups to fluid ounces", "cups to fl oz", "cups to floz", "cups to oz"],
     customLongDescription: cupsToOzStructuredContent,
     faq: defineFaqs(
       defineFaq("How many ounces are in 1 cup?", "1 US cup equals 8 fluid ounces."),
@@ -733,10 +801,10 @@ export const volumePairPages = [
       ),
     ),
     metaDescription:
-      "Convert cups to fl oz for recipe prep and kitchen measurements with an easy calculator, quick formula, and common cup-to-fluid-ounce references.",
+      "Convert cups to fluid ounces for recipe prep and kitchen measurements with a clear calculator, quick formula, and common references.",
   }),
   defineNumericPairPage("volume", "floz", "cup", 8, [1, 2, 4, 8, 12, 16], {
-    aliases: ["fl oz to cups", "floz to cups", "oz to cups", "fluid ounces to cups"],
+    aliases: ["fluid ounces to cups", "fl oz to cups", "floz to cups", "oz to cups"],
     faq: defineFaqs(
       defineFaq("How many cups are in 1 fluid ounce?", "1 fluid ounce equals 0.125 cups."),
       defineFaq(
@@ -749,7 +817,7 @@ export const volumePairPages = [
       ),
     ),
     metaDescription:
-      "See how many cups are in a fluid ounce using this fl oz to cups converter, useful for recipes, serving sizes, and portion calculations.",
+      "See how many cups are in a fluid ounce using this fluid ounces to cups converter, useful for recipes, serving sizes, and portion calculations.",
   }),
   defineNumericPairPage("volume", "l", "gal", 3, [0.5, 1, 2, 3, 5, 10], {
     faq: defineFaqs(
@@ -784,6 +852,7 @@ export const volumePairPages = [
   }),
   defineNumericPairPage("volume", "tbsp", "ml", 2, [0.5, 1, 2, 4, 8, 16], {
     aliases: ["tbsp to ml", "tablespoons to ml", "tablespoon to milliliters"],
+    crossLinks: ["cooking-converter", "cups-to-grams-flour", "tsp-to-grams-sugar"],
     faq: defineFaqs(
       defineFaq(
         "How many milliliters are in 1 tablespoon for cooking?",
@@ -826,6 +895,7 @@ export const volumePairPages = [
   }),
   defineNumericPairPage("volume", "tsp", "ml", 3, [0.5, 1, 2, 3, 4, 6], {
     aliases: ["tsp to ml", "teaspoons to ml", "teaspoon to milliliters"],
+    crossLinks: ["cooking-converter", "tsp-to-grams-sugar", "cups-to-grams-sugar"],
     faq: defineFaqs(
       defineFaq(
         "How many milliliters are in 1 teaspoon for cooking?",
@@ -865,6 +935,70 @@ export const volumePairPages = [
     metaDescription:
       "Convert ml to tsp quickly for recipe prep, syrups, and kitchen measurements with a simple formula and common reference values.",
   }),
+  defineNumericPairPage("volume", "l", "ml", 2, [0.25, 0.5, 1, 2, 5, 10], {
+    aliases: ["liters to ml", "liters to milliliters", "l to ml"],
+    faq: defineFaqs(
+      defineFaq("How many milliliters are in 1 liter?", "1 liter equals 1000 milliliters."),
+      defineFaq(
+        "What is the formula to convert liters to milliliters?",
+        "Multiply liters by 1000 to convert them to milliliters.",
+      ),
+      defineFaq(
+        "When is liters to ml conversion useful?",
+        "It is useful for recipes, drink prep, packaging labels, and liquid measurements.",
+      ),
+    ),
+    metaDescription:
+      "Convert liters to milliliters for bottles, recipes, and packaging with a quick metric volume calculator and reference table.",
+  }),
+  defineNumericPairPage("volume", "ml", "l", 750, [100, 250, 500, 750, 1000, 2000], {
+    aliases: ["ml to liters", "milliliters to liters", "ml to l"],
+    faq: defineFaqs(
+      defineFaq("How many liters are in 1 milliliter?", "1 milliliter equals 0.001 liters."),
+      defineFaq(
+        "What is the formula to convert milliliters to liters?",
+        "Divide milliliters by 1000 to convert them to liters.",
+      ),
+      defineFaq(
+        "Why convert milliliters to liters?",
+        "It helps compare smaller liquid amounts with bottle sizes, storage containers, and recipe totals.",
+      ),
+    ),
+    metaDescription:
+      "Convert milliliters to liters for recipes, bottle sizing, and liquid totals with a simple metric volume reference.",
+  }),
+  defineNumericPairPage("volume", "cup", "tbsp", 1, [0.25, 0.5, 1, 2, 3, 4], {
+    aliases: ["cups to tbsp", "cups to tablespoons", "cup to tablespoons"],
+    faq: defineFaqs(
+      defineFaq("How many tablespoons are in 1 cup?", "1 US cup equals 16 tablespoons."),
+      defineFaq(
+        "What is the formula to convert cups to tablespoons?",
+        "Multiply cups by 16 to convert them to tablespoons.",
+      ),
+      defineFaq(
+        "When is cups to tablespoons conversion useful?",
+        "It is useful for scaling recipes, mixing dressings, and measuring ingredients when you do not want to use cups.",
+      ),
+    ),
+    metaDescription:
+      "Convert cups to tablespoons for recipe scaling, baking, and kitchen prep with a quick US cooking conversion table.",
+  }),
+  defineNumericPairPage("volume", "tbsp", "cup", 8, [1, 2, 4, 8, 12, 16], {
+    aliases: ["tbsp to cups", "tablespoons to cups", "tablespoon to cup"],
+    faq: defineFaqs(
+      defineFaq("How many cups are in 1 tablespoon?", "1 tablespoon equals 0.0625 cups."),
+      defineFaq(
+        "What is the formula to convert tablespoons to cups?",
+        "Divide tablespoons by 16 to convert them to cups.",
+      ),
+      defineFaq(
+        "Why convert tablespoons to cups?",
+        "It helps combine smaller recipe measurements into larger cup-based totals during baking and meal prep.",
+      ),
+    ),
+    metaDescription:
+      "Convert tablespoons to cups for baking, meal prep, and recipe scaling with a simple kitchen conversion reference.",
+  }),
 ] as const;
 
 export const temperaturePairPages = [
@@ -887,20 +1021,8 @@ export const temperaturePairPages = [
       "Convert Celsius to Fahrenheit for weather, cooking, and science with the exact formula, worked examples, and quick reference values.",
   }),
   defineNumericPairPage("temperature", "f", "c", 72, [32, 50, 68, 72, 86, 104], {
-    faq: defineFaqs(
-      defineFaq(
-        "How many Celsius is 1 Fahrenheit?",
-        "1 degree Fahrenheit equals about -17.2222 degrees Celsius.",
-      ),
-      defineFaq(
-        "What is the formula to convert Fahrenheit to Celsius?",
-        "Subtract 32 from Fahrenheit, then multiply by 5/9.",
-      ),
-      defineFaq(
-        "Why does Fahrenheit to Celsius include subtracting 32?",
-        "Because Fahrenheit and Celsius start from different zero points on their scales.",
-      ),
-    ),
+    customLongDescription: fahrenheitToCelsiusStructuredContent,
+    faq: fahrenheitToCelsiusFaqs,
     formulaLabel: "\u00b0C = (\u00b0F - 32) x 5/9",
     metaDescription:
       "Need Fahrenheit in Celsius? Use this quick converter for forecasts, ovens, and lab work, with the formula and common temperature values.",
@@ -937,6 +1059,40 @@ export const temperaturePairPages = [
     formulaLabel: "\u00b0F = ((K - 273.15) x 9/5) + 32",
     metaDescription:
       "Use this Kelvin to Fahrenheit converter for lab work and technical calculations, with the full formula, examples, and common values.",
+  }),
+  defineNumericPairPage("temperature", "c", "k", 25, [0, 10, 20, 25, 37, 100], {
+    aliases: ["celsius to kelvin", "c to kelvin", "degrees celsius to kelvin"],
+    faq: defineFaqs(
+      defineFaq("How many Kelvin are in 1 degree Celsius?", "1 degree Celsius equals 274.15 Kelvin."),
+      defineFaq(
+        "What is the formula to convert Celsius to Kelvin?",
+        "Add 273.15 to Celsius to convert it to Kelvin.",
+      ),
+      defineFaq(
+        "When is Celsius to Kelvin conversion useful?",
+        "It is useful for science, lab work, engineering references, and temperature calculations that require an absolute scale.",
+      ),
+    ),
+    formulaLabel: "K = °C + 273.15",
+    metaDescription:
+      "Convert Celsius to Kelvin for science, engineering, and lab work with the exact formula, examples, and common reference values.",
+  }),
+  defineNumericPairPage("temperature", "k", "c", 298.15, [250, 273.15, 298.15, 310.15, 373.15], {
+    aliases: ["kelvin to celsius", "k to celsius", "kelvin into celsius"],
+    faq: defineFaqs(
+      defineFaq("How many Celsius is 1 Kelvin?", "1 Kelvin equals -272.15 degrees Celsius."),
+      defineFaq(
+        "What is the formula to convert Kelvin to Celsius?",
+        "Subtract 273.15 from Kelvin to convert it to Celsius.",
+      ),
+      defineFaq(
+        "Why use Kelvin to Celsius conversion?",
+        "It helps translate scientific and technical temperatures into a more familiar everyday scale.",
+      ),
+    ),
+    formulaLabel: "°C = K - 273.15",
+    metaDescription:
+      "Convert Kelvin to Celsius quickly for lab work, science classes, and technical references with the exact formula and examples.",
   }),
 ] as const;
 
@@ -1001,20 +1157,8 @@ export const dataPairPages = [
     popular: true,
   }),
   defineNumericPairPage("data", "gb", "mb", 5, [0.5, 1, 2, 5, 10, 25], {
-    faq: defineFaqs(
-      defineFaq(
-        "How many megabytes are in 1 gigabyte?",
-        "1 gigabyte equals 1024 megabytes in binary conversion.",
-      ),
-      defineFaq(
-        "What is the formula to convert GB to MB?",
-        "Multiply gigabytes by 1024 to convert them to megabytes.",
-      ),
-      defineFaq(
-        "When is GB to MB conversion helpful?",
-        "It is useful for upload limits, storage planning, and comparing download or file sizes.",
-      ),
-    ),
+    customLongDescription: gbToMbStructuredContent,
+    faq: gbToMbFaqs,
     metaDescription:
       "See how many megabytes are in a gigabyte with this GB to MB converter, ideal for downloads, storage limits, and transfer planning.",
   }),

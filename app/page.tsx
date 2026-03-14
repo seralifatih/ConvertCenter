@@ -14,8 +14,7 @@ import {
 } from "@/lib/content/categories";
 import {
   getLaunchPage,
-  getLaunchPageCount,
-  getLaunchPageLabel,
+  getHomepagePopularLabel,
   getPageHref,
   getSearchEntries,
 } from "@/lib/content/pages";
@@ -37,10 +36,11 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function Home() {
-  const launchPageTotal = getLaunchPageCount();
+  const searchEntries = getSearchEntries();
+  const featuredPopularCount = homePopularSlugs.length;
 
   return (
-    <PageContainer className="space-y-5 pb-4">
+    <PageContainer className="space-y-4 pb-4">
       <StructuredData
         data={{
           "@context": "https://schema.org",
@@ -52,50 +52,55 @@ export default function Home() {
         }}
       />
 
-      <section className="shell-card px-5 py-6 text-center sm:px-8 sm:py-8">
-        <div className="mx-auto max-w-3xl">
-          <div className="mb-4 flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
-            <Image
-              alt=""
-              aria-hidden="true"
-              className="h-5 w-5 rounded-[6px]"
-              height={20}
-              src={faviconIco}
-              width={20}
-            />
-            <span>convertcenter</span>
+      <section className="homepage-hero shell-card px-5 py-5 sm:px-7 sm:py-6">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(320px,0.74fr)] lg:items-start">
+          <div className="max-w-2xl">
+            <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="h-5 w-5 rounded-[6px]"
+                height={20}
+                src={faviconIco}
+                width={20}
+              />
+              <span>convertcenter</span>
+            </div>
+            <h1 className="max-w-2xl text-4xl font-medium tracking-[-0.05em] sm:text-[58px]">
+              Convert anything, instantly
+            </h1>
+            <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
+              Search, convert, copy. No sign-up needed.
+            </p>
+            <div className="mt-4 lg:hidden">
+              <HomeSearch quickSearches={homeQuickSearches} searchEntries={searchEntries} />
+            </div>
           </div>
-          <h1 className="text-4xl font-medium tracking-[-0.05em] sm:text-[58px]">
-            Convert anything, instantly
-          </h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
-            Units, text, data. Paste, convert, copy.
-          </p>
-        </div>
-        <div className="mx-auto mt-4 max-w-4xl text-left">
-          <HomeSearch
-            quickSearches={homeQuickSearches}
-            searchEntries={getSearchEntries()}
-          />
-          <HomeUniversalConverter />
+
+          <div className="space-y-3 text-left">
+            <div className="hidden lg:block">
+              <HomeSearch quickSearches={homeQuickSearches} searchEntries={searchEntries} />
+            </div>
+            <div className="hero-converter-card">
+              <div className="mb-2.5 flex items-center justify-between gap-3">
+                <div>
+                  <div className="mono-kicker">quick convert</div>
+                  <div className="mt-1 text-sm text-[color:var(--muted)]">
+                    Fast unit conversion without leaving the homepage.
+                  </div>
+                </div>
+                <span className="section-badge">compact</span>
+              </div>
+              <HomeUniversalConverter />
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="flex flex-wrap gap-2 px-1">
-        <PillLink active href="#popular">
-          all
-        </PillLink>
-        {browseCategories.map((category) => (
-          <PillLink href={category.route} key={category.route}>
-            {category.label}
-          </PillLink>
-        ))}
-      </div>
-
-      <section className="space-y-4" id="popular">
+      <section className="space-y-3" id="popular">
         <div className="flex items-center gap-3">
           <h2 className="section-title">Popular conversions</h2>
-          <span className="section-badge">{launchPageTotal} pages</span>
+          <span className="section-badge">{featuredPopularCount} featured tools</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {homePopularSlugs.map((slug) => {
@@ -106,12 +111,12 @@ export default function Home() {
             }
 
             return (
-              <Link className="link-tile" href={getPageHref(page)} key={page.slug}>
-                <span className="font-mono text-sm text-[color:var(--text)]">
-                  {getLaunchPageLabel(page)}
+              <Link className="link-tile-popular" href={getPageHref(page)} key={page.slug}>
+                <span className="text-[13px] leading-5 text-[color:var(--text)] sm:text-sm">
+                  {getHomepagePopularLabel(page)}
                 </span>
                 <span className="text-xs text-[color:var(--muted)]">
-                  Open the dedicated {page.category} page
+                  Open the dedicated {page.category} tool
                 </span>
               </Link>
             );
@@ -119,14 +124,28 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="space-y-4" id="category-hubs">
+      <nav
+        aria-label="Browse conversion categories"
+        className="flex gap-2 overflow-x-auto px-1 pb-1 home-chip-scroll"
+      >
+        <PillLink active className="shrink-0 whitespace-nowrap" href="/">
+          all tools
+        </PillLink>
+        {browseCategories.map((category) => (
+          <PillLink className="shrink-0 whitespace-nowrap" href={category.route} key={category.route}>
+            {category.label}
+          </PillLink>
+        ))}
+      </nav>
+
+      <section className="space-y-3" id="category-hubs">
         <div className="flex items-center gap-3">
           <h2 className="section-title">Category hubs</h2>
           <span className="section-badge">{browseCategories.length} hubs</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {browseCategories.map((category) => (
-            <Link className="link-tile" href={category.route} key={category.route}>
+          {browseCategories.map((category, index) => (
+            <Link className="link-tile-hub" data-tone={index % 3} href={category.route} key={category.route}>
               <span className="font-mono text-sm text-[color:var(--text)]">
                 {category.route}
               </span>

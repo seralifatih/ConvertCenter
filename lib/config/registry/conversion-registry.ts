@@ -8,6 +8,7 @@ import type {
 import {
   buildUnitPairSlug,
   dataUnits,
+  getUnitPluralLabel,
   getUnitSymbol,
   lengthUnits,
   temperatureUnits,
@@ -280,6 +281,8 @@ export const categoryRegistry: LaunchCategorySchema[] = [
       "html to markdown",
       "json to yaml",
       "yaml to json",
+      "seconds to milliseconds",
+      "milliseconds to seconds",
       "programming tools",
     ],
     description:
@@ -341,33 +344,11 @@ const toolConfigBySlug = Object.fromEntries(
 export const homepageConfig: HomePageConfig = {
   exampleQueries: [
     "kg to lbs",
+    "cm to inches",
+    "celsius to fahrenheit",
     "cups to grams",
-    "grams to cups",
-    "teaspoons to grams",
-    "tbsp to ml",
-    "tsp to ml",
-    "hex to rgb",
-    "rgb to hex",
-    "hex to hsl",
-    "hsl to hex",
-    "color picker",
-    "reverse text",
-    "remove line breaks",
-    "remove extra spaces",
-    "word counter",
-    "character counter",
-    "slug generator",
-    "base64 encode",
-    "base64 decode",
-    "url encode",
-    "url decode",
-    "json formatter",
-    "json minifier",
-    "json validator",
-    "markdown to html",
-    "html to markdown",
-    "json to yaml",
-    "yaml to json",
+    "mb to gb",
+    "percentage calculator",
   ],
   featuredConverter: {
     categoryKey: "weight",
@@ -457,6 +438,12 @@ export function getToolAliases(tool: LaunchToolPageSchema) {
 export function getToolLabel(tool: LaunchToolPageSchema) {
   if (tool.kind === "text-transform") {
     return tool.title;
+  }
+
+  if (tool.fromUnitKey === "floz" || tool.toUnitKey === "floz") {
+    return `${getUnitPluralLabel(tool.fromUnitKey).toLowerCase()} to ${getUnitPluralLabel(
+      tool.toUnitKey,
+    ).toLowerCase()}`;
   }
 
   return `${getUnitSymbol(tool.fromUnitKey).toLowerCase()} to ${getUnitSymbol(

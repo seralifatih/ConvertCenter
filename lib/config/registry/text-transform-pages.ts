@@ -229,6 +229,7 @@ export const textTransformPages = [
         "url slug generator",
         "slugify text",
       ],
+      crossLinks: ["url-encode", "markdown-to-html"],
       metaDescription:
         "Generate clean URL slugs from text instantly for CMS entries, blog posts, and filenames.",
       popular: true,
@@ -289,6 +290,7 @@ export const textTransformPages = [
         "plain text to base64",
       ],
       categoryKey: "encoding",
+      crossLinks: ["json-formatter", "markdown-to-html"],
       metaDescription:
         "Encode text to Base64 instantly with this free online Base64 encoder. Works entirely in your browser.",
       popular: true,
@@ -376,6 +378,7 @@ export const textTransformPages = [
         "pretty print json",
       ],
       categoryKey: "encoding",
+      crossLinks: ["markdown-to-html", "json-to-yaml", "yaml-to-json"],
       metaDescription:
         "Format, beautify, and validate JSON instantly with this free JSON formatter.",
       popular: true,
@@ -443,6 +446,7 @@ export const textTransformPages = [
         "convert markdown to html",
       ],
       categoryKey: "dev-data",
+      crossLinks: ["json-formatter", "html-to-markdown", "developer-tools"],
       metaDescription:
         "Convert Markdown to HTML instantly with this free online Markdown converter.",
       popular: true,
@@ -487,6 +491,7 @@ export const textTransformPages = [
         "json into yaml",
       ],
       categoryKey: "dev-data",
+      crossLinks: ["json-formatter", "yaml-to-json", "developer-tools"],
       metaDescription:
         "Convert JSON data into YAML format instantly.",
       popular: true,

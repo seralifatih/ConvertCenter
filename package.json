@@ -8,6 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "check:content": "vitest run tests/content/content-quality.test.ts",
+    "check:sitemap": "vitest run tests/content/sitemap-readiness.test.ts",
+    "check:numeric-pairs": "vitest run tests/content/numeric-pair-expansion.test.ts",
+    "check:cross-links": "vitest run tests/content/cross-links.test.ts",
     "typecheck": "tsc --noEmit",
     "verify": "npm run lint && npm run typecheck && npm run test && npm run build"
   },

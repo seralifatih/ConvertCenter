@@ -102,6 +102,7 @@ export type NumericUnitSchema = LinearUnitSchema | FormulaUnitSchema;
 export type NumericPairPageSchema = {
   aliases: readonly string[];
   categoryKey: NumericCategoryKey;
+  crossLinks?: readonly string[];
   customLongDescription?: StructuredContent;
   customLongDescriptionSections?: readonly StructuredContentSection[];
   exampleValue: number;
@@ -123,6 +124,7 @@ export type TextTransformPageSchema = {
   actionLabel?: string;
   aliases: readonly string[];
   categoryKey: TextualCategoryKey;
+  crossLinks?: readonly string[];
   description: string;
   exampleInput: string;
   faq?: readonly FaqEntry[];

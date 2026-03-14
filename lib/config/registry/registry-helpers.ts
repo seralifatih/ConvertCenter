@@ -25,6 +25,7 @@ export function defineNumericPairPage(
   sampleValues: readonly number[],
   options?: {
     aliases?: readonly string[];
+    crossLinks?: readonly string[];
     faq?: readonly FaqEntry[];
     featured?: boolean;
     formulaLabel?: string;
@@ -44,6 +45,7 @@ export function defineNumericPairPage(
   return {
     aliases: options?.aliases ?? defaultAliases,
     categoryKey,
+    crossLinks: options?.crossLinks,
     customLongDescription: options?.customLongDescription,
     customLongDescriptionSections: options?.customLongDescriptionSections,
     exampleValue,
@@ -78,6 +80,7 @@ export function defineTextTransformPage(
     actionLabel?: string;
     aliases?: readonly string[];
     categoryKey?: TextualCategoryKey;
+    crossLinks?: readonly string[];
     faq?: readonly FaqEntry[];
     featured?: boolean;
     longDescription?: StructuredContent;
@@ -93,6 +96,7 @@ export function defineTextTransformPage(
     actionLabel: options?.actionLabel,
     aliases: options?.aliases ?? [slug.replace(/-/g, " "), title.toLowerCase(), `${mode} converter`],
     categoryKey: options?.categoryKey ?? "text",
+    crossLinks: options?.crossLinks,
     description,
     exampleInput,
     faq: options?.faq,

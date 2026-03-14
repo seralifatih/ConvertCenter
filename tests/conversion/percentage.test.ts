@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { calculatePercentageChange } from "@/lib/percentage";
+import { calculatePercentageChange, percentOf, whatPercentOf } from "@/lib/percentage";
 
 describe("percentage calculations", () => {
+  it("calculates a percent of a value", () => {
+    expect(percentOf(25, 200)).toBe(50);
+  });
+
+  it("calculates what percent one value is of another", () => {
+    expect(whatPercentOf(45, 60)).toBe(75);
+  });
+
   it("calculates percentage increase", () => {
     expect(calculatePercentageChange(100, 120)).toEqual({
       difference: 20,
@@ -27,6 +35,8 @@ describe("percentage calculations", () => {
   });
 
   it("returns null for invalid or zero-base input", () => {
+    expect(percentOf(Number.NaN, 50)).toBeNull();
+    expect(whatPercentOf(10, 0)).toBeNull();
     expect(calculatePercentageChange(0, 50)).toBeNull();
     expect(calculatePercentageChange(Number.NaN, 50)).toBeNull();
     expect(calculatePercentageChange(50, Number.POSITIVE_INFINITY)).toBeNull();

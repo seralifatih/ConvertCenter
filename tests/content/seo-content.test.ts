@@ -10,10 +10,10 @@ import { makeFaqSchemaIfPresent } from "../../lib/seo";
 
 describe("long-form SEO content", () => {
   it("builds generated fallback content for long-tail numeric pages", () => {
-    const page = getUnitPage("lbs-to-kg");
+    const page = getUnitPage("grams-to-ounces");
 
     expect(page?.longDescription).toBeDefined();
-    expect(page?.longDescription?.title).toBe("About converting pounds to kilograms");
+    expect(page?.longDescription?.title).toBe("About converting grams to ounces");
     expect(page?.longDescription?.sections.length).toBeGreaterThanOrEqual(3);
     expect(page?.longDescription?.sections[0]?.heading).toBe("Conversion formula");
   });

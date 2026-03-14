@@ -16,6 +16,10 @@ import {
   type NumericCategoryKey,
   type UnitKey,
 } from "@/lib/conversion/units";
+import {
+  getConverterInputMessage,
+  getConverterInputState,
+} from "@/lib/conversion/converter-input";
 
 type PairUnitConverterProps = {
   category: NumericCategoryKey;
@@ -82,12 +86,15 @@ function PairUnitConverterContent({
   const fromValueControlId = `pair-converter-from-value-${category}`;
   const toUnitControlId = `pair-converter-to-unit-${category}`;
   const toValueControlId = `pair-converter-to-value-${category}`;
-  const trimmedValue = rawValue.trim();
-  const numericValue = Number(trimmedValue);
-  const hasValidInput = trimmedValue.length > 0 && Number.isFinite(numericValue);
-  const result = hasValidInput ? convertValue(fromUnit, toUnit, numericValue) : null;
+  const inputState = getConverterInputState(rawValue);
+  const result =
+    inputState.kind === "valid"
+      ? convertValue(fromUnit, toUnit, inputState.numericValue)
+      : null;
   const formattedResult = result === null ? "" : formatConverterOutput(category, result);
   const formulaLine = getUnitReferenceLine(fromUnit, toUnit, "formula");
+  const helperMessage =
+    inputState.kind === "valid" ? undefined : getConverterInputMessage(inputState);
 
   function handleSwap() {
     if (swapHref) {
@@ -119,6 +126,7 @@ function PairUnitConverterContent({
         copyText={formattedResult || undefined}
         defaultValue={String(defaultValue)}
         formulaLine={formulaLine}
+        helperMessage={helperMessage}
         onClear={() => onChangeRawValue("")}
       />
     </section>

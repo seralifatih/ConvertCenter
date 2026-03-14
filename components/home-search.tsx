@@ -51,8 +51,8 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
   }
 
   return (
-    <div className="mb-5">
-      <div className="relative">
+    <div className="space-y-3">
+      <div className="hero-search-card relative">
         <span
           aria-hidden="true"
           className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[color:var(--muted-strong)]"
@@ -66,7 +66,7 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
           aria-controls={dropdownIsOpen ? listboxId : undefined}
           aria-expanded={dropdownIsOpen}
           autoComplete="off"
-          className="input-surface w-full px-11 py-4 text-base placeholder:text-[color:var(--muted-strong)]"
+          className="hero-search-input w-full px-11 py-4 text-base placeholder:text-[color:var(--muted-strong)]"
           onBlur={() => {
             window.setTimeout(() => setIsFocused(false), 120);
           }}
@@ -104,7 +104,7 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
         />
         {dropdownIsOpen ? (
           <div
-            className="panel-card absolute inset-x-0 top-[calc(100%+0.35rem)] z-10 overflow-hidden"
+            className="panel-card absolute inset-x-0 top-[calc(100%+0.5rem)] z-10 overflow-hidden"
             id={listboxId}
             role="listbox"
           >
@@ -131,14 +131,14 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
           </div>
         ) : null}
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 home-chip-scroll">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted-strong)]">
           try:
         </span>
         {quickSearches.map((item) => (
           <PillButton
             aria-label={`Try search example ${item}`}
-            className="font-mono"
+            className="shrink-0 whitespace-nowrap font-mono"
             key={item}
             onClick={() => handleExampleChip(item)}
           >
