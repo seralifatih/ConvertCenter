@@ -89,3 +89,30 @@ export function makeFaqSchemaIfPresent(
 ) {
   return entries.length ? makeFaqSchema(entries) : null;
 }
+
+export function makeSoftwareApplicationSchema({
+  name,
+  description,
+  path,
+  applicationCategory = "UtilitiesApplication",
+}: {
+  name: string;
+  description: string;
+  path: string;
+  applicationCategory?: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    applicationCategory,
+    description,
+    name,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    operatingSystem: "Any",
+    url: `${siteConfig.url}${path}`,
+  };
+}

@@ -21,6 +21,7 @@ import {
 } from "@/lib/config/conversion-registry";
 import { transformText, type TextMode } from "@/lib/conversion/text";
 import { standaloneToolPages } from "@/lib/content/standalone-pages";
+import { getMathSearchEntries, mathToolPages } from "@/lib/content/math-tools";
 import { convertValue, formatNumber, getUnitFactor, units } from "@/lib/conversion/units";
 import type { SearchEntry } from "@/lib/search";
 
@@ -132,6 +133,7 @@ export const textPages = rawTextPages.map(adaptTextPage);
 export const launchPages: LaunchPage[] = [...unitPages, ...textPages];
 export const launchPageCount = new Set([
   ...launchPages.map((page) => page.slug),
+  ...mathToolPages.map((page) => page.slug),
   ...standaloneToolPages.map((page) => page.slug),
 ]).size;
 
@@ -406,6 +408,7 @@ export function getLaunchPageSummary(page: LaunchPage) {
 
 export function getSearchEntries() {
   const registryEntries = getSearchSuggestionEntries();
+  const mathEntries = getMathSearchEntries();
   const standaloneEntries: SearchEntry[] = standaloneToolPages.map((page) => ({
     category: page.category,
     entryType: "page",
@@ -414,5 +417,5 @@ export function getSearchEntries() {
     title: page.title,
   }));
 
-  return [...registryEntries, ...standaloneEntries];
+  return [...registryEntries, ...mathEntries, ...standaloneEntries];
 }

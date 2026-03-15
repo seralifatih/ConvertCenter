@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
 import clsx from "clsx";
+import { useId, useMemo, useState } from "react";
 import { solveProportion, simplifyRatio } from "@/lib/ratio";
 
 type RatioMode = "proportion" | "simplify";
@@ -12,19 +12,21 @@ function formatValue(value: number, maximumFractionDigits = 4) {
 
 type RatioCalculatorWidgetProps = {
   defaultLeft: number;
+  defaultMode?: RatioMode;
   defaultRight: number;
   defaultThird: number;
 };
 
 export function RatioCalculatorWidget({
   defaultLeft,
+  defaultMode = "simplify",
   defaultRight,
   defaultThird,
 }: RatioCalculatorWidgetProps) {
   const leftId = useId();
   const rightId = useId();
   const thirdId = useId();
-  const [mode, setMode] = useState<RatioMode>("simplify");
+  const [mode, setMode] = useState<RatioMode>(defaultMode);
   const [leftValue, setLeftValue] = useState(String(defaultLeft));
   const [rightValue, setRightValue] = useState(String(defaultRight));
   const [thirdValue, setThirdValue] = useState(String(defaultThird));
@@ -49,7 +51,6 @@ export function RatioCalculatorWidget({
               { label: "solve proportion", value: "proportion" },
             ].map((option) => (
               <button
-                key={option.value}
                 aria-pressed={mode === option.value}
                 className={clsx(
                   "rounded-full border px-3 py-2 text-sm transition",
@@ -57,6 +58,7 @@ export function RatioCalculatorWidget({
                     ? "border-[color:var(--accent)] bg-[color:var(--accent-surface)] text-[color:var(--accent)]"
                     : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--muted)] hover:border-[color:var(--border-strong)] hover:text-[color:var(--foreground)]",
                 )}
+                key={option.value}
                 onClick={() => setMode(option.value as RatioMode)}
                 type="button"
               >
@@ -160,7 +162,7 @@ export function RatioCalculatorWidget({
                 </div>
                 <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
                   <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">formula</div>
-                  <p className="font-mono text-sm text-[color:var(--accent)]">x = (b × c) / a</p>
+                  <p className="font-mono text-sm text-[color:var(--accent)]">x = (b x c) / a</p>
                 </div>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryPageTemplate } from "@/components/category-page-template";
+import { MathToolPageTemplate } from "@/components/math-tool-page-template";
 import { TextPageTemplate } from "@/components/text-page-template";
 import { UnitPageTemplate } from "@/components/unit-page-template";
 import {
@@ -10,6 +11,10 @@ import {
   getBrowseCategoryMetaDescription,
   getBrowseCategoryMetaTitle,
 } from "@/lib/content/categories";
+import {
+  getMathToolPage,
+  mathToolPages,
+} from "@/lib/content/math-tools";
 import {
   getLaunchPage,
   getTextPageKeywords,
@@ -33,8 +38,9 @@ export function generateStaticParams() {
     category: category.route.slice(1),
   }));
   const launchPageParams = launchPages.map((page) => ({ category: page.slug }));
+  const mathPageParams = mathToolPages.map((page) => ({ category: page.slug }));
 
-  return [...categoryParams, ...launchPageParams];
+  return [...categoryParams, ...launchPageParams, ...mathPageParams];
 }
 
 export async function generateMetadata({ params }: DynamicPageProps): Promise<Metadata> {
@@ -53,27 +59,39 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
 
   const page = getLaunchPage(category);
 
-  if (!page) {
-    return {};
-  }
+  if (page) {
+    if (page.kind === "text") {
+      return buildMetadata({
+        title: getTextPageMetaTitle(page),
+        description: getTextPageMetaDescription(page),
+        imagePath: `/${page.slug}/opengraph-image`,
+        path: `/${page.slug}`,
+        keywords: getTextPageKeywords(page),
+      });
+    }
 
-  if (page.kind === "text") {
     return buildMetadata({
-      title: getTextPageMetaTitle(page),
-      description: getTextPageMetaDescription(page),
+      title: getUnitPageMetaTitle(page),
+      description: getUnitPageMetaDescription(page),
       imagePath: `/${page.slug}/opengraph-image`,
       path: `/${page.slug}`,
-      keywords: getTextPageKeywords(page),
+      keywords: getUnitPageKeywords(page),
     });
   }
 
-  return buildMetadata({
-    title: getUnitPageMetaTitle(page),
-    description: getUnitPageMetaDescription(page),
-    imagePath: `/${page.slug}/opengraph-image`,
-    path: `/${page.slug}`,
-    keywords: getUnitPageKeywords(page),
-  });
+  const mathToolPage = getMathToolPage(category);
+
+  if (mathToolPage) {
+    return buildMetadata({
+      title: mathToolPage.title,
+      description: mathToolPage.metaDescription ?? mathToolPage.description,
+      imagePath: `/${mathToolPage.slug}/opengraph-image`,
+      path: mathToolPage.route,
+      keywords: [...mathToolPage.aliases, ...mathToolPage.keywords],
+    });
+  }
+
+  return {};
 }
 
 export default async function DynamicPage({ params }: DynamicPageProps) {
@@ -86,13 +104,19 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 
   const page = getLaunchPage(category);
 
-  if (!page) {
-    notFound();
+  if (page) {
+    if (page.kind === "text") {
+      return <TextPageTemplate page={page} />;
+    }
+
+    return <UnitPageTemplate page={page} />;
   }
 
-  if (page.kind === "text") {
-    return <TextPageTemplate page={page} />;
+  const mathToolPage = getMathToolPage(category);
+
+  if (mathToolPage) {
+    return <MathToolPageTemplate page={mathToolPage} />;
   }
 
-  return <UnitPageTemplate page={page} />;
+  notFound();
 }

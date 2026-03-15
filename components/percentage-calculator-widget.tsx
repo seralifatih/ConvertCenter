@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
 import clsx from "clsx";
+import { useId, useMemo, useState } from "react";
 import { calculatePercentageChange, percentOf, whatPercentOf } from "@/lib/percentage";
 
 type PercentageMode = "change" | "percentOf" | "whatPercent";
@@ -68,7 +68,6 @@ export function PercentageCalculatorWidget({
               { label: "percentage change", value: "change" },
             ].map((option) => (
               <button
-                key={option.value}
                 aria-pressed={mode === option.value}
                 className={clsx(
                   "rounded-full border px-3 py-2 text-sm transition",
@@ -76,6 +75,7 @@ export function PercentageCalculatorWidget({
                     ? "border-[color:var(--accent)] bg-[color:var(--accent-surface)] text-[color:var(--accent)]"
                     : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--muted)] hover:border-[color:var(--border-strong)] hover:text-[color:var(--foreground)]",
                 )}
+                key={option.value}
                 onClick={() => setMode(option.value as PercentageMode)}
                 type="button"
               >
@@ -149,17 +149,17 @@ export function PercentageCalculatorWidget({
                 <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">formula</div>
                 <p className="font-mono text-sm text-[color:var(--accent)]">
                   {mode === "percentOf"
-                    ? "(x / 100) × y"
+                    ? "(x / 100) x y"
                     : mode === "whatPercent"
-                      ? "(x / y) × 100"
-                      : "((new - old) / old) × 100"}
+                      ? "(x / y) x 100"
+                      : "((new - old) / old) x 100"}
                 </p>
               </div>
             </div>
           ) : (
             <p className="text-sm leading-7 text-[color:var(--accent-text)]">
-              Enter valid numbers to calculate percentages. For percentage change and “what percent”
-              mode, the base value cannot be zero.
+              Enter valid numbers to calculate percentages. For percentage change and
+              {" "}&quot;what percent&quot; mode, the base value cannot be zero.
             </p>
           )}
         </div>

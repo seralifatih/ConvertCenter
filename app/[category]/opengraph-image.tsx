@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 import { getBrowseCategory } from "@/lib/content/categories";
+import { getMathToolPage } from "@/lib/content/math-tools";
 import { getLaunchPage } from "@/lib/content/pages";
 import { siteConfig } from "@/lib/site";
 import { units } from "@/lib/conversion/units";
@@ -33,23 +34,33 @@ export function getImageCopy(slugOrCategory: string) {
 
   const page = getLaunchPage(slugOrCategory);
 
-  if (!page) {
-    return null;
-  }
+  if (page) {
+    if (page.kind === "text") {
+      return {
+        eyebrow: "Text conversion",
+        title: page.title,
+        subtitle: "Instant text formatting",
+      };
+    }
 
-  if (page.kind === "text") {
     return {
-      eyebrow: "Text conversion",
-      title: page.title,
-      subtitle: "Instant text formatting",
+      eyebrow: "Unit conversion",
+      title: `${units[page.from].shortLabel} -> ${units[page.to].shortLabel} Converter`,
+      subtitle: "Instant unit conversion",
     };
   }
 
-  return {
-    eyebrow: "Unit conversion",
-    title: `${units[page.from].shortLabel} \u2192 ${units[page.to].shortLabel} Converter`,
-    subtitle: "Instant unit conversion",
-  };
+  const mathToolPage = getMathToolPage(slugOrCategory);
+
+  if (mathToolPage) {
+    return {
+      eyebrow: "Math calculator",
+      title: mathToolPage.title,
+      subtitle: "Instant browser-based math tool",
+    };
+  }
+
+  return null;
 }
 
 export default async function OpenGraphImage({ params }: OpenGraphImageProps) {

@@ -17,6 +17,13 @@ describe("search ranking", () => {
     expect(findExactSearchMatch(searchEntries, "hex to rgb")?.href).toBe("/hex-to-rgb");
   });
 
+  it("finds math-tool registry pages via exact search intent", () => {
+    expect(findExactSearchMatch(searchEntries, "median calculator")?.href).toBe("/median-calculator");
+    expect(findExactSearchMatch(searchEntries, "fraction to decimal calculator")?.href).toBe(
+      "/fraction-to-decimal",
+    );
+  });
+
   it("ranks partial and intent-style matches correctly", () => {
     const results = rankSearchEntries(searchEntries, "kilogram pound");
 

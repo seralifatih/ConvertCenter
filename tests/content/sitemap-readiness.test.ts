@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import robots from "../../app/robots";
 import sitemap from "../../app/sitemap";
 import { browseCategories } from "../../lib/content/categories";
+import { mathToolPages } from "../../lib/content/math-tools";
 import { launchPages } from "../../lib/content/pages";
 import { standaloneToolPages } from "../../lib/content/standalone-pages";
 import { siteConfig } from "../../lib/site";
@@ -13,6 +14,7 @@ describe("sitemap and robots readiness", () => {
       "",
       ...standaloneToolPages.map((page) => page.route),
       ...browseCategories.map((category) => category.route),
+      ...mathToolPages.map((page) => page.route),
       ...launchPages.map((page) => `/${page.slug}`),
     ];
     const expectedUrls = new Set(expectedRoutes.map((route) => `${siteConfig.url}${route}`));

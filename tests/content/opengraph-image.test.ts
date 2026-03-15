@@ -11,8 +11,16 @@ describe("opengraph image route", () => {
 
     expect(copy).toEqual({
       eyebrow: "Unit conversion",
-      title: "kg → lb Converter",
+      title: "kg -> lb Converter",
       subtitle: "Instant unit conversion",
+    });
+  });
+
+  it("returns the expected copy for a math calculator page", () => {
+    expect(getImageCopy("median-calculator")).toEqual({
+      eyebrow: "Math calculator",
+      title: "Median Calculator",
+      subtitle: "Instant browser-based math tool",
     });
   });
 

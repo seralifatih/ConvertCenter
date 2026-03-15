@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import type { Metadata } from "next";
 import faviconIco from "@/app/assets/favicon.ico";
 import { HomeSearch } from "@/components/home-search";
 import { HomeUniversalConverter } from "@/components/home-universal-converter";
@@ -13,21 +13,22 @@ import {
   homeQuickSearches,
 } from "@/lib/content/categories";
 import {
-  getLaunchPage,
   getHomepagePopularLabel,
+  getLaunchPage,
   getPageHref,
   getSearchEntries,
 } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Unit Converter, Text Case Converter & Data Size Calculator",
+  title: "Math Calculators, Unit Converter & Developer Tools",
   description:
-    "Free online converter for units, text case, and data sizes. Convert kg to lbs, cm to inches, MB to GB, and more — instantly, no sign-up needed.",
+    "Free online math calculators, converters, and developer tools. Calculate percentages, fractions, ratios, kg to lbs, cm to inches, MB to GB, and more instantly.",
   path: "/",
   keywords: [
     "convert anything instantly",
     "conversion hub",
+    "math calculators",
     "unit conversion hub",
     "text conversion tools",
     "data size converter",
@@ -48,7 +49,7 @@ export default function Home() {
           name: "ConvertCenter",
           url: "https://convertcenter.org",
           description:
-            "Universal conversion hub for units, text case, data sizes, and lightweight developer-friendly transforms.",
+            "Universal tool hub for math calculators, unit conversions, text transforms, data sizes, and lightweight developer-friendly utilities.",
         }}
       />
 
@@ -67,10 +68,10 @@ export default function Home() {
               <span>convertcenter</span>
             </div>
             <h1 className="max-w-2xl text-4xl font-medium tracking-[-0.05em] sm:text-[58px]">
-              Convert anything, instantly
+              Calculate and convert anything, instantly
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
-              Search, convert, copy. No sign-up needed.
+              Search, calculate, convert, copy. No sign-up needed.
             </p>
             <div className="mt-4 lg:hidden">
               <HomeSearch quickSearches={homeQuickSearches} searchEntries={searchEntries} />
@@ -130,6 +131,9 @@ export default function Home() {
       >
         <PillLink active className="shrink-0 whitespace-nowrap" href="/">
           all tools
+        </PillLink>
+        <PillLink className="shrink-0 whitespace-nowrap" href="/math-tools">
+          math
         </PillLink>
         {browseCategories.map((category) => (
           <PillLink className="shrink-0 whitespace-nowrap" href={category.route} key={category.route}>
