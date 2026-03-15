@@ -75,6 +75,11 @@ export default function RootLayout({
           {themeScript}
         </Script>
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 py-3 sm:px-4 lg:px-6">
+          <div
+            aria-hidden="true"
+            className="shrink-0"
+            style={{ height: "var(--site-top-bar-height, 0px)" }}
+          />
           <SiteNav />
           <main className="flex-1">{children}</main>
           <AppFooter />

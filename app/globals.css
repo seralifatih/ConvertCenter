@@ -2,6 +2,7 @@
 
 :root,
 html[data-theme="dark"] {
+  --site-top-bar-height: 0px;
   --page: #0f1115;
   --card: #171b22;
   --input: #1d2129;
@@ -63,6 +64,7 @@ html {
 }
 
 body {
+  margin: 0;
   min-height: 100vh;
   background:
     radial-gradient(circle at top, color-mix(in oklab, var(--accent) 12%, transparent) 0%, transparent 34%),
@@ -172,6 +174,14 @@ select {
   .home-chip-scroll::-webkit-scrollbar {
     display: none;
   }
+
+  .theme-toggle {
+    @apply inline-flex items-center gap-1.5;
+  }
+
+  .theme-toggle-thumb {
+    transform: translateX(16px);
+  }
 }
 
 html[data-theme="light"] .homepage-hero {
@@ -205,4 +215,8 @@ html[data-theme="light"] .link-tile-hub[data-tone="1"] {
 
 html[data-theme="light"] .link-tile-hub[data-tone="2"] {
   background: color-mix(in oklab, var(--card) 86%, #eef3ef);
+}
+
+html[data-theme="light"] .theme-toggle-thumb {
+  transform: translateX(2px);
 }
