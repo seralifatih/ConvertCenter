@@ -16,7 +16,7 @@ export const metadata = buildMetadata({
   keywords: [...mathHubConfig.keywords],
 });
 
-export default function MathToolsPage() {
+export default function MathCalculatorsPage() {
   return (
     <PageContainer className="space-y-5 pb-4">
       <StructuredData
@@ -56,7 +56,7 @@ export default function MathToolsPage() {
 
       <UtilityCard>
         <div className="mb-4 flex items-center gap-3">
-          <h2 className="section-title">Math calculator library</h2>
+          <h2 className="section-title">Core calculators</h2>
           <span className="section-badge">{mathToolPages.length} tools</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -90,9 +90,9 @@ export default function MathToolsPage() {
             <span className="section-badge">recommended</span>
           </div>
           <div className="mt-4 space-y-3 text-sm leading-7 text-[color:var(--muted)]">
-            <p>Use percentage tools for discounts, growth, and percentage comparisons.</p>
-            <p>Use statistics tools for quick list summaries such as average, median, and spread.</p>
-            <p>Use fraction, ratio, and number-theory tools for exact math and classroom workflows.</p>
+            <p>Use the percentage calculator for percent-of, what-percent, and flexible percentage math.</p>
+            <p>Use percentage change for before-and-after comparisons with a clear increase or decrease result.</p>
+            <p>Use average and ratio tools when you already have a list or pair of values ready to compare.</p>
           </div>
         </UtilityCard>
       </section>

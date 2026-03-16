@@ -6,6 +6,15 @@ import {
 } from "../../lib/content/math-tools";
 
 describe("math tool registry", () => {
+  it("keeps the initial rollout limited to the four requested calculators", () => {
+    expect(mathToolPages.map((page) => page.slug)).toEqual([
+      "percentage-calculator",
+      "percentage-change",
+      "average-calculator",
+      "ratio-calculator",
+    ]);
+  });
+
   it("keeps slugs and routes unique", () => {
     const slugs = new Set(mathToolPages.map((page) => page.slug));
     const routes = new Set(mathToolPages.map((page) => page.route));
@@ -24,7 +33,7 @@ describe("math tool registry", () => {
   });
 
   it("resolves related math pages from config", () => {
-    const page = getMathToolPage("fraction-calculator");
+    const page = getMathToolPage("average-calculator");
 
     expect(page).toBeDefined();
 
@@ -33,7 +42,7 @@ describe("math tool registry", () => {
     }
 
     expect(getMathToolRelatedPages(page).map((entry) => entry.slug)).toEqual(
-      expect.arrayContaining(["fraction-to-decimal", "decimal-to-fraction", "ratio-calculator"]),
+      expect.arrayContaining(["percentage-calculator", "percentage-change", "ratio-calculator"]),
     );
   });
 });

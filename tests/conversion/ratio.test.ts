@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { greatestCommonDivisor, simplifyRatio, solveProportion } from "@/lib/ratio";
+import {
+  buildEquivalentRatios,
+  greatestCommonDivisor,
+  simplifyRatio,
+  solveProportion,
+} from "@/lib/ratio";
 
 describe("ratio calculations", () => {
   it("finds the greatest common divisor", () => {
@@ -24,8 +29,17 @@ describe("ratio calculations", () => {
     });
   });
 
+  it("builds equivalent ratio scales from the simplified ratio", () => {
+    expect(buildEquivalentRatios(4, 8)).toEqual([
+      { factor: 2, left: 2, right: 4 },
+      { factor: 3, left: 3, right: 6 },
+      { factor: 4, left: 4, right: 8 },
+    ]);
+  });
+
   it("returns null for invalid proportion inputs", () => {
     expect(solveProportion(0, 2, 3)).toBeNull();
     expect(solveProportion(2, Number.POSITIVE_INFINITY, 3)).toBeNull();
+    expect(buildEquivalentRatios(4.5, 9)).toEqual([]);
   });
 });

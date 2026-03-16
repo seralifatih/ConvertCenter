@@ -18,9 +18,18 @@ describe("search ranking", () => {
   });
 
   it("finds math-tool registry pages via exact search intent", () => {
-    expect(findExactSearchMatch(searchEntries, "median calculator")?.href).toBe("/median-calculator");
-    expect(findExactSearchMatch(searchEntries, "fraction to decimal calculator")?.href).toBe(
-      "/fraction-to-decimal",
+    expect(findExactSearchMatch(searchEntries, "average calculator")?.href).toBe(
+      "/average-calculator",
+    );
+    expect(findExactSearchMatch(searchEntries, "ratio calculator")?.href).toBe(
+      "/ratio-calculator",
+    );
+  });
+
+  it("finds the math calculator hub and initial math pages", () => {
+    expect(findExactSearchMatch(searchEntries, "math calculators")?.href).toBe("/math-calculators");
+    expect(findExactSearchMatch(searchEntries, "percentage calculator")?.href).toBe(
+      "/percentage-calculator",
     );
   });
 

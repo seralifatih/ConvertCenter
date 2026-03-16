@@ -3,48 +3,54 @@ import type { SearchEntry } from "@/lib/search";
 
 export type MathToolWidgetConfig =
   | {
-      defaultPrimary: number;
-      defaultSecondary: number;
-      defaultMode?: "change" | "percentOf" | "whatPercent";
-      kind: "percentage";
-    }
+    defaultPrimary: number;
+    defaultSecondary: number;
+    defaultMode?: "change" | "percentOf" | "whatPercent";
+    kind: "percentage";
+  }
   | {
-      defaultNewValue: number;
-      defaultOldValue: number;
-      kind: "percentage-change";
-    }
+    calculatorId: string;
+    defaultVariant?: string;
+    defaultValues?: Record<string, string | number>;
+    kind: "generic";
+  }
   | {
-      defaultMode?: "proportion" | "simplify";
-      defaultLeft: number;
-      defaultRight: number;
-      defaultThird: number;
-      kind: "ratio";
-    }
+    defaultNewValue: number;
+    defaultOldValue: number;
+    kind: "percentage-change";
+  }
   | {
-      defaultValue: string;
-      kind: "number-list-stat";
-      metric: "average" | "median" | "mode" | "range" | "standardDeviation";
-    }
+    defaultMode?: "proportion" | "simplify";
+    defaultLeft: number;
+    defaultRight: number;
+    defaultThird: number;
+    kind: "ratio";
+  }
   | {
-      defaultDecimal?: string;
-      defaultDenominator: number;
-      defaultMode?: "decimalToFraction" | "fractionToDecimal" | "simplify";
-      defaultNumerator: number;
-      kind: "fraction";
-    }
+    defaultValue: string;
+    kind: "number-list-stat";
+    metric: "average" | "median" | "mode" | "range" | "standardDeviation";
+  }
   | {
-      defaultLeft: number;
-      defaultMode?: "gcd" | "lcm";
-      defaultRight: number;
-      kind: "integer-math";
-    }
+    defaultDecimal?: string;
+    defaultDenominator: number;
+    defaultMode?: "decimalToFraction" | "fractionToDecimal" | "simplify";
+    defaultNumerator: number;
+    kind: "fraction";
+  }
   | {
-      defaultCoefficient: string;
-      defaultDecimal: string;
-      defaultExponent: string;
-      defaultMode?: "decimalToScientific" | "scientificToDecimal";
-      kind: "scientific-notation";
-    };
+    defaultLeft: number;
+    defaultMode?: "gcd" | "lcm";
+    defaultRight: number;
+    kind: "integer-math";
+  }
+  | {
+    defaultCoefficient: string;
+    defaultDecimal: string;
+    defaultExponent: string;
+    defaultMode?: "decimalToScientific" | "scientificToDecimal";
+    kind: "scientific-notation";
+  };
 
 export type MathToolExample = {
   expression: string;
@@ -75,26 +81,32 @@ type MathToolSeed = Omit<MathToolPageDefinition, "longDescription" | "route"> & 
 
 export const mathHubConfig = {
   description:
-    "Math calculator hub for percentages, averages, fractions, ratios, and everyday number work.",
+    "Math calculator hub for percentages, averages, ratios, and everyday number comparisons.",
   intro:
-    "Math tools work best when they answer one question quickly and still provide enough context to trust the result. This hub groups together the calculators people reach for most often across schoolwork, budgeting, reporting, design scaling, and everyday problem-solving. Each page keeps the interface lightweight, stays static-first, and pairs the calculator with examples, related tools, and plain-language notes so the answer is easy to use right away.",
+    "Math calculators work best when they answer one question quickly and still provide enough context to trust the result. This hub brings together the first set of core number tools people reach for most often: percentages for discounts and growth, averages for short lists, and ratios for comparisons or scale problems. Each page stays lightweight, static-first, and easy to scan, with worked examples and related tools built in.",
   keywords: [
-    "math tools",
     "math calculators",
     "online math calculator",
     "percentage calculator",
-    "fraction calculator",
     "ratio calculator",
-    "statistics calculator",
+    "average calculator",
+    "percentage change calculator",
   ],
-  route: "/math-tools" as const,
-  title: "Math Tools",
+  route: "/math-calculators" as const,
+  title: "Math Calculators",
   useCases: [
-    "Check percentage, ratio, and fraction math without opening a spreadsheet.",
-    "Summarize short lists of values for homework, reports, and planning notes.",
-    "Handle quick number conversions such as decimals to fractions or scientific notation.",
+    "Check percentage, ratio, and average math without opening a spreadsheet.",
+    "Handle discounts, growth, and before-and-after comparisons quickly.",
+    "Summarize short numeric lists for homework, reporting, and planning notes.",
   ],
 };
+
+const initialMathToolSlugs = new Set([
+  "percentage-calculator",
+  "percentage-change",
+  "average-calculator",
+  "ratio-calculator",
+]);
 
 function buildMathLongDescription(
   title: string,
@@ -130,7 +142,7 @@ const mathToolSeeds: MathToolSeed[] = [
     examples: [
       { expression: "25% of 200", result: "50" },
       { expression: "45 is what percent of 60", result: "75%" },
-      { expression: "80 to 96", note: "percentage increase", result: "20%" },
+      { expression: "200 increased by 15%", note: "increase by percent", result: "230" },
     ],
     faq: [
       {
@@ -153,7 +165,7 @@ const mathToolSeeds: MathToolSeed[] = [
       "percentage math",
     ],
     overview: [
-      "This page combines the three percentage tasks people use most often: finding a percent of a number, finding what percent one value is of another, and checking percentage change between two values.",
+      "This page combines the three percentage tasks people use most often: finding a percent of a number, finding what percent one value is of another, and increasing or decreasing a starting value by a percentage.",
       "The calculator updates instantly as you type, which makes it useful for shopping math, school assignments, dashboards, and quick business checks.",
     ],
     relatedSlugs: ["percentage-change", "average-calculator", "ratio-calculator"],
@@ -166,13 +178,12 @@ const mathToolSeeds: MathToolSeed[] = [
     useCases: [
       "Calculate discounts, tips, commissions, and taxes.",
       "Check conversion rates, completion rates, and score percentages.",
-      "Compare before-and-after values during reporting or planning.",
+      "Increase or decrease a starting value by a chosen percentage.",
     ],
     widget: {
-      defaultMode: "percentOf",
-      defaultPrimary: 25,
-      defaultSecondary: 200,
-      kind: "percentage",
+      calculatorId: "percentage",
+      defaultVariant: "percent-of",
+      kind: "generic",
     },
   },
   {
@@ -186,7 +197,7 @@ const mathToolSeeds: MathToolSeed[] = [
     examples: [
       { expression: "100 to 120", result: "20% increase" },
       { expression: "250 to 200", result: "20% decrease" },
-      { expression: "50 to 50", result: "0% change" },
+      { expression: "-100 to -80", note: "negative baseline", result: "20% increase" },
     ],
     faq: [
       {
@@ -225,9 +236,9 @@ const mathToolSeeds: MathToolSeed[] = [
       "Check growth or decline for traffic, sales, and production counts.",
     ],
     widget: {
-      defaultNewValue: 120,
-      defaultOldValue: 100,
-      kind: "percentage-change",
+      calculatorId: "percentage-change",
+      defaultValues: { oldVal: 100, newVal: 120 },
+      kind: "generic",
     },
   },
   {
@@ -257,7 +268,7 @@ const mathToolSeeds: MathToolSeed[] = [
       "Average is often the fastest way to summarize a short list of numbers into one representative value.",
       "This calculator is built for quick pasted input, which makes it handy for grades, expenses, ratings, measurements, and small datasets.",
     ],
-    relatedSlugs: ["median-calculator", "mode-calculator", "standard-deviation-calculator"],
+    relatedSlugs: ["percentage-calculator", "percentage-change", "ratio-calculator"],
     slug: "average-calculator",
     supportingNotes: [
       "Mean values are useful when you want a single headline number and the dataset is not extremely skewed by outliers.",
@@ -270,9 +281,9 @@ const mathToolSeeds: MathToolSeed[] = [
       "Summarize repeated measurements during planning or analysis.",
     ],
     widget: {
-      defaultValue: "10, 20, 30\n40",
-      kind: "number-list-stat",
-      metric: "average",
+      calculatorId: "average",
+      defaultValues: { values: "10, 20, 30\n40" },
+      kind: "generic",
     },
   },
   {
@@ -482,7 +493,7 @@ const mathToolSeeds: MathToolSeed[] = [
       "Ratios are useful when you care about relative size rather than standalone numbers. That comes up in recipes, drawings, scaling, model building, and performance comparisons.",
       "This page combines ratio simplification with a direct proportion solver so you can handle both common workflows from the same interface.",
     ],
-    relatedSlugs: ["proportion-calculator", "fraction-calculator", "percentage-calculator"],
+    relatedSlugs: ["percentage-calculator", "percentage-change", "average-calculator"],
     slug: "ratio-calculator",
     supportingNotes: [
       "A ratio page is especially handy when the relationship between values matters more than the exact totals.",
@@ -495,11 +506,9 @@ const mathToolSeeds: MathToolSeed[] = [
       "Check whether two ratios are equivalent before sharing results.",
     ],
     widget: {
-      defaultLeft: 4,
-      defaultMode: "simplify",
-      defaultRight: 8,
-      defaultThird: 6,
-      kind: "ratio",
+      calculatorId: "ratio",
+      defaultVariant: "simplify",
+      kind: "generic",
     },
   },
   {
@@ -542,11 +551,9 @@ const mathToolSeeds: MathToolSeed[] = [
       "Solve missing-value ratio questions in classroom math and exams.",
     ],
     widget: {
-      defaultLeft: 2,
-      defaultMode: "proportion",
-      defaultRight: 5,
-      defaultThird: 8,
-      kind: "ratio",
+      calculatorId: "ratio",
+      defaultVariant: "proportion",
+      kind: "generic",
     },
   },
   {
@@ -836,16 +843,18 @@ const mathToolSeeds: MathToolSeed[] = [
   },
 ];
 
-export const mathToolPages: MathToolPageDefinition[] = mathToolSeeds.map((page) => ({
-  ...page,
-  longDescription: buildMathLongDescription(
-    page.title,
-    page.overview,
-    page.supportingNotes,
-    page.useCases,
-  ),
-  route: `/${page.slug}`,
-}));
+export const mathToolPages: MathToolPageDefinition[] = mathToolSeeds
+  .filter((page) => initialMathToolSlugs.has(page.slug))
+  .map((page) => ({
+    ...page,
+    longDescription: buildMathLongDescription(
+      page.title,
+      page.overview,
+      page.supportingNotes,
+      page.useCases,
+    ),
+    route: `/${page.slug}`,
+  }));
 
 const mathToolPageBySlug = new Map(mathToolPages.map((page) => [page.slug, page] as const));
 

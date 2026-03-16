@@ -2,13 +2,15 @@
 
 import clsx from "clsx";
 import { useId, useMemo, useState } from "react";
-import { calculatePercentageChange, percentOf, whatPercentOf } from "@/lib/percentage";
+import { formatMathValue, formatPercentValue, formatSignedMathValue } from "@/lib/math-format";
+import {
+  applyPercentageAdjustment,
+  type PercentageAdjustmentMode,
+  percentOf,
+  whatPercentOf,
+} from "@/lib/percentage";
 
-type PercentageMode = "change" | "percentOf" | "whatPercent";
-
-function formatValue(value: number, maximumFractionDigits = 4) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value);
-}
+type PercentageMode = "adjustBy" | "percentOf" | "whatPercent";
 
 type PercentageCalculatorWidgetProps = {
   defaultPrimary: number;
@@ -22,6 +24,8 @@ export function PercentageCalculatorWidget({
   const primaryId = useId();
   const secondaryId = useId();
   const [mode, setMode] = useState<PercentageMode>("percentOf");
+  const [adjustmentDirection, setAdjustmentDirection] =
+    useState<PercentageAdjustmentMode>("increase");
   const [primaryValue, setPrimaryValue] = useState(String(defaultPrimary));
   const [secondaryValue, setSecondaryValue] = useState(String(defaultSecondary));
 
@@ -31,31 +35,32 @@ export function PercentageCalculatorWidget({
   const result = useMemo(() => {
     if (mode === "percentOf") {
       const value = percentOf(primary, secondary);
-      return value === null ? null : { label: "result", value };
+      return value === null ? null : { label: "result" as const, value };
     }
 
     if (mode === "whatPercent") {
       const value = whatPercentOf(primary, secondary);
-      return value === null ? null : { label: "percent", value };
+      return value === null ? null : { label: "percent" as const, value };
     }
 
-    const value = calculatePercentageChange(primary, secondary);
-
-    if (!value) {
-      return null;
-    }
-
-    return {
-      detail: value.direction,
-      label: "change",
-      value: value.percentage,
-    };
-  }, [mode, primary, secondary]);
+    const value = applyPercentageAdjustment(secondary, primary, adjustmentDirection);
+    return value === null ? null : { label: "adjusted" as const, ...value };
+  }, [adjustmentDirection, mode, primary, secondary]);
+  const adjustmentResult = result?.label === "adjusted" ? result : null;
+  const directValue = result && "value" in result ? result.value : null;
 
   const primaryLabel =
-    mode === "percentOf" ? "percent value" : mode === "whatPercent" ? "part value" : "old value";
+    mode === "percentOf"
+      ? "percent value"
+      : mode === "whatPercent"
+        ? "part value"
+        : "percentage";
   const secondaryLabel =
-    mode === "percentOf" ? "base value" : mode === "whatPercent" ? "whole value" : "new value";
+    mode === "percentOf"
+      ? "base value"
+      : mode === "whatPercent"
+        ? "whole value"
+        : "starting value";
 
   return (
     <section className="shell-card p-4 sm:p-5">
@@ -65,7 +70,7 @@ export function PercentageCalculatorWidget({
             {[
               { label: "what is x% of y", value: "percentOf" },
               { label: "x is what percent of y", value: "whatPercent" },
-              { label: "percentage change", value: "change" },
+              { label: "increase/decrease by %", value: "adjustBy" },
             ].map((option) => (
               <button
                 aria-pressed={mode === option.value}
@@ -114,12 +119,36 @@ export function PercentageCalculatorWidget({
             </div>
           </div>
 
+          {mode === "adjustBy" ? (
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "increase", value: "increase" },
+                { label: "decrease", value: "decrease" },
+              ].map((option) => (
+                <button
+                  aria-pressed={adjustmentDirection === option.value}
+                  className={clsx(
+                    "rounded-full border px-3 py-2 text-sm transition",
+                    adjustmentDirection === option.value
+                      ? "border-[color:var(--accent)] bg-[color:var(--accent-surface)] text-[color:var(--accent)]"
+                      : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--muted)] hover:border-[color:var(--border-strong)] hover:text-[color:var(--foreground)]",
+                  )}
+                  key={option.value}
+                  onClick={() => setAdjustmentDirection(option.value as PercentageAdjustmentMode)}
+                  type="button"
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
           <p className="text-sm leading-7 text-[color:var(--muted)]">
             {mode === "percentOf"
               ? "Use this mode to calculate a percentage of a number, such as 15% of 240."
               : mode === "whatPercent"
                 ? "Use this mode to find what percentage one value is of another, such as 45 out of 60."
-                : "Use this mode to calculate percentage increase or decrease between an old value and a new value."}
+                : "Use this mode to increase or decrease a starting value by a chosen percentage."}
           </p>
         </div>
 
@@ -133,33 +162,50 @@ export function PercentageCalculatorWidget({
             <div className="space-y-4">
               <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-4 py-4">
                 <div className="font-mono text-3xl font-medium text-[color:var(--accent)]">
-                  {formatValue(result.value)}
-                  {result.label === "percent" || result.label === "change" ? "%" : ""}
+                  {result.label === "percent"
+                    ? formatPercentValue(directValue ?? 0)
+                    : formatMathValue(adjustmentResult ? adjustmentResult.result : (directValue ?? 0))}
                 </div>
                 <div className="mt-1 text-sm text-[color:var(--accent-text)]">
                   {mode === "percentOf"
-                    ? `${formatValue(primary)}% of ${formatValue(secondary)}`
+                    ? `${formatPercentValue(primary)} of ${formatMathValue(secondary)}`
                     : mode === "whatPercent"
-                      ? `${formatValue(primary)} is what percent of ${formatValue(secondary)}`
-                      : `percentage ${result.detail}`}
+                      ? `${formatMathValue(primary)} is what percent of ${formatMathValue(secondary)}`
+                      : `${adjustmentDirection} ${formatMathValue(secondary)} by ${formatPercentValue(primary)}`}
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
-                <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">formula</div>
-                <p className="font-mono text-sm text-[color:var(--accent)]">
-                  {mode === "percentOf"
-                    ? "(x / 100) x y"
-                    : mode === "whatPercent"
-                      ? "(x / y) x 100"
-                      : "((new - old) / old) x 100"}
-                </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
+                  <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">
+                    {mode === "adjustBy" ? "delta" : "formula"}
+                  </div>
+                  <p className="font-mono text-sm text-[color:var(--accent)]">
+                    {mode === "percentOf"
+                      ? "(x / 100) x y"
+                      : mode === "whatPercent"
+                        ? "(x / y) x 100"
+                        : formatSignedMathValue(adjustmentResult?.delta ?? 0)}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
+                  <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">
+                    {mode === "adjustBy" ? "formula" : "output"}
+                  </div>
+                  <p className="font-mono text-sm text-[color:var(--accent)]">
+                    {mode === "percentOf"
+                      ? formatMathValue(directValue ?? 0)
+                      : mode === "whatPercent"
+                        ? formatPercentValue(directValue ?? 0)
+                        : `y x (1 ${adjustmentDirection === "increase" ? "+" : "-"} x/100)`}
+                  </p>
+                </div>
               </div>
             </div>
           ) : (
             <p className="text-sm leading-7 text-[color:var(--accent-text)]">
-              Enter valid numbers to calculate percentages. For percentage change and
-              {" "}&quot;what percent&quot; mode, the base value cannot be zero.
+              Enter valid numbers to calculate percentages. For &quot;what percent&quot; mode, the
+              whole value cannot be zero.
             </p>
           )}
         </div>

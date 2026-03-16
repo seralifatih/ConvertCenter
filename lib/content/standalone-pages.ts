@@ -20,18 +20,17 @@ export const standaloneToolPages: StandaloneToolPage[] = [
   {
     category: "math",
     description:
-      "Math calculator hub for percentages, averages, fractions, ratios, and everyday number work.",
+      "Math calculator hub for percentages, averages, ratios, and quick everyday number comparisons.",
     keywords: [
-      "math tools",
       "math calculators",
       "percentage calculator",
-      "fraction calculator",
-      "statistics calculator",
+      "percentage change calculator",
+      "average calculator",
       "ratio calculator",
     ],
-    route: "/math-tools",
-    slug: "math-tools",
-    title: "Math Tools",
+    route: "/math-calculators",
+    slug: "math-calculators",
+    title: "Math Calculators",
   },
   {
     category: "date",

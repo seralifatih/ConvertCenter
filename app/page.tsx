@@ -23,7 +23,7 @@ import { buildMetadata } from "@/lib/seo";
 export const metadata: Metadata = buildMetadata({
   title: "Math Calculators, Unit Converter & Developer Tools",
   description:
-    "Free online math calculators, converters, and developer tools. Calculate percentages, fractions, ratios, kg to lbs, cm to inches, MB to GB, and more instantly.",
+    "Free online math calculators, converters, and developer tools. Calculate percentages, averages, ratios, kg to lbs, cm to inches, MB to GB, and more instantly.",
   path: "/",
   keywords: [
     "convert anything instantly",
@@ -132,7 +132,7 @@ export default function Home() {
         <PillLink active className="shrink-0 whitespace-nowrap" href="/">
           all tools
         </PillLink>
-        <PillLink className="shrink-0 whitespace-nowrap" href="/math-tools">
+        <PillLink className="shrink-0 whitespace-nowrap" href="/math-calculators">
           math
         </PillLink>
         {browseCategories.map((category) => (

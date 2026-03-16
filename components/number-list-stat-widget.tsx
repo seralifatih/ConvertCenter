@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 import { calculateAverage, parseNumberList } from "@/lib/average";
+import { formatMathValue } from "@/lib/math-format";
 import {
   calculateMedian,
   calculateMode,
@@ -9,10 +10,6 @@ import {
   calculateRange,
   type NumberListMetric,
 } from "@/lib/statistics";
-
-function formatValue(value: number, maximumFractionDigits = 4) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value);
-}
 
 const metricCopy: Record<
   NumberListMetric,
@@ -70,24 +67,24 @@ export function NumberListStatWidget({
   const resultLabel =
     metric === "average"
       ? average
-        ? formatValue(average.average)
+        ? formatMathValue(average.average)
         : null
       : metric === "median"
         ? median !== null
-          ? formatValue(median)
+          ? formatMathValue(median)
           : null
         : metric === "mode"
           ? mode?.hasMode
-            ? mode.values.map((value) => formatValue(value)).join(", ")
+            ? mode.values.map((value) => formatMathValue(value)).join(", ")
             : hasValues
               ? "No mode"
               : null
           : metric === "range"
             ? range !== null
-              ? formatValue(range)
+              ? formatMathValue(range)
               : null
             : standardDeviation
-              ? formatValue(standardDeviation.standardDeviation)
+              ? formatMathValue(standardDeviation.standardDeviation)
               : null;
 
   return (
@@ -131,27 +128,41 @@ export function NumberListStatWidget({
                     ? `${mode.frequency} occurrences`
                     : metric === "standardDeviation"
                       ? "population standard deviation"
-                      : `${values.length} value${values.length === 1 ? "" : "s"} entered`}
+                      : metric === "average"
+                        ? "mean value"
+                        : `${values.length} value${values.length === 1 ? "" : "s"} entered`}
                 </div>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className={`grid gap-3 ${metric === "average" ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                 <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
                   <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">count</div>
                   <p className="font-mono text-sm text-[color:var(--accent)]">{values.length}</p>
                 </div>
+                {metric === "average" ? (
+                  <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
+                    <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">sum</div>
+                    <p className="font-mono text-sm text-[color:var(--accent)]">
+                      {average ? formatMathValue(average.sum) : "-"}
+                    </p>
+                  </div>
+                ) : null}
                 <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
                   <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">
-                    {metric === "standardDeviation" ? "mean" : "spread"}
+                    {metric === "average" || metric === "standardDeviation" ? "mean" : "spread"}
                   </div>
                   <p className="font-mono text-sm text-[color:var(--accent)]">
-                    {metric === "standardDeviation"
-                      ? standardDeviation
-                        ? formatValue(standardDeviation.mean)
+                    {metric === "average"
+                      ? average
+                        ? formatMathValue(average.average)
                         : "-"
-                      : values.length
-                        ? `${formatValue(Math.min(...values))} to ${formatValue(Math.max(...values))}`
-                        : "-"}
+                      : metric === "standardDeviation"
+                        ? standardDeviation
+                          ? formatMathValue(standardDeviation.mean)
+                          : "-"
+                        : values.length
+                          ? `${formatMathValue(Math.min(...values))} to ${formatMathValue(Math.max(...values))}`
+                          : "-"}
                   </p>
                 </div>
               </div>

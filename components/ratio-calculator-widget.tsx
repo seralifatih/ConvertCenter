@@ -2,13 +2,10 @@
 
 import clsx from "clsx";
 import { useId, useMemo, useState } from "react";
-import { solveProportion, simplifyRatio } from "@/lib/ratio";
+import { formatMathValue } from "@/lib/math-format";
+import { buildEquivalentRatios, solveProportion, simplifyRatio } from "@/lib/ratio";
 
 type RatioMode = "proportion" | "simplify";
-
-function formatValue(value: number, maximumFractionDigits = 4) {
-  return new Intl.NumberFormat("en-US", { maximumFractionDigits }).format(value);
-}
 
 type RatioCalculatorWidgetProps = {
   defaultLeft: number;
@@ -35,7 +32,10 @@ export function RatioCalculatorWidget({
     () => simplifyRatio(Number(leftValue), Number(rightValue)),
     [leftValue, rightValue],
   );
-
+  const equivalentRatios = useMemo(
+    () => buildEquivalentRatios(Number(leftValue), Number(rightValue)),
+    [leftValue, rightValue],
+  );
   const proportionResult = useMemo(
     () => solveProportion(Number(leftValue), Number(rightValue), Number(thirdValue)),
     [leftValue, rightValue, thirdValue],
@@ -131,10 +131,28 @@ export function RatioCalculatorWidget({
               <div className="space-y-4">
                 <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-4 py-4">
                   <div className="font-mono text-3xl font-medium text-[color:var(--accent)]">
-                    {formatValue(simplifyResult.left)} : {formatValue(simplifyResult.right)}
+                    {formatMathValue(simplifyResult.left)} : {formatMathValue(simplifyResult.right)}
                   </div>
                   <div className="mt-1 text-sm text-[color:var(--accent-text)]">simplified ratio</div>
                 </div>
+
+                {equivalentRatios.length ? (
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {equivalentRatios.map((ratio) => (
+                      <div
+                        className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3"
+                        key={`${ratio.factor}-${ratio.left}-${ratio.right}`}
+                      >
+                        <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">
+                          {ratio.factor}x scale
+                        </div>
+                        <p className="font-mono text-sm text-[color:var(--accent)]">
+                          {formatMathValue(ratio.left)} : {formatMathValue(ratio.right)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ) : (
               <p className="text-sm leading-7 text-[color:var(--accent-text)]">
@@ -145,11 +163,11 @@ export function RatioCalculatorWidget({
             <div className="space-y-4">
               <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-4 py-4">
                 <div className="font-mono text-3xl font-medium text-[color:var(--accent)]">
-                  x = {formatValue(proportionResult.missingValue)}
+                  x = {formatMathValue(proportionResult.missingValue)}
                 </div>
                 <div className="mt-1 text-sm text-[color:var(--accent-text)]">
-                  {formatValue(Number(leftValue))} : {formatValue(Number(rightValue))} ={" "}
-                  {formatValue(Number(thirdValue))} : x
+                  {formatMathValue(Number(leftValue))} : {formatMathValue(Number(rightValue))} ={" "}
+                  {formatMathValue(Number(thirdValue))} : x
                 </div>
               </div>
 
@@ -157,7 +175,7 @@ export function RatioCalculatorWidget({
                 <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">
                   <div className="mono-kicker mb-1 text-[color:var(--accent-text)]">base ratio</div>
                   <p className="font-mono text-sm text-[color:var(--accent)]">
-                    {formatValue(proportionResult.ratio.left)} : {formatValue(proportionResult.ratio.right)}
+                    {formatMathValue(proportionResult.ratio.left)} : {formatMathValue(proportionResult.ratio.right)}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-[color:var(--accent-text)]/20 bg-[color:var(--page)]/30 px-3 py-3">

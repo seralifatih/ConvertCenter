@@ -17,9 +17,9 @@ describe("opengraph image route", () => {
   });
 
   it("returns the expected copy for a math calculator page", () => {
-    expect(getImageCopy("median-calculator")).toEqual({
+    expect(getImageCopy("average-calculator")).toEqual({
       eyebrow: "Math calculator",
-      title: "Median Calculator",
+      title: "Average Calculator",
       subtitle: "Instant browser-based math tool",
     });
   });
