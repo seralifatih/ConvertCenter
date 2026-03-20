@@ -60,6 +60,8 @@ export function scoreSearchEntry(entry: SearchEntry, query: string) {
   const normalizedTitle = normalizeSearchText(entry.title);
   const normalizedKeywords = entry.keywords.map(normalizeSearchText);
   const queryParts = expandSearchParts(query);
+  const titleParts = new Set(expandSearchParts(normalizedTitle));
+  const keywordParts = new Set(normalizedKeywords.flatMap((keyword) => expandSearchParts(keyword)));
   let score = 0;
 
   if (normalizedTitle === normalizedQuery) {
@@ -91,12 +93,16 @@ export function scoreSearchEntry(entry: SearchEntry, query: string) {
   }
 
   for (const part of queryParts) {
-    if (normalizedTitle.includes(part)) {
-      score += 9;
+    if (titleParts.has(part)) {
+      score += 11;
+    } else if (normalizedTitle.includes(part)) {
+      score += 3;
     }
 
-    if (normalizedKeywords.some((keyword) => keyword.includes(part))) {
-      score += 4;
+    if (keywordParts.has(part)) {
+      score += 7;
+    } else if (normalizedKeywords.some((keyword) => keyword.includes(part))) {
+      score += 2;
     }
   }
 

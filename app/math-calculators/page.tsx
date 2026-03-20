@@ -75,7 +75,7 @@ export default function MathCalculatorsPage() {
         <UtilityCard>
           <div className="flex items-center gap-3">
             <h2 className="section-title">Typical use cases</h2>
-            <span className="section-badge">everyday math</span>
+            <span className="section-badge">finance + science + math</span>
           </div>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-[color:var(--muted)]">
             {mathHubConfig.useCases.map((useCase) => (
@@ -90,9 +90,9 @@ export default function MathCalculatorsPage() {
             <span className="section-badge">recommended</span>
           </div>
           <div className="mt-4 space-y-3 text-sm leading-7 text-[color:var(--muted)]">
-            <p>Use the percentage calculator for percent-of, what-percent, and flexible percentage math.</p>
-            <p>Use percentage change for before-and-after comparisons with a clear increase or decrease result.</p>
-            <p>Use average and ratio tools when you already have a list or pair of values ready to compare.</p>
+            <p>Use percentage and ratio tools for the comparison math that shows up in pricing, growth, and scaling.</p>
+            <p>Use the finance calculators when you want monthly payments, interest totals, or savings growth without opening a spreadsheet.</p>
+            <p>Use molarity and pH when the problem needs chemistry formula logic rather than a plain unit conversion.</p>
           </div>
         </UtilityCard>
       </section>

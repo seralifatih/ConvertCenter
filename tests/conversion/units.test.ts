@@ -59,6 +59,10 @@ describe("unit conversions", () => {
     expect(convertValue("ft", "cm", 6)).toBeCloseTo(182.88, 2);
   });
 
+  it("converts yards to meters", () => {
+    expect(convertValue("yd", "m", 10)).toBeCloseTo(9.144, 3);
+  });
+
   it("converts fluid ounces to milliliters", () => {
     expect(convertValue("floz", "ml", 8)).toBeCloseTo(236.5882, 4);
   });
@@ -93,6 +97,30 @@ describe("unit conversions", () => {
 
   it("converts megabytes to kilobytes", () => {
     expect(convertValue("mb", "kb", 2)).toBe(2048);
+  });
+
+  it("converts miles per hour to kilometers per hour", () => {
+    expect(convertValue("mph", "kmh", 60)).toBeCloseTo(96.5606, 4);
+  });
+
+  it("converts kilometers per hour to knots", () => {
+    expect(convertValue("kmh", "knot", 100)).toBeCloseTo(53.9957, 4);
+  });
+
+  it("converts hectopascals to millimeters of mercury", () => {
+    expect(convertValue("hpa", "mmhg", 1013.25)).toBeCloseTo(760, 2);
+  });
+
+  it("converts bar to psi", () => {
+    expect(convertValue("bar", "psi", 1)).toBeCloseTo(14.5038, 4);
+  });
+
+  it("converts millimeters of rain to inches of rain", () => {
+    expect(convertValue("rainmm", "raininch", 25.4)).toBeCloseTo(1, 4);
+  });
+
+  it("converts inches of rain to millimeters of rain", () => {
+    expect(convertValue("raininch", "rainmm", 2)).toBeCloseTo(50.8, 4);
   });
 
   it("returns custom formulas for temperature pairs", () => {

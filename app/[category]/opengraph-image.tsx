@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 import { getBrowseCategory } from "@/lib/content/categories";
+import { getInteractiveToolPage } from "@/lib/content/interactive-tools";
 import { getMathToolPage } from "@/lib/content/math-tools";
 import { getLaunchPage } from "@/lib/content/pages";
 import { siteConfig } from "@/lib/site";
@@ -57,6 +58,80 @@ export function getImageCopy(slugOrCategory: string) {
       eyebrow: "Math calculator",
       title: mathToolPage.title,
       subtitle: "Instant browser-based math tool",
+    };
+  }
+
+  const interactiveToolPage = getInteractiveToolPage(slugOrCategory);
+
+  if (interactiveToolPage) {
+    if (interactiveToolPage.categoryKey === "text") {
+      return {
+        eyebrow: "Text utility",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based text tool",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "dev-data") {
+      return {
+        eyebrow: "Developer tool",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based developer utility",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "generator") {
+      return {
+        eyebrow: "Generator tool",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based random generator",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "seo") {
+      return {
+        eyebrow: "SEO tool",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based marketing utility",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "social") {
+      return {
+        eyebrow: "Social tool",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based social utility",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "utility") {
+      return {
+        eyebrow: "Design utility",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based micro utility",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "image") {
+      return {
+        eyebrow: "Image tool",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based image utility",
+      };
+    }
+
+    if (interactiveToolPage.categoryKey === "file") {
+      return {
+        eyebrow: "File tool",
+        title: interactiveToolPage.title,
+        subtitle: "Interactive browser-based PDF utility",
+      };
+    }
+
+    return {
+      eyebrow: "Interactive tool",
+      title: interactiveToolPage.title,
+      subtitle: "Instant browser-based calculator",
     };
   }
 

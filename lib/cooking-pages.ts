@@ -204,6 +204,38 @@ export const ingredientCookingPages: CookingPageDefinition[] = [
     ],
   },
   {
+    defaultValue: "1",
+    description:
+      "Convert tablespoons to grams for granulated sugar using the same ingredient-specific baking assumptions as the rest of the sugar conversion set.",
+    faq: defineFaqs(
+      defineFaq(
+        "How many grams are in 1 tablespoon of granulated sugar?",
+        "This page uses an approximate kitchen reference of 1 tablespoon of granulated sugar being about 12.6 grams.",
+      ),
+      defineFaq(
+        "Why is tbsp to grams sugar only approximate?",
+        "Tablespoon-to-gram cooking conversions still depend on ingredient density, packing, and spoon leveling, so the result is a practical kitchen estimate rather than a lab value.",
+      ),
+      defineFaq(
+        "When is tbsp to grams sugar conversion useful?",
+        "It is useful for syrups, toppings, sauces, drink recipes, and dessert adjustments where a tablespoon amount needs to be weighed more precisely.",
+      ),
+    ),
+    ingredient: "sugar",
+    intro:
+      "This page is fixed to granulated sugar and uses the same ingredient-specific density assumptions as the rest of the sugar cooking tools. It treats 1 tablespoon as roughly 12.6 grams of granulated sugar, which is helpful for dessert prep, sweet sauces, drink recipes, and recipe scaling that starts with tablespoon measures.",
+    keywords: ["tbsp to grams sugar", "tablespoons to grams sugar", "sugar tablespoon grams", "granulated sugar tbsp grams"],
+    mode: "tablespoonsToGrams",
+    path: "/tbsp-to-grams-sugar",
+    slug: "tbsp-to-grams-sugar",
+    title: "Tablespoons to Grams Sugar Converter",
+    useCases: [
+      "Convert tablespoon sugar amounts into grams for baking and dessert prep.",
+      "Check syrup, glaze, and topping quantities against a kitchen scale.",
+      "Translate sugar tablespoon values into metric-friendly recipe notes.",
+    ],
+  },
+  {
     defaultValue: "12.6",
     description:
       "Convert grams to teaspoons for granulated sugar using an ingredient-specific kitchen reference.",

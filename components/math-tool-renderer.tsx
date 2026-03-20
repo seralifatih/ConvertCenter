@@ -1,4 +1,5 @@
 import { FractionToolWidget } from "@/components/fraction-tool-widget";
+import { GenericMathCalculator } from "@/components/generic-math-calculator";
 import { IntegerMathWidget } from "@/components/integer-math-widget";
 import { NumberListStatWidget } from "@/components/number-list-stat-widget";
 import { PercentageCalculatorWidget } from "@/components/percentage-calculator-widget";
@@ -46,6 +47,16 @@ export function MathToolRenderer({ widget }: { widget: MathToolWidgetConfig }) {
     );
   }
 
+  if (widget.kind === "generic") {
+    return (
+      <GenericMathCalculator
+        calculatorId={widget.calculatorId}
+        defaultValues={widget.defaultValues}
+        defaultVariant={widget.defaultVariant}
+      />
+    );
+  }
+
   if (widget.kind === "fraction") {
     return (
       <FractionToolWidget
@@ -67,12 +78,12 @@ export function MathToolRenderer({ widget }: { widget: MathToolWidgetConfig }) {
     );
   }
 
-  return (
+  return widget.kind === "scientific-notation" ? (
     <ScientificNotationWidget
       defaultCoefficient={widget.defaultCoefficient}
       defaultDecimal={widget.defaultDecimal}
       defaultExponent={widget.defaultExponent}
       defaultMode={widget.defaultMode}
     />
-  );
+  ) : null;
 }

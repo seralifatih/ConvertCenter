@@ -6,11 +6,17 @@ import {
   decodeURL,
   encodeBase64,
   encodeURL,
+  csvToJson,
   formatJSON,
+  htmlDecode,
+  htmlEncode,
   htmlToMarkdown,
+  jsonToCsv,
+  jsonToXml,
   jsonToYaml,
   minifyJSON,
   validateJSON,
+  xmlToJson,
   yamlToJson,
   type TextMode,
 } from "@/lib/conversion/text";
@@ -30,9 +36,15 @@ type SupportedDevMode =
   | "base64Decode"
   | "urlEncode"
   | "urlDecode"
+  | "htmlEncode"
+  | "htmlDecode"
   | "jsonFormat"
   | "jsonMinify"
   | "jsonValidate"
+  | "jsonToCsv"
+  | "csvToJson"
+  | "xmlToJson"
+  | "jsonToXml"
   | "htmlToMarkdown"
   | "jsonToYaml"
   | "yamlToJson";
@@ -62,6 +74,23 @@ function getDecodeErrorState(
 const jsonInvalidState = getDecodeErrorState("Invalid JSON", "Enter valid JSON to continue.");
 const yamlInvalidState = getDecodeErrorState("Invalid YAML", "Enter valid YAML to continue.");
 
+function getPrefixedErrorState(
+  prefix: string,
+  helperText: string,
+): (output: string, input: string) => DevToolErrorState {
+  return (output, input) =>
+    input.trim() && output.startsWith(prefix)
+      ? {
+          errorMessage: helperText,
+          panelTone: "error",
+        }
+      : { panelTone: "default" };
+}
+
+const csvInvalidState = getPrefixedErrorState("Invalid CSV:", "Enter valid CSV with a header row.");
+const jsonPrefixInvalidState = getPrefixedErrorState("Invalid JSON:", "Enter valid JSON to continue.");
+const xmlInvalidState = getPrefixedErrorState("Invalid XML:", "Enter valid XML to continue.");
+
 const devToolConfigs: Record<SupportedDevMode, DevToolConfig> = {
   base64Decode: {
     description: "Decode Base64 strings in the browser and copy the plain-text result instantly.",
@@ -79,6 +108,25 @@ const devToolConfigs: Record<SupportedDevMode, DevToolConfig> = {
     outputLabel: "base64 output",
     transformFunction: encodeBase64,
   },
+  csvToJson: {
+    description: "Convert CSV rows into formatted JSON arrays for APIs, fixtures, spreadsheets, and cleanup work.",
+    errorHandling: csvInvalidState,
+    inputLabel: "csv input",
+    outputLabel: "json output",
+    transformFunction: csvToJson,
+  },
+  htmlDecode: {
+    description: "Decode HTML entities back into readable text or markup characters in the browser.",
+    inputLabel: "html entities",
+    outputLabel: "decoded output",
+    transformFunction: htmlDecode,
+  },
+  htmlEncode: {
+    description: "Escape HTML-sensitive characters into safe entities for docs, templates, and snippets.",
+    inputLabel: "html or text",
+    outputLabel: "encoded output",
+    transformFunction: htmlEncode,
+  },
   jsonFormat: {
     description: "Format and validate JSON with a readable pretty-printed result for APIs and configs.",
     errorHandling: jsonInvalidState,
@@ -93,6 +141,20 @@ const devToolConfigs: Record<SupportedDevMode, DevToolConfig> = {
     inputLabel: "json input",
     outputLabel: "minified json",
     transformFunction: minifyJSON,
+  },
+  jsonToCsv: {
+    description: "Convert JSON records into CSV with automatic headers for spreadsheets, exports, and quick inspections.",
+    errorHandling: jsonPrefixInvalidState,
+    inputLabel: "json input",
+    outputLabel: "csv output",
+    transformFunction: jsonToCsv,
+  },
+  jsonToXml: {
+    description: "Convert JSON data into XML for integrations, feeds, and structured developer workflows.",
+    errorHandling: jsonPrefixInvalidState,
+    inputLabel: "json input",
+    outputLabel: "xml output",
+    transformFunction: jsonToXml,
   },
   jsonValidate: {
     description: "Check JSON syntax instantly and get a clear valid or invalid result without leaving the page.",
@@ -139,6 +201,13 @@ const devToolConfigs: Record<SupportedDevMode, DevToolConfig> = {
     inputLabel: "yaml input",
     outputLabel: "json output",
     transformFunction: yamlToJson,
+  },
+  xmlToJson: {
+    description: "Convert XML into formatted JSON for migrations, payload inspection, and structured-data cleanup.",
+    errorHandling: xmlInvalidState,
+    inputLabel: "xml input",
+    outputLabel: "json output",
+    transformFunction: xmlToJson,
   },
   urlDecode: {
     description: "Decode percent-encoded URLs and query strings back into readable text.",

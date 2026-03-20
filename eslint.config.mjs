@@ -12,6 +12,18 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Legacy prototype files not used by the current app/router architecture:
+    "calculator-registry.ts",
+    "conversion-registry.ts",
+    "conversions.test.ts",
+    "cooking-conversions.ts",
+    "cooking-density-converter.tsx",
+    "file-size-conversions.ts",
+    "file-transfer-time.test.ts",
+    "generic-calculator.tsx",
+    "ingredients.ts",
+    "lib/content/file-size-intent-pages.ts",
+    "lib/content/time-conversions.ts",
   ]),
 ]);
 

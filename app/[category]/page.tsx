@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CategoryPageTemplate } from "@/components/category-page-template";
+import { InteractiveToolPageTemplate } from "@/components/interactive-tool-page-template";
 import { MathToolPageTemplate } from "@/components/math-tool-page-template";
 import { TextPageTemplate } from "@/components/text-page-template";
 import { UnitPageTemplate } from "@/components/unit-page-template";
@@ -15,6 +16,7 @@ import {
   getMathToolPage,
   mathToolPages,
 } from "@/lib/content/math-tools";
+import { getInteractiveToolPage, interactiveToolPages } from "@/lib/content/interactive-tools";
 import {
   getLaunchPage,
   getTextPageKeywords,
@@ -38,9 +40,10 @@ export function generateStaticParams() {
     category: category.route.slice(1),
   }));
   const launchPageParams = launchPages.map((page) => ({ category: page.slug }));
+  const interactivePageParams = interactiveToolPages.map((page) => ({ category: page.slug }));
   const mathPageParams = mathToolPages.map((page) => ({ category: page.slug }));
 
-  return [...categoryParams, ...launchPageParams, ...mathPageParams];
+  return [...categoryParams, ...launchPageParams, ...interactivePageParams, ...mathPageParams];
 }
 
 export async function generateMetadata({ params }: DynamicPageProps): Promise<Metadata> {
@@ -91,6 +94,18 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
     });
   }
 
+  const interactiveToolPage = getInteractiveToolPage(category);
+
+  if (interactiveToolPage) {
+    return buildMetadata({
+      title: interactiveToolPage.title,
+      description: interactiveToolPage.metaDescription ?? interactiveToolPage.description,
+      imagePath: `/${interactiveToolPage.slug}/opengraph-image`,
+      path: interactiveToolPage.route,
+      keywords: [...interactiveToolPage.aliases, ...interactiveToolPage.keywords],
+    });
+  }
+
   return {};
 }
 
@@ -116,6 +131,12 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 
   if (mathToolPage) {
     return <MathToolPageTemplate page={mathToolPage} />;
+  }
+
+  const interactiveToolPage = getInteractiveToolPage(category);
+
+  if (interactiveToolPage) {
+    return <InteractiveToolPageTemplate page={interactiveToolPage} />;
   }
 
   notFound();

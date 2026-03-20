@@ -81,9 +81,9 @@ type MathToolSeed = Omit<MathToolPageDefinition, "longDescription" | "route"> & 
 
 export const mathHubConfig = {
   description:
-    "Math calculator hub for percentages, averages, ratios, and everyday number comparisons.",
+    "Math calculator hub for percentages, finance, chemistry, and everyday number comparisons.",
   intro:
-    "Math calculators work best when they answer one question quickly and still provide enough context to trust the result. This hub brings together the first set of core number tools people reach for most often: percentages for discounts and growth, averages for short lists, and ratios for comparisons or scale problems. Each page stays lightweight, static-first, and easy to scan, with worked examples and related tools built in.",
+    "Math calculators work best when they answer one question quickly and still provide enough context to trust the result. This hub now stretches beyond basic percentage and ratio work into practical finance and chemistry formulas too, including loan planning, savings growth, molarity, and pH calculations. Each page stays lightweight, static-first, and easy to scan, with worked examples, validation, and related tools built in.",
   keywords: [
     "math calculators",
     "online math calculator",
@@ -91,13 +91,19 @@ export const mathHubConfig = {
     "ratio calculator",
     "average calculator",
     "percentage change calculator",
+    "loan calculator",
+    "compound interest calculator",
+    "mortgage calculator",
+    "savings calculator",
+    "molarity calculator",
+    "ph calculator",
   ],
   route: "/math-calculators" as const,
   title: "Math Calculators",
   useCases: [
     "Check percentage, ratio, and average math without opening a spreadsheet.",
-    "Handle discounts, growth, and before-and-after comparisons quickly.",
-    "Summarize short numeric lists for homework, reporting, and planning notes.",
+    "Estimate loans, mortgage costs, savings growth, and interest scenarios quickly.",
+    "Handle chemistry calculations like molarity and pH with clear browser-based formulas.",
   ],
 };
 
@@ -106,6 +112,13 @@ const initialMathToolSlugs = new Set([
   "percentage-change",
   "average-calculator",
   "ratio-calculator",
+  "loan-calculator",
+  "simple-interest-calculator",
+  "compound-interest-calculator",
+  "mortgage-calculator",
+  "savings-calculator",
+  "molarity-calculator",
+  "ph-calculator",
 ]);
 
 function buildMathLongDescription(
@@ -508,6 +521,316 @@ const mathToolSeeds: MathToolSeed[] = [
     widget: {
       calculatorId: "ratio",
       defaultVariant: "simplify",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["loan calculator", "loan payment calculator", "monthly loan payment", "amortization calculator"],
+    description: "Estimate monthly loan payments, total repayment, and total interest with a fixed-rate loan calculator.",
+    examples: [
+      { expression: "$25,000 at 7.25% for 5 years", result: "$497.98 per month" },
+      { expression: "$12,000 at 0% for 3 years", result: "$333.33 per month" },
+      { expression: "$40,000 at 6% for 6 years", result: "$662.92 per month" },
+    ],
+    faq: [
+      {
+        answer: "It uses the standard fixed-rate amortization formula, which turns the loan amount, annual rate, and term into an equal monthly payment.",
+        question: "What formula does the loan calculator use?",
+      },
+      {
+        answer: "Yes. If the interest rate is zero, the calculator simply divides the loan amount by the total number of monthly payments.",
+        question: "Can the loan calculator handle a 0% rate?",
+      },
+      {
+        answer: "Use this calculator for a plain fixed loan. Mortgage pages are better when you also want down payment, property tax, or insurance in view.",
+        question: "How is this different from the mortgage calculator?",
+      },
+    ],
+    keywords: ["loan payment formula", "monthly loan payment", "fixed loan calculator", "loan amortization"],
+    overview: [
+      "Loan math is most useful when it turns a borrowed amount into something you can compare month to month. This calculator focuses on that practical question first.",
+      "It shows the monthly payment, total repayment, and total interest together so the cost of borrowing is easier to scan than a formula alone.",
+    ],
+    relatedSlugs: ["simple-interest-calculator", "compound-interest-calculator", "mortgage-calculator"],
+    slug: "loan-calculator",
+    supportingNotes: [
+      "The page is useful for auto loans, personal loans, equipment financing, and any other fixed-rate borrowing scenario.",
+      "Because the tool is registry-based, it can reuse the same generic calculator shell as the broader finance set without extra page code.",
+    ],
+    title: "Loan Calculator",
+    useCases: [
+      "Estimate a monthly payment before applying for financing.",
+      "Compare total repayment across different rates and loan terms.",
+      "Understand how much of a fixed loan cost comes from interest.",
+    ],
+    widget: {
+      calculatorId: "loan",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["simple interest calculator", "simple interest formula", "calculate simple interest"],
+    description: "Calculate simple interest and ending amount from principal, annual rate, and time.",
+    examples: [
+      { expression: "$5,000 at 6% for 3 years", result: "$900 interest" },
+      { expression: "$1,200 at 4% for 2 years", result: "$96 interest" },
+      { expression: "$10,000 at 5% for 1.5 years", result: "$750 interest" },
+    ],
+    faq: [
+      {
+        answer: "Simple interest uses principal x rate x time, so the interest grows linearly instead of compounding on previous interest.",
+        question: "What is simple interest?",
+      },
+      {
+        answer: "Yes. Time can be entered as fractional years, which is useful when the investment or borrowing period is not a whole number.",
+        question: "Can I use partial years in the simple interest calculator?",
+      },
+      {
+        answer: "Compound interest reinvests growth and earns interest on earlier interest, while simple interest only uses the starting principal.",
+        question: "How is simple interest different from compound interest?",
+      },
+    ],
+    keywords: ["simple interest formula", "principal rate time", "simple interest math", "interest earned calculator"],
+    overview: [
+      "Simple interest is the most direct finance formula in the set because the growth depends only on principal, annual rate, and time.",
+      "That makes the page useful for quick classroom checks, basic agreements, and side-by-side comparisons before moving to compound growth models.",
+    ],
+    relatedSlugs: ["compound-interest-calculator", "loan-calculator", "savings-calculator"],
+    slug: "simple-interest-calculator",
+    supportingNotes: [
+      "It is a good fit for educational examples and straightforward contracts where interest is not periodically added back into the balance.",
+      "Showing interest earned and ending amount together keeps the result practical instead of leaving users with only a raw formula output.",
+    ],
+    title: "Simple Interest Calculator",
+    useCases: [
+      "Check a basic interest agreement without using a spreadsheet.",
+      "Compare simple-interest growth with compound-interest growth.",
+      "Work through finance homework or training examples quickly.",
+    ],
+    widget: {
+      calculatorId: "simple-interest",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["compound interest calculator", "compound interest formula", "future value calculator", "interest compounding calculator"],
+    description: "Estimate compound growth using principal, annual rate, time, and compounding frequency.",
+    examples: [
+      { expression: "$10,000 at 7% for 10 years, monthly", result: "$20,096.61 future value" },
+      { expression: "$5,000 at 5% for 5 years, annually", result: "$6,381.41 future value" },
+      { expression: "$2,500 at 4.5% for 3 years, quarterly", result: "$2,861.55 future value" },
+    ],
+    faq: [
+      {
+        answer: "It uses A = P(1 + r/n)^(nt), where P is principal, r is annual rate, n is compounds per year, and t is time in years.",
+        question: "What formula does the compound interest calculator use?",
+      },
+      {
+        answer: "The compounding frequency determines how often interest is added back into the balance. More frequent compounding usually creates slightly more growth.",
+        question: "Why does compounding frequency matter?",
+      },
+      {
+        answer: "This page focuses on compound growth from a starting principal. Use the savings calculator when you also want recurring monthly contributions.",
+        question: "How is this different from the savings calculator?",
+      },
+    ],
+    keywords: ["compound growth formula", "future value formula", "interest compounding", "investment growth calculator"],
+    overview: [
+      "Compound interest becomes more intuitive when the formula is tied to a future value and an earned-growth figure instead of just symbols.",
+      "This calculator keeps the core variables visible so it is easier to compare how rate, time, and compounding frequency change the outcome.",
+    ],
+    relatedSlugs: ["simple-interest-calculator", "savings-calculator", "loan-calculator"],
+    slug: "compound-interest-calculator",
+    supportingNotes: [
+      "It is useful for savings estimates, investment illustrations, classroom finance work, and quick side-by-side rate comparisons.",
+      "Because the generic calculator registry handles field definitions and output formatting, finance pages like this stay scalable without custom components.",
+    ],
+    title: "Compound Interest Calculator",
+    useCases: [
+      "Project future value from a lump-sum starting balance.",
+      "Compare annual, quarterly, and monthly compounding effects.",
+      "Estimate how much of the ending balance comes from growth alone.",
+    ],
+    widget: {
+      calculatorId: "compound-interest",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["mortgage calculator", "home loan calculator", "monthly mortgage payment", "mortgage payment estimator"],
+    description: "Estimate mortgage borrowing, monthly housing cost, and total interest with home price, down payment, tax, and insurance inputs.",
+    examples: [
+      { expression: "$400,000 home with $80,000 down at 6.5% for 30 years", result: "$2,022.62 principal and interest" },
+      { expression: "Add $4,800 tax and $1,800 insurance", result: "$2,572.62 estimated monthly housing cost" },
+      { expression: "Lower down payment", note: "larger loan amount", result: "Higher monthly payment and total interest" },
+    ],
+    faq: [
+      {
+        answer: "The calculator first estimates the loan amount from home price minus down payment, then applies a fixed-rate mortgage payment formula.",
+        question: "How does the mortgage calculator estimate monthly payment?",
+      },
+      {
+        answer: "Yes. The page adds annual property tax and annual insurance into the estimated monthly housing cost so the result is closer to what homeowners budget for.",
+        question: "Does the mortgage calculator include taxes and insurance?",
+      },
+      {
+        answer: "The down payment must be smaller than the home price. Otherwise there is no mortgage balance left to finance.",
+        question: "Why must the down payment be less than the home price?",
+      },
+    ],
+    keywords: ["home loan estimate", "mortgage payment formula", "monthly mortgage estimator", "housing cost calculator"],
+    overview: [
+      "Mortgage decisions are easier when the monthly payment is shown alongside the actual loan amount and the broader housing-cost estimate.",
+      "This page keeps home price, down payment, rate, term, tax, and insurance together so the result is more practical than a bare principal-and-interest figure alone.",
+    ],
+    relatedSlugs: ["loan-calculator", "compound-interest-calculator", "savings-calculator"],
+    slug: "mortgage-calculator",
+    supportingNotes: [
+      "It is useful for early home-buying research, lender comparison, and quick budget checks before moving to a full amortization schedule.",
+      "The calculator stays intentionally lightweight while still covering the core monthly cost inputs many people want to see together.",
+    ],
+    title: "Mortgage Calculator",
+    useCases: [
+      "Estimate housing cost before making an offer or speaking with a lender.",
+      "Compare how down payment size changes the loan amount and payment.",
+      "Include tax and insurance when sketching a monthly home budget.",
+    ],
+    widget: {
+      calculatorId: "mortgage",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["savings calculator", "savings growth calculator", "future savings calculator", "monthly savings calculator"],
+    description: "Project savings growth from an initial deposit, recurring monthly contributions, annual return, and time.",
+    examples: [
+      { expression: "$5,000 initial plus $300 monthly at 4.5% for 10 years", result: "$53,194.39 estimated balance" },
+      { expression: "No monthly contribution", result: "Shows growth from the initial deposit only" },
+      { expression: "Higher monthly deposit", result: "Larger ending balance and total contributions" },
+    ],
+    faq: [
+      {
+        answer: "It combines growth on the initial deposit with the future value of repeated monthly contributions.",
+        question: "What does the savings calculator include?",
+      },
+      {
+        answer: "Yes. The result card separates total contributions from growth earned, which makes it easier to see how much came from saving versus compounding.",
+        question: "Can I see contributions and interest separately?",
+      },
+      {
+        answer: "This page is best for savings buildup. Use the compound interest calculator when you want a lump-sum growth estimate without recurring deposits.",
+        question: "When should I use this instead of the compound interest calculator?",
+      },
+    ],
+    keywords: ["future savings", "monthly savings growth", "savings projection", "investment contribution calculator"],
+    overview: [
+      "Savings plans are easier to evaluate when recurring deposits are part of the formula instead of an afterthought.",
+      "This calculator makes that practical by showing the estimated balance, the amount you contributed, and the growth earned over time.",
+    ],
+    relatedSlugs: ["compound-interest-calculator", "simple-interest-calculator", "mortgage-calculator"],
+    slug: "savings-calculator",
+    supportingNotes: [
+      "It is useful for emergency-fund planning, goal tracking, retirement illustrations, and any recurring-save scenario that needs a fast browser estimate.",
+      "Keeping contributions and growth separate also makes the result easier to explain in planning conversations or simple dashboards.",
+    ],
+    title: "Savings Calculator",
+    useCases: [
+      "Estimate how quickly a savings habit can build over time.",
+      "Compare different monthly contribution amounts before committing to a plan.",
+      "See how much of a future balance comes from deposits versus growth.",
+    ],
+    widget: {
+      calculatorId: "savings",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["molarity calculator", "molarity formula", "solution molarity calculator", "molarity from moles"],
+    description: "Calculate molarity from moles and volume, or from mass, molar mass, and total solution volume.",
+    examples: [
+      { expression: "0.25 mol in 0.5 L", result: "0.5 M" },
+      { expression: "58.44 g NaCl, 58.44 g/mol, 1 L", result: "1 M" },
+      { expression: "0.1 M", note: "equivalent", result: "100 mM" },
+    ],
+    faq: [
+      {
+        answer: "Molarity is moles of solute divided by liters of total solution, usually written as mol/L or simply M.",
+        question: "What is molarity?",
+      },
+      {
+        answer: "Use the moles variant when the amount of solute is already known in moles. Use the mass variant when you need to convert grams into moles first using molar mass.",
+        question: "When should I use each molarity mode?",
+      },
+      {
+        answer: "Solution volume must be greater than zero because molarity divides the amount of solute by the total volume.",
+        question: "Why does the molarity calculator require a non-zero volume?",
+      },
+    ],
+    keywords: ["solution concentration", "molarity equation", "moles per liter", "molarity from mass"],
+    overview: [
+      "Molarity is easier to trust when the calculator shows the exact pathway from the inputs to the concentration, whether you start from moles or from mass and molar mass.",
+      "This page keeps both common chemistry workflows in one place so you can switch methods without opening a separate tool.",
+    ],
+    relatedSlugs: ["ph-calculator", "ratio-calculator", "percentage-calculator"],
+    slug: "molarity-calculator",
+    supportingNotes: [
+      "It is useful for classroom chemistry, lab preparation, dilution planning, and quick concentration checks.",
+      "The variant-based generic widget also makes it a good example of when a registry calculator fits better than a pair converter or text transform.",
+    ],
+    title: "Molarity Calculator",
+    useCases: [
+      "Calculate solution concentration from known moles and volume.",
+      "Convert mass into molarity when molar mass is known.",
+      "Check M and mM values quickly during chemistry work.",
+    ],
+    widget: {
+      calculatorId: "molarity",
+      defaultVariant: "from-moles",
+      kind: "generic",
+    },
+  },
+  {
+    aliases: ["ph calculator", "ph formula calculator", "calculate ph", "ph from concentration"],
+    description: "Calculate pH and pOH from hydrogen-ion or hydroxide-ion concentration with a fast chemistry calculator.",
+    examples: [
+      { expression: "[H+] = 1e-7 mol/L", result: "pH 7, neutral" },
+      { expression: "[H+] = 1e-3 mol/L", result: "pH 3, acidic" },
+      { expression: "[OH-] = 1e-2 mol/L", result: "pH 12, basic" },
+    ],
+    faq: [
+      {
+        answer: "When hydrogen-ion concentration is known, the calculator uses pH = -log10[H+]. When hydroxide concentration is known, it uses pOH first and then converts to pH.",
+        question: "What formulas does the pH calculator use?",
+      },
+      {
+        answer: "The concentration must be greater than zero because the logarithm of zero or a negative number is undefined.",
+        question: "Why does the pH calculator require a positive concentration?",
+      },
+      {
+        answer: "The result labels the solution as acidic, neutral, or basic based on the pH value, which helps make the number easier to interpret quickly.",
+        question: "Does the calculator explain what the pH value means?",
+      },
+    ],
+    keywords: ["ph equation", "poh calculator", "hydrogen ion concentration", "acidic basic neutral calculator"],
+    overview: [
+      "pH calculations are compact in theory, but it still helps to see pH, pOH, and solution type together instead of working from the logarithm by hand.",
+      "This page supports the two most common starting points, hydrogen concentration and hydroxide concentration, in one chemistry-focused calculator.",
+    ],
+    relatedSlugs: ["molarity-calculator", "ratio-calculator", "percentage-calculator"],
+    slug: "ph-calculator",
+    supportingNotes: [
+      "It is useful for chemistry homework, quick lab checks, and sanity-checking concentration values against expected acidity or basicity.",
+      "Because it needs formula logic, multiple outputs, and mode switching, it is a much better fit for the calculator registry than for text tools or pair converters.",
+    ],
+    title: "pH Calculator",
+    useCases: [
+      "Calculate pH from hydrogen-ion concentration.",
+      "Calculate pH from hydroxide concentration and see pOH at the same time.",
+      "Interpret whether a solution is acidic, neutral, or basic more quickly.",
+    ],
+    widget: {
+      calculatorId: "ph",
+      defaultVariant: "from-hydrogen",
       kind: "generic",
     },
   },

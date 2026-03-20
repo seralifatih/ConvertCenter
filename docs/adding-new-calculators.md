@@ -50,6 +50,10 @@ const stdDevCalculator: MathCalculatorDef = {
 
 ## Guidance for Future Tools
 
+-   The shared UI lives in `components/generic-math-calculator.tsx`, so `kind: "generic"` pages automatically get variant tabs, validation, reset/clear actions, and formatted outputs.
+-   Use `formatOptions` on outputs for currency, percentage, or unit suffix formatting instead of creating page-specific result markup.
+-   Prefer multiple `variants` over one-off custom widgets when a calculator has a few related modes, such as `molarity` or `pH`.
+
 -   **Exponent**: Use `fields: [{id: "base"}, {id: "exponent"}]`. Formula: `Math.pow(base, exponent)`.
 -   **Square Root**: Use `fields: [{id: "number"}]`. Formula: `Math.sqrt(number)`.
 -   **Median/Mode**: Use `type: "number-list"`. Parse list, sort, and find middle/frequency.

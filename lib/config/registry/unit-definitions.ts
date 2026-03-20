@@ -105,6 +105,11 @@ export const lengthUnits = [
     "mile",
     "miles",
   ]),
+  defineLinearUnit("yd", "Yard", "Yards", "yd", "yards", 0.9144, [
+    "yd",
+    "yard",
+    "yards",
+  ]),
 ] as const;
 
 export const volumeUnits = [
@@ -183,6 +188,72 @@ export const temperatureUnits = [
   ),
 ] as const;
 
+export const windUnits = [
+  defineLinearUnit("kmh", "Kilometer per Hour", "Kilometers per Hour", "km/h", "kmh", 1, [
+    "kmh",
+    "km/h",
+    "kilometer per hour",
+    "kilometers per hour",
+    "kilometre per hour",
+    "kilometres per hour",
+  ]),
+  defineLinearUnit("mph", "Mile per Hour", "Miles per Hour", "mph", "mph", 1.609344, [
+    "mph",
+    "mile per hour",
+    "miles per hour",
+  ]),
+  defineLinearUnit("knot", "Knot", "Knots", "kn", "knots", 1.852, [
+    "kn",
+    "knot",
+    "knots",
+    "nautical mile per hour",
+    "nautical miles per hour",
+  ]),
+] as const;
+
+export const pressureUnits = [
+  defineLinearUnit("hpa", "Hectopascal", "Hectopascals", "hPa", "hpa", 1, [
+    "hpa",
+    "hPa",
+    "hectopascal",
+    "hectopascals",
+  ]),
+  defineLinearUnit("mmhg", "Millimeter of Mercury", "Millimeters of Mercury", "mmHg", "mmhg", 1.33322387415, [
+    "mmhg",
+    "mm hg",
+    "millimeter of mercury",
+    "millimeters of mercury",
+  ]),
+  defineLinearUnit("bar", "Bar", "Bars", "bar", "bar", 1000, [
+    "bar",
+    "bars",
+  ]),
+  defineLinearUnit("psi", "Pound per Square Inch", "Pounds per Square Inch", "psi", "psi", 68.9475729318, [
+    "psi",
+    "pound per square inch",
+    "pounds per square inch",
+  ]),
+] as const;
+
+export const rainfallUnits = [
+  defineLinearUnit("rainmm", "Millimeter of Rain", "Millimeters of Rain", "mm rain", "mm", 1, [
+    "mm rain",
+    "mm rainfall",
+    "millimeter of rain",
+    "millimeters of rain",
+    "millimeter of rainfall",
+    "millimeters of rainfall",
+  ]),
+  defineLinearUnit("raininch", "Inch of Rain", "Inches of Rain", "in rain", "inches-rain", 25.4, [
+    "inch of rain",
+    "inches of rain",
+    "inch rain",
+    "inches rain",
+    "inch of rainfall",
+    "inches of rainfall",
+  ]),
+] as const;
+
 export const dataUnits = [
   defineLinearUnit("byte", "Byte", "Bytes", "B", "bytes", 1 / (1024 * 1024), [
     "b",
@@ -216,6 +287,9 @@ export const numericUnitRegistry = [
   ...lengthUnits,
   ...volumeUnits,
   ...temperatureUnits,
+  ...windUnits,
+  ...pressureUnits,
+  ...rainfallUnits,
   ...dataUnits,
 ] as const;
 

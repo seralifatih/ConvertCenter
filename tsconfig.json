@@ -17,6 +17,9 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "types": [
+      "vitest/globals"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -33,9 +36,21 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "calculator-registry.ts",
+    "conversion-registry.ts",
+    "conversions.test.ts",
+    "cooking-conversions.ts",
+    "cooking-density-converter.tsx",
+    "file-size-conversions.ts",
+    "file-transfer-time.test.ts",
+    "generic-calculator.tsx",
+    "ingredients.ts",
+    "lib/content/file-size-intent-pages.ts",
+    "lib/content/time-conversions.ts"
   ]
 }

@@ -33,15 +33,20 @@ export function CookingIngredientConverterWidget({
   const numericValue = Number(rawValue);
   const convertedValue = convertCookingValue(numericValue, resolvedIngredient, mode);
   const labels = getCookingModeLabels(mode);
+  const gramsPerTablespoon = cookingIngredients[resolvedIngredient].gramsPerTeaspoon * 3;
   const formulaLine =
     mode === "cupsToGrams" || mode === "gramsToCups"
       ? `1 cup ${cookingIngredients[resolvedIngredient].label.toLowerCase()} ~= ${formatNumber(cookingIngredients[resolvedIngredient].gramsPerCup, 3)} g`
+      : mode === "tablespoonsToGrams"
+        ? `1 tbsp ${cookingIngredients[resolvedIngredient].label.toLowerCase()} ~= ${formatNumber(gramsPerTablespoon, 3)} g`
       : `1 tsp ${cookingIngredients[resolvedIngredient].label.toLowerCase()} ~= ${formatNumber(cookingIngredients[resolvedIngredient].gramsPerTeaspoon, 3)} g`;
 
   const outputText =
     convertedValue === null
       ? mode === "cupsToGrams"
         ? "Enter a valid cup amount."
+        : mode === "tablespoonsToGrams"
+          ? "Enter a valid tablespoon amount."
         : mode === "gramsToCups" || mode === "gramsToTeaspoons"
           ? "Enter a valid gram amount."
           : "Enter a valid teaspoon amount."

@@ -2,6 +2,22 @@ import { marked } from "marked";
 import { dump as dumpYaml } from "js-yaml";
 import { load as loadYaml } from "js-yaml";
 import TurndownService from "turndown";
+import {
+  csvToJson,
+  htmlDecode,
+  htmlEncode,
+  jsonToCsv,
+  jsonToXml,
+  xmlToJson,
+} from "@/lib/conversion/dev-formats";
+export {
+  csvToJson,
+  htmlDecode,
+  htmlEncode,
+  jsonToCsv,
+  jsonToXml,
+  xmlToJson,
+} from "@/lib/conversion/dev-formats";
 
 export type TextMode =
   | "uppercase"
@@ -11,8 +27,23 @@ export type TextMode =
   | "reverse"
   | "removeLineBreaks"
   | "removeExtraSpaces"
+  | "removeDuplicateLines"
+  | "removeEmptyLines"
+  | "removePunctuation"
+  | "stripHtmlTags"
+  | "removeEmojis"
+  | "normalizeUnicode"
+  | "removeNonAscii"
+  | "removeDiacritics"
+  | "sortLines"
+  | "shuffleLines"
+  | "joinLines"
+  | "splitText"
+  | "lineBreaksToCommas"
   | "wordCount"
   | "characterCount"
+  | "sentenceCount"
+  | "paragraphCount"
   | "slug"
   | "camel"
   | "snake"
@@ -21,9 +52,15 @@ export type TextMode =
   | "base64Decode"
   | "urlEncode"
   | "urlDecode"
+  | "htmlEncode"
+  | "htmlDecode"
   | "jsonFormat"
   | "jsonMinify"
   | "jsonValidate"
+  | "jsonToCsv"
+  | "csvToJson"
+  | "xmlToJson"
+  | "jsonToXml"
   | "markdownToHtml"
   | "htmlToMarkdown"
   | "jsonToYaml"
@@ -98,6 +135,110 @@ export const textModeOptions: readonly TextModeOption[] = [
     sampleValue: "Too    many   spaces    here",
   },
   {
+    description: "Keeps the first instance of each line and removes repeated duplicates.",
+    group: "editorial",
+    helperLabel: "Remove duplicate lines",
+    label: "Remove duplicate lines",
+    mode: "removeDuplicateLines",
+    sampleValue: "alpha\nbeta\nalpha\ngamma\nbeta",
+  },
+  {
+    description: "Removes blank lines while keeping the remaining text in its original order.",
+    group: "editorial",
+    helperLabel: "Remove empty lines",
+    label: "Remove empty lines",
+    mode: "removeEmptyLines",
+    sampleValue: "First line\n\nSecond line\n   \nThird line",
+  },
+  {
+    description: "Strips punctuation marks for simpler text cleaning and downstream processing.",
+    group: "editorial",
+    helperLabel: "Remove punctuation",
+    label: "Remove punctuation",
+    mode: "removePunctuation",
+    sampleValue: "Hello, world! Ready-to-go? Yes.",
+  },
+  {
+    description: "Removes HTML tags and leaves behind readable plain text.",
+    group: "editorial",
+    helperLabel: "Strip HTML tags",
+    label: "Strip HTML tags",
+    mode: "stripHtmlTags",
+    sampleValue: "<p>Hello <strong>world</strong></p>",
+  },
+  {
+    description: "Removes emoji characters from text for exports, forms, and plain-text cleanup.",
+    group: "editorial",
+    helperLabel: "Remove emojis",
+    label: "Remove emojis",
+    mode: "removeEmojis",
+    sampleValue: "Ship it 🚀 Ready ✅",
+  },
+  {
+    description: "Normalizes Unicode text into a consistent compatibility form for matching and cleanup.",
+    group: "editorial",
+    helperLabel: "Normalize Unicode",
+    label: "Normalize Unicode",
+    mode: "normalizeUnicode",
+    sampleValue: "Cafe\u0301 \uFF21\uFF22\uFF23 \uFB01",
+  },
+  {
+    description: "Removes characters outside the ASCII range for strict plain-text output.",
+    group: "editorial",
+    helperLabel: "Remove non-ASCII",
+    label: "Remove non-ASCII",
+    mode: "removeNonAscii",
+    sampleValue: "Cafe deja vu - año",
+  },
+  {
+    description: "Normalizes accented characters into plain Latin letters when possible.",
+    group: "editorial",
+    helperLabel: "Remove diacritics",
+    label: "Remove diacritics",
+    mode: "removeDiacritics",
+    sampleValue: "Crème brûlée déjà vu",
+  },
+  {
+    description: "Sorts multiline text alphabetically for lists, exports, and cleanup work.",
+    group: "editorial",
+    helperLabel: "Sort lines",
+    label: "Sort lines",
+    mode: "sortLines",
+    sampleValue: "banana\nApple\ncherry",
+  },
+  {
+    description: "Shuffles non-empty lines into a deterministic randomized order for prompts and lists.",
+    group: "editorial",
+    helperLabel: "Shuffle lines",
+    label: "Shuffle lines",
+    mode: "shuffleLines",
+    sampleValue: "alpha\nbeta\ngamma\ndelta",
+  },
+  {
+    description: "Joins multiple lines into one clean line with single-space separators.",
+    group: "editorial",
+    helperLabel: "Join lines",
+    label: "Join lines",
+    mode: "joinLines",
+    sampleValue: "First item\nSecond item\nThird item",
+  },
+  {
+    description: "Splits delimited text into separate lines for easier scanning and cleanup.",
+    group: "editorial",
+    helperLabel: "Split text",
+    label: "Split text",
+    mode: "splitText",
+    sampleValue: "apples, oranges, pears",
+  },
+  {
+    description: "Replaces line breaks with comma-separated output for forms and inline lists.",
+    group: "editorial",
+    helperLabel: "Lines to commas",
+    label: "Lines to commas",
+    mode: "lineBreaksToCommas",
+    sampleValue: "red\nblue\ngreen",
+  },
+  {
     description: "Counts words in pasted text for drafts, limits, and quick content checks.",
     group: "editorial",
     helperLabel: "Word count",
@@ -112,6 +253,22 @@ export const textModeOptions: readonly TextModeOption[] = [
     label: "Character count",
     mode: "characterCount",
     sampleValue: "Count every character in this line.",
+  },
+  {
+    description: "Counts likely sentences in pasted text for readability checks and content review.",
+    group: "editorial",
+    helperLabel: "Sentence count",
+    label: "Sentence count",
+    mode: "sentenceCount",
+    sampleValue: "One. Two! Is this three?",
+  },
+  {
+    description: "Counts paragraph blocks separated by blank lines.",
+    group: "editorial",
+    helperLabel: "Paragraph count",
+    label: "Paragraph count",
+    mode: "paragraphCount",
+    sampleValue: "First paragraph.\n\nSecond paragraph.\nStill second.\n\nThird.",
   },
   {
     description: "Turns text into a clean lowercase slug for URLs, filenames, and CMS fields.",
@@ -178,6 +335,22 @@ export const textModeOptions: readonly TextModeOption[] = [
     sampleValue: "https%3A%2F%2Fconvertcenter.org%2Fsearch%3Fq%3Dkg%2520to%2520lbs%26source%3Dapp",
   },
   {
+    description: "Escapes HTML-sensitive characters into safe entities for templates, docs, and snippets.",
+    group: "developer",
+    helperLabel: "HTML encode",
+    label: "HTML encode",
+    mode: "htmlEncode",
+    sampleValue: '<button class="primary">Save & continue</button>',
+  },
+  {
+    description: "Decodes HTML entities back into readable text and markup characters.",
+    group: "developer",
+    helperLabel: "HTML decode",
+    label: "HTML decode",
+    mode: "htmlDecode",
+    sampleValue: "&lt;button class=&quot;primary&quot;&gt;Save &amp; continue&lt;/button&gt;",
+  },
+  {
     description: "Formats, validates, and beautifies JSON for APIs, configs, and developer workflows.",
     group: "developer",
     helperLabel: "JSON format",
@@ -200,6 +373,38 @@ export const textModeOptions: readonly TextModeOption[] = [
     label: "JSON validate",
     mode: "jsonValidate",
     sampleValue: '{"site":"ConvertCenter","tools":["base64","url","json"],"active":true}',
+  },
+  {
+    description: "Converts JSON records into CSV with automatic headers for spreadsheets and exports.",
+    group: "developer",
+    helperLabel: "JSON to CSV",
+    label: "JSON to CSV",
+    mode: "jsonToCsv",
+    sampleValue: '[{"name":"Ada","score":42},{"name":"Lin","score":39}]',
+  },
+  {
+    description: "Converts CSV rows into formatted JSON arrays for APIs, fixtures, and cleanup work.",
+    group: "developer",
+    helperLabel: "CSV to JSON",
+    label: "CSV to JSON",
+    mode: "csvToJson",
+    sampleValue: "name,score\nAda,42\nLin,39",
+  },
+  {
+    description: "Converts XML documents into formatted JSON for inspection, migration, and tooling.",
+    group: "developer",
+    helperLabel: "XML to JSON",
+    label: "XML to JSON",
+    mode: "xmlToJson",
+    sampleValue: "<person><name>Ada</name><score>42</score></person>",
+  },
+  {
+    description: "Converts JSON data into XML for integrations, feeds, and structured exports.",
+    group: "developer",
+    helperLabel: "JSON to XML",
+    label: "JSON to XML",
+    mode: "jsonToXml",
+    sampleValue: '{"person":{"name":"Ada","score":42}}',
   },
   {
     description: "Converts Markdown into HTML with a fast rendered preview for docs, content, and developer workflows.",
@@ -239,8 +444,8 @@ export const textModeGroups: ReadonlyArray<{
   key: TextModeGroupKey;
   label: string;
 }> = [
-  { key: "editorial", label: "case types" },
-  { key: "developer", label: "developer styles" },
+  { key: "editorial", label: "text tools" },
+  { key: "developer", label: "developer tools" },
 ] as const;
 
 export const textSampleHelpers: ReadonlyArray<{
@@ -265,6 +470,30 @@ function splitWords(value: string) {
     .trim()
     .split(/\s+/)
     .filter(Boolean);
+}
+
+function getNormalizedLines(input: string) {
+  return input.replace(/\r\n?/g, "\n").split("\n");
+}
+
+function hashString(value: string) {
+  let hash = 2166136261;
+
+  for (const character of value) {
+    hash ^= character.codePointAt(0) ?? 0;
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function createSeededRandom(seed: number) {
+  let state = seed >>> 0 || 1;
+
+  return () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 4294967296;
+  };
 }
 
 export function encodeBase64(input: string) {
@@ -363,6 +592,115 @@ export function removeExtraSpaces(input: string) {
   return input.replace(/\s+/g, " ").trim();
 }
 
+export function removeDuplicateLines(input: string) {
+  const seen = new Set<string>();
+
+  return getNormalizedLines(input)
+    .filter((line) => {
+      if (seen.has(line)) {
+        return false;
+      }
+
+      seen.add(line);
+      return true;
+    })
+    .join("\n");
+}
+
+export function removeEmptyLines(input: string) {
+  return getNormalizedLines(input)
+    .filter((line) => line.trim().length > 0)
+    .join("\n");
+}
+
+export function removePunctuation(input: string) {
+  return input.replace(/[\p{P}]+/gu, " ").replace(/\s+/g, " ").trim();
+}
+
+export function stripHtmlTags(input: string) {
+  return input.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+export function removeEmojis(input: string) {
+  return input
+    .replace(/[\p{Extended_Pictographic}\p{Regional_Indicator}\u200D\uFE0F]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function normalizeUnicode(input: string) {
+  return input.normalize("NFKC");
+}
+
+export function removeNonAscii(input: string) {
+  return input.replace(/[^\x00-\x7F]+/g, "").replace(/\s+/g, " ").trim();
+}
+
+export function removeDiacritics(input: string) {
+  return input.normalize("NFD").replace(/\p{M}+/gu, "").normalize("NFC");
+}
+
+export function sortLinesAlphabetically(input: string) {
+  return getNormalizedLines(input)
+    .filter((line) => line.trim().length > 0)
+    .sort((left, right) => left.localeCompare(right, undefined, { sensitivity: "base" }))
+    .join("\n");
+}
+
+export function shuffleLines(input: string) {
+  const lines = getNormalizedLines(input).filter((line) => line.trim().length > 0);
+
+  if (lines.length <= 1) {
+    return lines.join("\n");
+  }
+
+  const shuffled = [...lines];
+  const random = createSeededRandom(hashString(lines.join("\n")));
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled.join("\n");
+}
+
+export function joinLines(input: string) {
+  return getNormalizedLines(input)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function splitTextIntoLines(input: string) {
+  const normalized = input.trim();
+
+  if (!normalized) {
+    return "";
+  }
+
+  const delimitedParts = normalized
+    .split(/[\n,;|]+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (delimitedParts.length > 1) {
+    return delimitedParts.join("\n");
+  }
+
+  return normalized
+    .split(/\s+/)
+    .filter(Boolean)
+    .join("\n");
+}
+
+export function replaceLineBreaksWithCommas(input: string) {
+  return getNormalizedLines(input)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(", ");
+}
+
 export function countWords(input: string) {
   const normalized = input.trim();
   return normalized ? normalized.split(/\s+/).length : 0;
@@ -370,6 +708,24 @@ export function countWords(input: string) {
 
 export function countCharacters(input: string) {
   return input.length;
+}
+
+export function countSentences(input: string) {
+  const matches = input
+    .replace(/\n+/g, " ")
+    .match(/[^.!?]+(?:[.!?]+|$)/g);
+
+  if (!matches) {
+    return 0;
+  }
+
+  return matches.filter((entry) => /[\p{L}\p{N}]/u.test(entry)).length;
+}
+
+export function countParagraphs(input: string) {
+  return input
+    .split(/\r?\n\s*\r?\n+/)
+    .filter((paragraph) => paragraph.trim().length > 0).length;
 }
 
 export function generateSlug(input: string) {
@@ -401,10 +757,40 @@ export function transformText(mode: TextMode, value: string) {
       return removeLineBreaks(value);
     case "removeExtraSpaces":
       return removeExtraSpaces(value);
+    case "removeDuplicateLines":
+      return removeDuplicateLines(value);
+    case "removeEmptyLines":
+      return removeEmptyLines(value);
+    case "removePunctuation":
+      return removePunctuation(value);
+    case "stripHtmlTags":
+      return stripHtmlTags(value);
+    case "removeEmojis":
+      return removeEmojis(value);
+    case "normalizeUnicode":
+      return normalizeUnicode(value);
+    case "removeNonAscii":
+      return removeNonAscii(value);
+    case "removeDiacritics":
+      return removeDiacritics(value);
+    case "sortLines":
+      return sortLinesAlphabetically(value);
+    case "shuffleLines":
+      return shuffleLines(value);
+    case "joinLines":
+      return joinLines(value);
+    case "splitText":
+      return splitTextIntoLines(value);
+    case "lineBreaksToCommas":
+      return replaceLineBreaksWithCommas(value);
     case "wordCount":
       return String(countWords(value));
     case "characterCount":
       return String(countCharacters(value));
+    case "sentenceCount":
+      return String(countSentences(value));
+    case "paragraphCount":
+      return String(countParagraphs(value));
     case "slug":
       return generateSlug(value);
     case "camel": {
@@ -431,12 +817,24 @@ export function transformText(mode: TextMode, value: string) {
       return encodeURL(value);
     case "urlDecode":
       return decodeURL(value);
+    case "htmlEncode":
+      return htmlEncode(value);
+    case "htmlDecode":
+      return htmlDecode(value);
     case "jsonFormat":
       return formatJSON(value);
     case "jsonMinify":
       return minifyJSON(value);
     case "jsonValidate":
       return validateJSON(value);
+    case "jsonToCsv":
+      return jsonToCsv(value);
+    case "csvToJson":
+      return csvToJson(value);
+    case "xmlToJson":
+      return xmlToJson(value);
+    case "jsonToXml":
+      return jsonToXml(value);
     case "markdownToHtml":
       return markdownToHtml(value);
     case "htmlToMarkdown":

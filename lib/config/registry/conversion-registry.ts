@@ -1,7 +1,8 @@
 import type {
+  CategoryKey,
+  CategorySchema,
   HomePageConfig,
   LaunchCategoryKey,
-  LaunchCategorySchema,
   LaunchToolPageSchema,
   NumericCategorySchema,
 } from "./conversion-types";
@@ -11,15 +12,21 @@ import {
   getUnitPluralLabel,
   getUnitSymbol,
   lengthUnits,
+  pressureUnits,
+  rainfallUnits,
   temperatureUnits,
   volumeUnits,
+  windUnits,
   weightUnits,
 } from "./unit-definitions";
 import {
   dataPairPages,
   lengthPairPages,
+  pressurePairPages,
+  rainfallPairPages,
   temperaturePairPages,
   volumePairPages,
+  windPairPages,
   weightPairPages,
 } from "./numeric-pair-pages";
 import { plannedDevToolPages, textTransformPages } from "./text-transform-pages";
@@ -30,7 +37,6 @@ const colorToolPages = textTransformPages.filter((page) => page.categoryKey === 
 const devDataToolPages = textTransformPages.filter((page) => page.categoryKey === "dev-data");
 const featuredEncodingPage = encodingToolPages[0];
 const featuredColorPage = colorToolPages[0];
-const featuredDevDataPage = devDataToolPages[0];
 
 function uniqueStrings(values: readonly string[]) {
   return [...new Set(values)];
@@ -40,7 +46,7 @@ export * from "./conversion-types";
 export * from "./unit-definitions";
 export { plannedDevToolPages } from "./text-transform-pages";
 
-export const categoryRegistry: LaunchCategorySchema[] = [
+export const categoryRegistry: CategorySchema[] = [
   {
     aliases: ["weight", "mass", "kg", "lbs", "grams", "ounces"],
     baseUnitKey: "kg",
@@ -146,6 +152,84 @@ export const categoryRegistry: LaunchCategorySchema[] = [
     units: temperatureUnits,
   },
   {
+    aliases: ["wind", "wind speed", "mph", "kmh", "km/h", "knots"],
+    baseUnitKey: "kmh",
+    description: "Convert mph, km/h, and knots for forecasts, travel, and marine planning.",
+    engine: "linear",
+    featuredSlug: windPairPages[0].slug,
+    intro:
+      "Wind speed is one of those values that changes meaning depending on the unit you are used to seeing. Weather apps may show kilometers per hour, marine forecasts often use knots, and many people in the United States still think in miles per hour. This hub keeps those common wind-speed lookups together so you can move quickly between forecast data, travel references, and marine or aviation contexts without re-checking the math each time.",
+    key: "wind",
+    kind: "numeric",
+    label: "wind",
+    metaDescription:
+      "Wind converter for mph, km/h, and knots. Compare forecasts, road speeds, and marine conditions with fast wind-speed tools.",
+    pairPages: windPairPages,
+    relatedCategoryKeys: ["temperature", "pressure", "length"],
+    relatedTopics: ["weather alerts", "marine forecasts", "aviation references", "speed comparisons"],
+    route: "/wind-converter",
+    slug: "wind-converter",
+    title: "Wind converter",
+    useCases: [
+      "Translate wind speeds between mph and km/h for forecasts and travel planning.",
+      "Convert knots for marine weather, sailing, and aviation references.",
+      "Compare speed thresholds from different reporting systems without manual math.",
+    ],
+    units: windUnits,
+  },
+  {
+    aliases: ["pressure", "air pressure", "hpa", "mmhg", "bar", "psi"],
+    baseUnitKey: "hpa",
+    description: "Convert hPa, mmHg, bar, and psi for weather maps, gauges, and technical checks.",
+    engine: "linear",
+    featuredSlug: pressurePairPages[0].slug,
+    intro:
+      "Pressure values show up in more places than most utility sites account for. Forecast maps and aviation references often use hectopascals, gauges may show bar or psi, and some readings still appear in millimeters of mercury. This hub keeps those practical pressure conversions together so you can move between weather, workshop, and technical contexts without switching tools or hunting down formulas.",
+    key: "pressure",
+    kind: "numeric",
+    label: "pressure",
+    metaDescription:
+      "Pressure converter for hPa, mmHg, bar, and psi. Useful for weather, aviation, tire pressure, and gauge comparisons.",
+    pairPages: pressurePairPages,
+    relatedCategoryKeys: ["temperature", "wind", "rainfall"],
+    relatedTopics: ["weather maps", "aviation pressure", "tire pressure", "industrial gauges"],
+    route: "/pressure-converter",
+    slug: "pressure-converter",
+    title: "Pressure converter",
+    useCases: [
+      "Convert hPa and mmHg while comparing weather charts and aviation references.",
+      "Switch between bar and psi for tire pressure, compressors, and regulators.",
+      "Use one calculator for mixed pressure units instead of separate lookup tables.",
+    ],
+    units: pressureUnits,
+  },
+  {
+    aliases: ["rainfall", "rain", "precipitation", "mm rain", "inches rain"],
+    baseUnitKey: "rainmm",
+    description: "Convert rainfall totals between millimeters and inches for forecasts and storm reports.",
+    engine: "linear",
+    featuredSlug: rainfallPairPages[0].slug,
+    intro:
+      "Rainfall totals are easy to misread when forecast sources switch between metric and imperial reporting. One service may describe a storm in millimeters, while a local weather report uses inches of rain. This hub keeps rainfall conversion focused on that weather use case so you can compare totals, brief conditions, and read hydrology-style references without second-guessing what the number means.",
+    key: "rainfall",
+    kind: "numeric",
+    label: "rainfall",
+    metaDescription:
+      "Rainfall converter for millimeters and inches of rain. Compare forecast totals, storm reports, and precipitation data quickly.",
+    pairPages: rainfallPairPages,
+    relatedCategoryKeys: ["temperature", "pressure", "wind"],
+    relatedTopics: ["storm totals", "forecast comparisons", "hydrology notes", "weather reporting"],
+    route: "/rainfall-converter",
+    slug: "rainfall-converter",
+    title: "Rainfall converter",
+    useCases: [
+      "Translate rainfall totals between mm and inches during storms and forecasts.",
+      "Compare precipitation numbers from local and international weather sources.",
+      "Read hydrology and weather data in the unit system that feels most familiar.",
+    ],
+    units: rainfallUnits,
+  },
+  {
     aliases: ["data", "storage", "kb", "mb", "gb", "tb"],
     baseUnitKey: "mb",
     description: "Check megabytes and gigabytes quickly for storage, upload limits, and file handoffs.",
@@ -172,61 +256,62 @@ export const categoryRegistry: LaunchCategorySchema[] = [
     units: dataUnits,
   },
   {
-    aliases: ["text", "text case", "uppercase", "developer text"],
-    description: "Change text case instantly with utility-focused formatting tools for writers and developers.",
-    featuredSlug: textCasePages[0].slug,
+    aliases: ["text", "text tools", "writing tools", "text utilities", "developer text"],
+    description: "Clean, compare, analyze, and transform text with fast browser-based tools for writers and teams.",
+    featuredSlug: "readability-checker",
     futureTools: plannedDevToolPages,
     intro:
-      "Text conversion tools solve a different kind of formatting problem than numeric converters: they help reshape pasted words into the style a task expects. That might mean turning rough draft copy into title case, cleaning up interface labels in uppercase, or converting phrases into developer-friendly formats like snake_case and kebab-case. This hub brings those quick text-formatting jobs together for writers, marketers, product teams, and developers who want a fast paste-convert-copy workflow. Each page stays focused on one transformation so the behavior, examples, and use cases are easier to understand at a glance.",
+      "Text tools solve a different kind of utility problem than numeric converters. Sometimes you need to clean up pasted copy, sometimes you need to compare two drafts, and sometimes you just need a quick readability check before publishing. This hub brings those day-to-day text workflows together in one place for writers, marketers, product teams, support teams, and developers who want a fast browser-based workflow. Some pages stay intentionally simple, like case conversion or line cleanup, while richer tools add focused widgets for comparison and readability.",
     key: "text",
     kind: "text",
     label: "text",
     metaDescription:
-      "Text case converter hub for uppercase, title case, snake_case, kebab-case, and more. Clean up copy, labels, and developer-friendly text in one place.",
-    relatedCategoryKeys: ["encoding", "data", "length"],
-    relatedTopics: ["headings", "UI labels", "developer identifiers", "content cleanup"],
+      "Text tools for cleanup, comparison, readability, case conversion, and copy-friendly formatting in one browser-based hub.",
+    relatedCategoryKeys: ["encoding", "generator", "dev-data"],
+    relatedTopics: ["text cleanup", "draft comparison", "readability", "writing workflows"],
     route: "/text-converter",
     slug: "text-converter",
     title: "Text converter",
     transforms: textCasePages,
     useCases: [
-      "Format headings, labels, and callouts into uppercase, title case, or sentence case.",
-      "Convert phrases into snake_case, camelCase, or kebab-case for code and content systems.",
-      "Clean up pasted draft text before moving it into a CMS, design file, or product UI.",
+      "Clean up pasted copy by removing duplicates, blank lines, punctuation, or inconsistent Unicode.",
+      "Compare drafts, check readability, and count sentences or paragraphs before publishing.",
+      "Transform case, normalize text, or prepare cleaner copy for publishing and handoff.",
     ],
   },
   {
     aliases: [
       "encoding",
       "encoding tools",
-      "base64",
-      "base64 encode",
-      "base64 decode",
-      "json formatter",
-      "json minifier",
-      "json validator",
-      "url encode",
-      "url decode",
-      "url encode",
-      "url decode",
-      "json format",
+      "developer encoding",
+      "developer formatting tools",
+      "base64 tools",
+      "url tools",
+      "html entity tools",
+      "json tools",
     ],
     description:
-      "Developer utilities for encoding, decoding, and formatting data such as Base64, URLs, and JSON.",
+      "Developer utilities for Base64, URLs, HTML entities, and JSON formatting in the browser.",
     featuredSlug: featuredEncodingPage?.slug ?? "",
     futureTools: plannedDevToolPages,
     intro:
-      "A dedicated hub for developer-friendly encoding, decoding, and formatting utilities that will expand beyond the current launch set.",
+      "Encoding tasks tend to be tiny, but they show up everywhere: debugging payloads, cleaning copied markup, escaping template snippets, and validating JSON before it hits an API. This hub keeps those fast browser-based encoding and formatting tools together so you can move between Base64, URLs, HTML entities, and JSON without breaking focus or writing a throwaway script.",
     key: "encoding",
     kind: "text",
     label: "encoding",
     metaDescription:
-      "Encoding and decoding tools for Base64, URLs, and JSON. Format, validate, encode, and decode developer-facing data directly in your browser.",
+      "Encoding and decoding tools for Base64, URLs, HTML entities, and JSON. Format, validate, encode, and decode developer-facing data directly in your browser.",
     relatedCategoryKeys: ["text", "data", "length"],
+    relatedTopics: ["base64 payloads", "url parameters", "html entities", "json formatting"],
     route: "/encoding-tools",
     slug: "encoding-tools",
     title: "Encoding & Decoding Tools",
     transforms: encodingToolPages,
+    useCases: [
+      "Encode or decode Base64, URLs, and HTML entities while debugging browser or API data.",
+      "Format, minify, and validate JSON without switching to a code editor.",
+      "Clean copied snippets and payload fragments before moving them into docs or templates.",
+    ],
   },
   {
     aliases: [
@@ -273,21 +358,15 @@ export const categoryRegistry: LaunchCategorySchema[] = [
       "developer tools",
       "developer utilities",
       "data conversion tools",
-      "unix timestamp converter",
-      "date to unix",
-      "unix to date",
-      "time zone converter",
-      "markdown to html",
-      "html to markdown",
-      "json to yaml",
-      "yaml to json",
-      "seconds to milliseconds",
-      "milliseconds to seconds",
+      "data format tools",
       "programming tools",
+      "browser developer tools",
+      "payload tools",
+      "api debugging tools",
     ],
     description:
-      "Tools for converting data formats, units used in programming, and developer utilities.",
-    featuredSlug: featuredDevDataPage?.slug ?? "",
+      "Developer tools for data formats, payload inspection, scheduling, IDs, hashing, and browser-based debugging.",
+    featuredSlug: "regex-tester",
     featuredStandaloneSlugs: [
       "unix-timestamp-converter",
       "date-to-unix",
@@ -296,22 +375,287 @@ export const categoryRegistry: LaunchCategorySchema[] = [
     ],
     futureTools: plannedDevToolPages,
     intro:
-      "Developer workflows often involve small but repetitive conversion tasks that do not fit neatly into a general unit converter. You might need to turn a date into a Unix timestamp for an API, check a timestamp returned by logs, or compare time values across zones while debugging scheduling issues. This hub groups those practical developer and data utilities into one place so you can move faster between raw values and readable output. It is designed for frontend work, backend debugging, data handling, and quick programming tasks where a focused browser tool is often faster than opening a terminal or writing one-off code.",
+      "Developer workflows are full of small format and inspection tasks that are annoying to do by hand but too common to keep rebuilding from scratch. You might need to turn CSV into JSON, decode a JWT from an API response, generate a cron schedule, hash a payload, or test a regex before shipping it into code. This hub groups those practical browser-based utilities with the existing time and data helpers so you can move from raw input to copy-ready output faster.",
     key: "dev-data",
     kind: "text",
     label: "dev-data",
     metaDescription:
-      "Developer and data conversion tools for Unix timestamps, time zones, and related programming utilities.",
+      "Developer and data tools for JSON, CSV, XML, regex, JWT decoding, cron expressions, UUIDs, hashes, Unix timestamps, and time zones.",
     relatedCategoryKeys: ["encoding", "data", "text"],
-    relatedTopics: ["API debugging", "timestamps", "time zones", "developer workflows"],
+    relatedTopics: ["API debugging", "payload formats", "timestamps", "developer workflows"],
     route: "/developer-tools",
     slug: "developer-tools",
     title: "Developer & Data Conversion Tools",
     transforms: devDataToolPages,
     useCases: [
-      "Convert Unix timestamps while testing APIs, logs, and webhook payloads.",
-      "Translate local time values between time zones for scheduling, releases, and debugging.",
-      "Handle common developer-side date and data checks without leaving the browser.",
+      "Convert JSON, CSV, XML, Markdown, and YAML without leaving the browser.",
+      "Inspect JWTs, test regex patterns, and generate cron expressions during debugging.",
+      "Handle timestamps, hashes, UUIDs, and payload cleanup in one shared utility hub.",
+    ],
+  },
+  {
+    aliases: [
+      "generator tools",
+      "random generators",
+      "random tools",
+      "generator utilities",
+      "online generator tools",
+    ],
+    description:
+      "Random generators for numbers, names, passwords, colors, teams, and placeholder text in one browser-based hub.",
+    featuredSlug: "random-password-generator",
+    intro:
+      "Generator tools are handy because they remove tiny bits of friction that keep showing up during design, QA, content prep, onboarding, and day-to-day operations. You might need a strong password, a clean test name list, a few balanced teams, a fresh color palette, or placeholder text that stays reproducible between screenshots. This hub groups those repeatable generation workflows into one shared family so they stay consistent, fast, and easy to extend.",
+    key: "generator",
+    kind: "interactive",
+    label: "generator",
+    metaDescription:
+      "Generator tools for random numbers, names, passwords, colors, teams, random text, and lorem ipsum with browser-based outputs.",
+    relatedCategoryKeys: ["text", "utility", "social", "color"],
+    relatedTopics: [
+      "placeholder content",
+      "test data",
+      "team shuffling",
+      "design inspiration",
+    ],
+    route: "/generator-tools",
+    slug: "generator-tools",
+    title: "Generator Tools",
+    useCases: [
+      "Generate reproducible placeholder text, names, and numbers during design or QA work.",
+      "Create stronger passwords, random teams, and quick palettes without switching apps.",
+      "Keep small generation tasks inside one browser-based workflow with shared controls.",
+    ],
+  },
+  {
+    aliases: [
+      "seo tools",
+      "marketing tools",
+      "seo marketing tools",
+      "utm tools",
+      "technical seo tools",
+    ],
+    description:
+      "SEO and marketing tools for metadata, sitemaps, robots rules, campaign URLs, keyword review, and link inspection.",
+    featuredSlug: "meta-tag-generator",
+    intro:
+      "SEO and marketing workflows often sit in an awkward middle ground. They are too structured for a plain text box, but too small to deserve a heavy analytics platform every time. This hub brings those practical browser-side tools together so you can generate metadata, audit links, build campaign URLs, and review draft copy without bouncing between five unrelated tabs.",
+    key: "seo",
+    kind: "interactive",
+    label: "seo",
+    metaDescription:
+      "SEO and marketing tools for meta tags, robots.txt, sitemap XML, keyword density, SEO word counts, URL parsing, and UTM links.",
+    relatedCategoryKeys: ["social", "utility", "text", "dev-data"],
+    relatedTopics: [
+      "metadata setup",
+      "campaign links",
+      "content audits",
+      "technical seo basics",
+    ],
+    route: "/seo-marketing-tools",
+    slug: "seo-marketing-tools",
+    title: "SEO & Marketing Tools",
+    useCases: [
+      "Generate metadata, robots rules, and sitemap XML during a launch or migration.",
+      "Inspect URLs and build UTM-tagged campaign links without a spreadsheet.",
+      "Review keyword density and draft length before publishing a landing page or article.",
+    ],
+  },
+  {
+    aliases: [
+      "social media tools",
+      "social tools",
+      "creator tools",
+      "social writing tools",
+      "social publishing tools",
+    ],
+    description:
+      "Social media tools for hashtags, username ideas, Instagram-style fonts, bio formatting, and tweet-length checks.",
+    featuredSlug: "hashtag-generator",
+    intro:
+      "Social publishing work moves quickly, which makes small utility tools disproportionately useful. You might need a quick hashtag set, a cleaner bio layout, a readable styled headline, or a last-minute length check before a post goes live. This hub groups those repeatable browser-side tasks into one shared workflow family for creators, marketers, and teams managing fast-moving campaigns.",
+    key: "social",
+    kind: "interactive",
+    label: "social",
+    metaDescription:
+      "Social media tools for hashtag generation, username ideas, Instagram fonts, bio formatting, and tweet-length checks.",
+    relatedCategoryKeys: ["seo", "utility", "text"],
+    relatedTopics: [
+      "creator workflows",
+      "profile setup",
+      "caption prep",
+      "campaign publishing",
+    ],
+    route: "/social-media-tools",
+    slug: "social-media-tools",
+    title: "Social Media Tools",
+    useCases: [
+      "Generate hashtag and username ideas for a new profile or launch campaign.",
+      "Format bios and stylized short text for profile and caption updates.",
+      "Check post length and social-ready copy before publishing.",
+    ],
+  },
+  {
+    aliases: [
+      "micro utilities",
+      "design utilities",
+      "css utilities",
+      "frontend utility tools",
+      "small design tools",
+    ],
+    curatedPageSlugs: ["favicon-generator"],
+    description:
+      "Micro utilities for password checks, color contrast, gradients, shadows, border radius, and quick design output.",
+    featuredSlug: "color-contrast-checker",
+    intro:
+      "Some of the most useful site tools are the smallest ones. A contrast check, a quick gradient, a reusable box shadow, a favicon pack, or a password strength review can unblock a design or launch task in minutes. This hub collects those focused browser-side helpers into one family so design, product, and content work can keep moving without heavier software.",
+    key: "utility",
+    kind: "interactive",
+    label: "utility",
+    metaDescription:
+      "Micro utility tools for password strength, color contrast, CSS gradients, box shadows, border radius, and favicon generation.",
+    relatedCategoryKeys: ["seo", "social", "color", "image"],
+    relatedTopics: [
+      "accessibility checks",
+      "css snippets",
+      "launch polish",
+      "small UI helpers",
+    ],
+    route: "/micro-utilities",
+    slug: "micro-utilities",
+    title: "Micro Design & Utility Tools",
+    useCases: [
+      "Check accessibility and generate small CSS snippets during UI polish work.",
+      "Create gradients, shadows, and border-radius values without guesswork.",
+      "Handle small launch tasks like password feedback and favicon generation in one place.",
+    ],
+  },
+  {
+    aliases: [
+      "science calculators",
+      "engineering calculators",
+      "engineering tools",
+      "electrical tools",
+      "science tools",
+      "engineering conversion tools",
+    ],
+    description:
+      "Science and engineering tools for electrical formulas, signal power, torque, and viscosity conversions.",
+    featuredSlug: "watts-to-amps",
+    intro:
+      "Science and engineering tools rarely fit into a simple one-number converter. Many of them need context like voltage, current, or a chosen unit family before the result is meaningful. This hub groups those practical calculators together so you can move from quick electrical checks to mechanical and fluid-style conversions without bouncing between unrelated pages.",
+    key: "science",
+    kind: "interactive",
+    label: "science",
+    metaDescription:
+      "Science and engineering calculators for watts to amps, volts to watts, dBm to watts, torque conversion, and viscosity conversion.",
+    relatedCategoryKeys: ["pressure", "temperature", "data"],
+    relatedTopics: [
+      "electrical formulas",
+      "signal power",
+      "mechanical torque",
+      "fluid measurements",
+    ],
+    route: "/science-calculators",
+    slug: "science-calculators",
+    title: "Science & Engineering Tools",
+    useCases: [
+      "Estimate electrical current or power from everyday voltage and amp values.",
+      "Translate dBm readings into watts for RF and networking work.",
+      "Convert torque and viscosity units without building a one-off spreadsheet.",
+    ],
+  },
+  {
+    aliases: [
+      "weather tools",
+      "uv tools",
+      "uv safety tools",
+      "weather safety tools",
+      "sun exposure tools",
+    ],
+    description:
+      "Weather-focused tools for interpreting UV index risk levels and outdoor exposure guidance.",
+    featuredSlug: "uv-index-calculator",
+    intro:
+      "Weather tools become more useful when they explain what the number means, not just what the number is. UV index is a good example: the same reading can feel abstract until you translate it into risk level, sun-protection urgency, and outdoor planning context. This hub keeps the first weather-safety tools focused on that practical interpretation.",
+    key: "weather",
+    kind: "interactive",
+    label: "weather",
+    metaDescription:
+      "Weather and UV tools for checking UV index risk, dangerous exposure ranges, and outdoor planning guidance.",
+    relatedCategoryKeys: ["temperature", "wind", "pressure", "rainfall"],
+    relatedTopics: [
+      "uv safety",
+      "sun exposure",
+      "outdoor planning",
+      "weather awareness",
+    ],
+    route: "/weather-tools",
+    slug: "weather-tools",
+    title: "Weather & UV Tools",
+    useCases: [
+      "Check whether today’s UV index is low, moderate, high, or extreme.",
+      "Explain UV ranges quickly before outdoor work, travel, or exercise.",
+      "Turn a forecast number into clearer sun-protection guidance.",
+    ],
+  },
+  {
+    aliases: [
+      "image tools",
+      "image utilities",
+      "image converter tools",
+      "browser image tools",
+      "photo tools",
+      "favicon tools",
+    ],
+    description:
+      "Browser-based image tools for format conversion, resizing, rotation, cropping, Base64 encoding, and favicon generation.",
+    featuredSlug: "png-to-jpg",
+    intro:
+      "Image tasks show up everywhere: preparing a screenshot for docs, shrinking a file for upload, turning a logo into a favicon set, or converting a downloaded asset into the format a tool actually accepts. This hub brings those practical image workflows together in one place with a shared upload, preview, and download experience. The goal is to keep everyday image jobs small, local, and reliable, so you can fix or export the file you need without jumping into a heavier editor for every one-off change.",
+    key: "image",
+    kind: "interactive",
+    label: "image",
+    metaDescription:
+      "Image tools for PNG to JPG, JPG to PNG, WEBP to PNG, SVG to PNG, resizing, cropping, rotating, Base64 image conversion, and favicon generation.",
+    relatedCategoryKeys: ["file", "text", "color"],
+    relatedTopics: ["asset prep", "image resizing", "favicon setup", "inline image encoding"],
+    route: "/image-tools",
+    slug: "image-tools",
+    title: "Image Tools",
+    useCases: [
+      "Convert images between practical web-friendly formats without leaving the browser.",
+      "Resize, crop, rotate, and compress assets before publishing or sharing them.",
+      "Generate Base64 strings and favicon packs from one upload workflow.",
+    ],
+  },
+  {
+    aliases: [
+      "file tools",
+      "pdf tools",
+      "browser file tools",
+      "document tools",
+      "pdf utilities",
+    ],
+    description:
+      "Browser-based file tools for PDF text extraction, text-to-PDF creation, merging PDFs, and splitting PDFs.",
+    featuredSlug: "pdf-to-text",
+    intro:
+      "File utilities often need more than a simple input and output field. PDF tasks especially need upload handling, validation, structured results, and sometimes multiple downloads from one action. This hub is built around that reality. It starts with practical PDF workflows like extraction, creation, merging, and splitting, all inside the same reusable file-processing system so the site can grow into broader file tooling without falling back to one-off page logic.",
+    key: "file",
+    kind: "interactive",
+    label: "file",
+    metaDescription:
+      "File tools for PDF to text, text to PDF, merge PDF, and split PDF with browser-based processing, downloads, and clear result panels.",
+    relatedCategoryKeys: ["image", "text", "dev-data"],
+    relatedTopics: ["pdf workflows", "document handoff", "text extraction", "browser file utilities"],
+    route: "/file-tools",
+    slug: "file-tools",
+    title: "File Tools",
+    useCases: [
+      "Extract text from PDFs and move it into editing or cleanup workflows quickly.",
+      "Create, merge, and split PDFs in the browser without installing extra software.",
+      "Use a consistent upload and result workflow for structured document utilities.",
     ],
   },
 ];
@@ -321,14 +665,14 @@ const categoryConfigByKey = categoryRegistry.reduce(
     accumulator[category.key] = category;
     return accumulator;
   },
-  {} as Record<LaunchCategoryKey, LaunchCategorySchema>,
+  {} as Record<CategoryKey, CategorySchema>,
 );
 
 export const launchToolRegistry = categoryRegistry.reduce<LaunchToolPageSchema[]>(
   (accumulator, category) => {
     if (category.kind === "numeric") {
       accumulator.push(...category.pairPages);
-    } else {
+    } else if (category.kind === "text") {
       accumulator.push(...category.transforms);
     }
 
@@ -346,6 +690,24 @@ export const homepageConfig: HomePageConfig = {
     "kg to lbs",
     "cm to inches",
     "celsius to fahrenheit",
+    "mph to kmh",
+    "random number generator",
+    "random password generator",
+    "meta tag generator",
+    "utm builder",
+    "hashtag generator",
+    "color contrast checker",
+    "json to csv",
+    "regex tester",
+    "jwt decoder",
+    "watts to amps",
+    "uv index calculator",
+    "png to jpg",
+    "pdf to text",
+    "merge pdf",
+    "readability checker",
+    "text diff",
+    "lorem ipsum generator",
     "cups to grams",
     "mb to gb",
     "percentage calculator",
@@ -356,12 +718,15 @@ export const homepageConfig: HomePageConfig = {
     toUnitKey: "lb",
     value: 75,
   },
-  filterCategoryKeys: ["weight", "length", "volume", "data", "text"],
+  filterCategoryKeys: ["weight", "length", "volume", "temperature", "wind", "pressure", "rainfall", "data", "text"],
   hubCategoryKeys: [
     "weight",
     "length",
     "volume",
     "temperature",
+    "wind",
+    "pressure",
+    "rainfall",
     "data",
     "text",
     "encoding",
@@ -375,15 +740,45 @@ export const homepageConfig: HomePageConfig = {
     buildUnitPairSlug("m", "ft"),
     buildUnitPairSlug("l", "gal"),
     buildUnitPairSlug("tbsp", "ml"),
+    buildUnitPairSlug("mph", "kmh"),
+    buildUnitPairSlug("hpa", "mmhg"),
+    buildUnitPairSlug("rainmm", "raininch"),
     buildUnitPairSlug("mb", "gb"),
     buildUnitPairSlug("kb", "mb"),
+    "pressure-unit-converter",
+    "watts-to-amps",
+    "uv-index-calculator",
+    "random-number-generator",
+    "random-password-generator",
+    "random-color-generator",
+    "random-text-generator",
+    "lorem-ipsum-generator",
     "uppercase-converter",
     "reverse-text",
     "remove-line-breaks",
     "remove-extra-spaces",
     "word-counter",
     "character-counter",
+    "normalize-unicode",
+    "shuffle-lines",
     "slug-generator",
+    "html-encode",
+    "json-to-csv",
+    "regex-tester",
+    "jwt-decoder",
+    "uuid-generator",
+    "hash-generator",
+    "cron-expression-generator",
+    "meta-tag-generator",
+    "utm-builder",
+    "hashtag-generator",
+    "color-contrast-checker",
+    "png-to-jpg",
+    "image-resizer",
+    "favicon-generator",
+    "pdf-to-text",
+    "merge-pdf",
+    "split-pdf",
     "snake-case-converter",
     "title-case-converter",
     "markdown-to-html",
@@ -392,7 +787,7 @@ export const homepageConfig: HomePageConfig = {
   ],
 };
 
-export function getCategoryConfig(categoryKey: LaunchCategoryKey) {
+export function getCategoryConfig(categoryKey: CategoryKey) {
   return categoryConfigByKey[categoryKey];
 }
 
@@ -406,11 +801,17 @@ export function getNumericCategoryConfigs(): NumericCategorySchema[] {
   );
 }
 
-export function getCategoryTools(categoryKey: LaunchCategoryKey) {
+export function getCategoryTools(categoryKey: CategoryKey) {
   const category = getCategoryConfig(categoryKey);
-  return category.kind === "numeric"
-    ? [...category.pairPages]
-    : [...category.transforms];
+  if (category.kind === "numeric") {
+    return [...category.pairPages];
+  }
+
+  if (category.kind === "text") {
+    return [...category.transforms];
+  }
+
+  return [];
 }
 
 export function getLaunchToolConfig(slug: string) {
@@ -477,7 +878,7 @@ export function getRelatedTools(tool: LaunchToolPageSchema) {
     .filter((entry): entry is LaunchToolPageSchema => Boolean(entry));
 }
 
-export function getCategoryHighlights(categoryKey: LaunchCategoryKey) {
+export function getCategoryHighlights(categoryKey: CategoryKey) {
   const category = getCategoryConfig(categoryKey);
 
   return category.relatedCategoryKeys.map((key) => getCategoryConfig(key)).filter(Boolean);

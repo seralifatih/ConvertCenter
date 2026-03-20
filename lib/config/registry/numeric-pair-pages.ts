@@ -687,6 +687,38 @@ export const lengthPairPages = [
     metaDescription:
       "Convert meters to kilometers for route planning, mapping, and distance summaries with fast metric reference values.",
   }),
+  defineNumericPairPage("length", "yd", "m", 10, [1, 5, 10, 25, 50, 100], {
+    aliases: ["yards to meters", "yard to meters", "yd to meters", "yards to m"],
+    faq: defineFaqs(
+      defineFaq("How many meters are in 1 yard?", "1 yard equals exactly 0.9144 meters."),
+      defineFaq(
+        "What is the formula to convert yards to meters?",
+        "Multiply yards by 0.9144 to convert them to meters.",
+      ),
+      defineFaq(
+        "When is yards to meters conversion useful?",
+        "It is useful for sports fields, fabric lengths, landscaping plans, and distance references that mix imperial and metric units.",
+      ),
+    ),
+    metaDescription:
+      "Convert yards to meters for sports distances, fabric measurements, and outdoor planning with a quick calculator and reference values.",
+  }),
+  defineNumericPairPage("length", "m", "yd", 10, [1, 5, 10, 25, 50, 100], {
+    aliases: ["meters to yards", "meter to yards", "m to yards", "meters to yd"],
+    faq: defineFaqs(
+      defineFaq("How many yards are in 1 meter?", "1 meter equals about 1.09361 yards."),
+      defineFaq(
+        "What is the formula to convert meters to yards?",
+        "Multiply meters by about 1.09361 to convert them to yards.",
+      ),
+      defineFaq(
+        "Why convert meters to yards?",
+        "It helps when metric measurements need to be compared with sports, textile, or outdoor references that still use yards.",
+      ),
+    ),
+    metaDescription:
+      "Convert meters to yards for field layouts, textiles, and measurement comparisons with a simple formula and quick reference table.",
+  }),
 ] as const;
 
 export const volumePairPages = [
@@ -852,7 +884,7 @@ export const volumePairPages = [
   }),
   defineNumericPairPage("volume", "tbsp", "ml", 2, [0.5, 1, 2, 4, 8, 16], {
     aliases: ["tbsp to ml", "tablespoons to ml", "tablespoon to milliliters"],
-    crossLinks: ["cooking-converter", "cups-to-grams-flour", "tsp-to-grams-sugar"],
+    crossLinks: ["cooking-converter", "cups-to-grams-flour", "tsp-to-grams-sugar", "tbsp-to-grams-sugar"],
     faq: defineFaqs(
       defineFaq(
         "How many milliliters are in 1 tablespoon for cooking?",
@@ -1093,6 +1125,207 @@ export const temperaturePairPages = [
     formulaLabel: "°C = K - 273.15",
     metaDescription:
       "Convert Kelvin to Celsius quickly for lab work, science classes, and technical references with the exact formula and examples.",
+  }),
+] as const;
+
+export const windPairPages = [
+  defineNumericPairPage("wind", "mph", "kmh", 60, [5, 10, 20, 30, 60, 100], {
+    aliases: ["mph to kmh", "mph to km/h", "miles per hour to kmh", "miles per hour to km/h"],
+    faq: defineFaqs(
+      defineFaq("How many kilometers per hour are in 1 mph?", "1 mph equals exactly 1.609344 km/h."),
+      defineFaq(
+        "What is the formula to convert mph to kmh?",
+        "Multiply miles per hour by 1.609344 to convert them to kilometers per hour.",
+      ),
+      defineFaq(
+        "When is mph to kmh conversion useful?",
+        "It is useful for forecasts, road speeds, marine conditions, and comparing speed references across countries.",
+      ),
+    ),
+    featured: true,
+    metaDescription:
+      "Convert mph to kmh quickly for weather, road speeds, and route planning with a precise formula and common speed references.",
+    popular: true,
+  }),
+  defineNumericPairPage("wind", "kmh", "mph", 100, [10, 20, 40, 60, 100, 120], {
+    aliases: ["kmh to mph", "km/h to mph", "kilometers per hour to mph", "kmh into mph"],
+    faq: defineFaqs(
+      defineFaq("How many mph are in 1 km/h?", "1 km/h equals about 0.621371 mph."),
+      defineFaq(
+        "What is the formula to convert kmh to mph?",
+        "Multiply kilometers per hour by 0.621371 to convert them to miles per hour.",
+      ),
+      defineFaq(
+        "Why convert kmh to mph?",
+        "It helps compare speed limits, storm reports, and travel references when one source uses metric speed and another uses imperial speed.",
+      ),
+    ),
+    metaDescription:
+      "Convert kmh to mph for speed limits, forecasts, and route planning with a quick calculator and common values table.",
+  }),
+  defineNumericPairPage("wind", "knot", "kmh", 20, [5, 10, 20, 30, 50, 100], {
+    aliases: ["knots to kmh", "knot to kmh", "knots to km/h", "nautical miles per hour to kmh"],
+    faq: defineFaqs(
+      defineFaq("How many kilometers per hour are in 1 knot?", "1 knot equals exactly 1.852 km/h."),
+      defineFaq(
+        "What is the formula to convert knots to kmh?",
+        "Multiply knots by 1.852 to convert them to kilometers per hour.",
+      ),
+      defineFaq(
+        "Where is knots to kmh conversion used?",
+        "It is common in marine weather, sailing, aviation, and forecast discussions that switch between nautical and metric speed references.",
+      ),
+    ),
+    metaDescription:
+      "Convert knots to kmh for marine weather, sailing, and aviation references with a fast calculator and exact rate.",
+    popular: true,
+  }),
+  defineNumericPairPage("wind", "kmh", "knot", 100, [10, 20, 40, 60, 100, 120], {
+    aliases: ["kmh to knots", "km/h to knots", "kilometers per hour to knots", "kmh into knots"],
+    faq: defineFaqs(
+      defineFaq("How many knots are in 1 km/h?", "1 km/h equals about 0.539957 knots."),
+      defineFaq(
+        "What is the formula to convert kmh to knots?",
+        "Divide kilometers per hour by 1.852, or multiply by about 0.539957.",
+      ),
+      defineFaq(
+        "When should I convert kmh to knots?",
+        "It is useful when weather data or travel speeds need to be interpreted in marine or aviation contexts that prefer knots.",
+      ),
+    ),
+    metaDescription:
+      "Convert kmh to knots for forecast interpretation, sailing, and aviation planning with the formula and common speed examples.",
+  }),
+] as const;
+
+export const pressurePairPages = [
+  defineNumericPairPage("pressure", "hpa", "mmhg", 1013.25, [980, 1000, 1013.25, 1020, 1030, 1050], {
+    aliases: ["hpa to mmhg", "hPa to mmHg", "hectopascals to mmhg", "hectopascal to millimeters of mercury"],
+    faq: defineFaqs(
+      defineFaq("How many mmHg are in 1 hPa?", "1 hPa equals about 0.750062 mmHg."),
+      defineFaq(
+        "What is the formula to convert hpa to mmhg?",
+        "Multiply hectopascals by about 0.750062 to convert them to millimeters of mercury.",
+      ),
+      defineFaq(
+        "When is hpa to mmhg conversion useful?",
+        "It is useful for aviation references, weather maps, and comparing pressure readings that switch between metric and mercury-based units.",
+      ),
+    ),
+    featured: true,
+    metaDescription:
+      "Convert hpa to mmhg for aviation, weather charts, and pressure readings with a precise calculator and common examples.",
+    popular: true,
+  }),
+  defineNumericPairPage("pressure", "mmhg", "hpa", 760, [720, 740, 760, 780, 800, 820], {
+    aliases: ["mmhg to hpa", "mmHg to hPa", "millimeters of mercury to hpa", "mmhg into hectopascals"],
+    faq: defineFaqs(
+      defineFaq("How many hPa are in 1 mmHg?", "1 mmHg equals about 1.33322 hPa."),
+      defineFaq(
+        "What is the formula to convert mmhg to hpa?",
+        "Multiply millimeters of mercury by about 1.33322 to convert them to hectopascals.",
+      ),
+      defineFaq(
+        "Why convert mmhg to hpa?",
+        "It helps compare medical, laboratory, or pressure-gauge values with weather and aviation references that use hectopascals.",
+      ),
+    ),
+    metaDescription:
+      "Convert mmhg to hpa quickly for weather, lab, and gauge comparisons with a simple calculator and common reference points.",
+  }),
+  defineNumericPairPage("pressure", "bar", "psi", 1, [0.5, 1, 2, 5, 10, 20], {
+    aliases: ["bar to psi", "bars to psi", "bar into psi", "bar pressure to psi"],
+    faq: defineFaqs(
+      defineFaq("How many psi are in 1 bar?", "1 bar equals about 14.5038 psi."),
+      defineFaq(
+        "What is the formula to convert bar to psi?",
+        "Multiply bar by about 14.5038 to convert it to pounds per square inch.",
+      ),
+      defineFaq(
+        "Where is bar to psi conversion common?",
+        "It is common for tire pressure, compressors, workshop tools, and industrial gauge readings that move between metric and imperial systems.",
+      ),
+    ),
+    metaDescription:
+      "Convert bar to psi for tire pressure, compressors, and gauge checks with an exact calculator and common values table.",
+    popular: true,
+  }),
+  defineNumericPairPage("pressure", "psi", "bar", 30, [5, 10, 14.5, 30, 50, 100], {
+    aliases: ["psi to bar", "psi into bar", "pounds per square inch to bar", "psi pressure to bar"],
+    faq: defineFaqs(
+      defineFaq("How many bar are in 1 psi?", "1 psi equals about 0.0689476 bar."),
+      defineFaq(
+        "What is the formula to convert psi to bar?",
+        "Multiply psi by about 0.0689476 to convert it to bar.",
+      ),
+      defineFaq(
+        "When should I convert psi to bar?",
+        "It is useful for tire inflation guides, pressure regulators, and equipment manuals that use metric gauge values.",
+      ),
+    ),
+    metaDescription:
+      "Convert psi to bar for tire guides, pressure regulators, and gauge comparisons with a quick calculator and reference values.",
+  }),
+] as const;
+
+export const rainfallPairPages = [
+  defineNumericPairPage("rainfall", "rainmm", "raininch", 25.4, [1, 5, 10, 25.4, 50, 100], {
+    aliases: ["mm to inches rain", "mm to inches of rain", "millimeters to inches rain", "rain mm to inches"],
+    customLongDescription: defineStructuredContent(
+      "About converting millimeters of rain to inches of rain",
+      defineContentSection("Why rainfall totals are often compared in two systems", [
+        "Rainfall reports, forecast models, and local weather summaries do not always use the same measurement system. Millimeters are common in many countries and in technical weather products, while inches remain familiar in the United States for storm totals and local forecasts. That is why mm to inches rain is a frequent lookup during storms, travel planning, and climate comparisons.",
+      ]),
+      defineContentSection("Rainfall conversion formula", [
+        "The conversion is straightforward: divide millimeters of rain by 25.4 to get inches of rain. A rainfall total of 25.4 mm equals exactly 1 inch, 50 mm is about 1.97 inches, and 100 mm is about 3.94 inches. Those reference points make it easier to understand whether a forecast suggests light rain, a soaking event, or a more serious storm total.",
+      ]),
+      defineContentSection("When this rainfall conversion is useful", [
+        "This conversion is useful for weather briefings, hydrology notes, forecast comparisons, and translating storm totals into the scale that feels most familiar locally. Instead of estimating or switching tools mid-report, a dedicated mm to inches rain page keeps the conversion fast and easy to check.",
+      ]),
+    ),
+    faq: defineFaqs(
+      defineFaq("How many inches of rain are in 1 mm?", "1 millimeter of rain equals about 0.0393701 inches of rain."),
+      defineFaq(
+        "What is the formula to convert mm to inches rain?",
+        "Divide millimeters of rain by 25.4 to convert them to inches of rain.",
+      ),
+      defineFaq(
+        "When is mm to inches rain conversion useful?",
+        "It is useful for forecast comparisons, storm reports, and translating rainfall totals between metric and US weather references.",
+      ),
+    ),
+    featured: true,
+    metaDescription:
+      "Convert mm to inches rain for forecast comparisons, storm totals, and weather reports with a clear rainfall calculator and examples.",
+    popular: true,
+  }),
+  defineNumericPairPage("rainfall", "raininch", "rainmm", 1, [0.1, 0.25, 0.5, 1, 2, 4], {
+    aliases: ["inches to mm rain", "inches of rain to mm", "rain inches to mm", "inches rain to mm"],
+    customLongDescription: defineStructuredContent(
+      "About converting inches of rain to millimeters of rain",
+      defineContentSection("Why this weather conversion comes up often", [
+        "US weather reports often describe rainfall in inches, while many forecast models, international services, and hydrology references use millimeters. That makes inches to mm rain a practical conversion whenever you want to compare local storm totals with international or technical weather sources.",
+      ]),
+      defineContentSection("Rainfall conversion formula", [
+        "To convert inches of rain to millimeters, multiply by 25.4. That means 1 inch of rain equals 25.4 mm, half an inch is 12.7 mm, and 2 inches equals 50.8 mm. Those benchmarks make it easier to compare rainfall totals across different forecast systems.",
+      ]),
+      defineContentSection("Where this conversion helps", [
+        "The conversion is useful for storm tracking, flood guidance, agricultural planning, and comparing rainfall totals from multiple sources. A dedicated inches to mm rain converter helps translate weather data quickly without leaving the forecast workflow.",
+      ]),
+    ),
+    faq: defineFaqs(
+      defineFaq("How many millimeters of rain are in 1 inch?", "1 inch of rain equals exactly 25.4 millimeters of rain."),
+      defineFaq(
+        "What is the formula to convert inches to mm rain?",
+        "Multiply inches of rain by 25.4 to convert them to millimeters of rain.",
+      ),
+      defineFaq(
+        "Why convert inches of rain to millimeters?",
+        "It helps compare storm totals with international forecasts, hydrology products, and weather datasets that use metric rainfall units.",
+      ),
+    ),
+    metaDescription:
+      "Convert inches to mm rain for storm tracking, hydrology references, and forecast comparisons with a fast rainfall calculator.",
   }),
 ] as const;
 

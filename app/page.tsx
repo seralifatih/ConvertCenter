@@ -14,9 +14,9 @@ import {
 } from "@/lib/content/categories";
 import {
   getHomepagePopularLabel,
-  getLaunchPage,
   getPageHref,
   getSearchEntries,
+  getSiteToolPage,
 } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo";
 
@@ -105,7 +105,7 @@ export default function Home() {
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {homePopularSlugs.map((slug) => {
-            const page = getLaunchPage(slug);
+            const page = getSiteToolPage(slug);
 
             if (!page) {
               return null;
@@ -117,7 +117,7 @@ export default function Home() {
                   {getHomepagePopularLabel(page)}
                 </span>
                 <span className="text-xs text-[color:var(--muted)]">
-                  Open the dedicated {page.category} tool
+                  Open the dedicated {page.kind === "interactive-tool" ? page.categoryKey : page.category} tool
                 </span>
               </Link>
             );

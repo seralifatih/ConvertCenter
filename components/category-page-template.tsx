@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DevToolPageWidget } from "@/components/dev-tool-page-widget";
-import { DeveloperToolsHub } from "@/components/developer-tools-hub";
 import { FreeUnitConverter } from "@/components/free-unit-converter";
+import { InteractiveToolRenderer } from "@/components/interactive-tool-renderer";
 import { MarkdownToolWidget } from "@/components/markdown-tool-widget";
 import { PageContainer } from "@/components/page-container";
 import { StructuredData } from "@/components/structured-data";
@@ -16,9 +16,8 @@ import {
   getCategoryStandalonePages,
   getLaunchPageLabel,
   getLaunchPageSummary,
+  getSiteToolPage,
   getPageHref,
-  getTextPage,
-  getUnitPage,
 } from "@/lib/content/pages";
 import { makeBreadcrumbSchema } from "@/lib/seo";
 
@@ -27,10 +26,6 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
 
   if (!category) {
     return null;
-  }
-
-  if (category.key === "dev-data") {
-    return <DeveloperToolsHub />;
   }
 
   const categoryConfig = getCategoryConfig(category.key);
@@ -48,10 +43,12 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
   );
   const highlights = getCategoryHighlights(category.key);
   const relevantHighlights = highlights.slice(0, 2);
+  const featuredPage = getSiteToolPage(category.featuredSlug);
   const featuredUnitPage =
-    categoryConfig.kind === "numeric" ? getUnitPage(category.featuredSlug) : undefined;
+    categoryConfig.kind === "numeric" && featuredPage?.kind === "unit" ? featuredPage : undefined;
   const featuredTextPage =
-    categoryConfig.kind === "text" ? getTextPage(category.featuredSlug) : undefined;
+    categoryConfig.kind === "text" && featuredPage?.kind === "text" ? featuredPage : undefined;
+  const featuredInteractivePage = featuredPage?.kind === "interactive-tool" ? featuredPage : undefined;
 
   return (
     <PageContainer className="space-y-5 pb-4">
@@ -116,7 +113,10 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
               />
             )
           ) : null}
-          {!featuredUnitPage && !featuredTextPage ? (
+          {featuredInteractivePage ? (
+            <InteractiveToolRenderer widget={featuredInteractivePage.widget} />
+          ) : null}
+          {!featuredUnitPage && !featuredTextPage && !featuredInteractivePage ? (
             featuredStandalonePages.length ? (
               <div className="grid gap-3 sm:grid-cols-2">
                 {featuredStandalonePages.map((page) => (

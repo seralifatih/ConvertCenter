@@ -77,6 +77,7 @@ export type CookingIngredientKey = keyof typeof cookingIngredients;
 export type CookingConversionMode =
   | "cupsToGrams"
   | "gramsToCups"
+  | "tablespoonsToGrams"
   | "teaspoonsToGrams"
   | "gramsToTeaspoons";
 
@@ -104,6 +105,14 @@ export function teaspoonsToGrams(value: number, ingredient: CookingIngredientKey
   return value * cookingIngredients[ingredient].gramsPerTeaspoon;
 }
 
+export function tablespoonsToGrams(value: number, ingredient: CookingIngredientKey) {
+  if (!Number.isFinite(value)) {
+    return null;
+  }
+
+  return value * cookingIngredients[ingredient].gramsPerTeaspoon * 3;
+}
+
 export function gramsToTeaspoons(value: number, ingredient: CookingIngredientKey) {
   if (!Number.isFinite(value)) {
     return null;
@@ -122,6 +131,8 @@ export function convertCookingValue(
       return cupsToGrams(value, ingredient);
     case "gramsToCups":
       return gramsToCups(value, ingredient);
+    case "tablespoonsToGrams":
+      return tablespoonsToGrams(value, ingredient);
     case "teaspoonsToGrams":
       return teaspoonsToGrams(value, ingredient);
     case "gramsToTeaspoons":
@@ -144,6 +155,13 @@ export function getCookingModeLabels(mode: CookingConversionMode) {
         outputLabel: "cups output",
         placeholder: "200",
         unitHint: "cups",
+      };
+    case "tablespoonsToGrams":
+      return {
+        inputLabel: "value in tablespoons",
+        outputLabel: "grams output",
+        placeholder: "1",
+        unitHint: "g",
       };
     case "teaspoonsToGrams":
       return {

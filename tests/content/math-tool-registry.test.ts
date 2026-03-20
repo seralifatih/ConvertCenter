@@ -6,12 +6,19 @@ import {
 } from "../../lib/content/math-tools";
 
 describe("math tool registry", () => {
-  it("keeps the initial rollout limited to the four requested calculators", () => {
+  it("exposes the expanded calculator rollout through the shared math registry", () => {
     expect(mathToolPages.map((page) => page.slug)).toEqual([
       "percentage-calculator",
       "percentage-change",
       "average-calculator",
       "ratio-calculator",
+      "loan-calculator",
+      "simple-interest-calculator",
+      "compound-interest-calculator",
+      "mortgage-calculator",
+      "savings-calculator",
+      "molarity-calculator",
+      "ph-calculator",
     ]);
   });
 
@@ -33,7 +40,7 @@ describe("math tool registry", () => {
   });
 
   it("resolves related math pages from config", () => {
-    const page = getMathToolPage("average-calculator");
+    const page = getMathToolPage("compound-interest-calculator");
 
     expect(page).toBeDefined();
 
@@ -42,7 +49,11 @@ describe("math tool registry", () => {
     }
 
     expect(getMathToolRelatedPages(page).map((entry) => entry.slug)).toEqual(
-      expect.arrayContaining(["percentage-calculator", "percentage-change", "ratio-calculator"]),
+      expect.arrayContaining([
+        "simple-interest-calculator",
+        "savings-calculator",
+        "loan-calculator",
+      ]),
     );
   });
 });

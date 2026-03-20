@@ -6,6 +6,7 @@ import {
 } from "@/lib/config/conversion-registry";
 
 export type BrowseCategory = {
+  curatedPageSlugs?: readonly string[];
   key: CategoryKey;
   label: string;
   route: `/${string}`;
@@ -21,6 +22,7 @@ export type BrowseCategory = {
 };
 
 export const browseCategories: BrowseCategory[] = categoryRegistry.map((category) => ({
+  curatedPageSlugs: category.curatedPageSlugs,
   description: category.description,
   featuredSlug: category.featuredSlug,
   featuredStandaloneSlugs: category.featuredStandaloneSlugs,

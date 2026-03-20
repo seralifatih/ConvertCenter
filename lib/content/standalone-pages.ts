@@ -134,6 +134,15 @@ export const standaloneToolPages: StandaloneToolPage[] = [
   {
     category: "cooking",
     description:
+      "Convert tablespoons to grams for granulated sugar using an ingredient-specific kitchen reference.",
+    keywords: ["tbsp to grams sugar", "tablespoons to grams sugar", "sugar tablespoon grams"],
+    route: "/tbsp-to-grams-sugar",
+    slug: "tbsp-to-grams-sugar",
+    title: "Tablespoons to Grams Sugar Converter",
+  },
+  {
+    category: "cooking",
+    description:
       "Convert grams to teaspoons for granulated sugar using an ingredient-specific kitchen reference.",
     keywords: ["grams to tsp sugar", "grams to teaspoons sugar", "sugar grams to teaspoon"],
     route: "/grams-to-tsp-sugar",

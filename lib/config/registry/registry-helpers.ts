@@ -167,6 +167,21 @@ function getCategoryContext(categoryKey: NumericCategoryKey) {
         context: "weather, cooking, travel, science, and technical reference work",
         heading: "When this conversion is useful",
       };
+    case "wind":
+      return {
+        context: "forecast comparisons, marine conditions, aviation references, and route planning",
+        heading: "When this conversion is useful",
+      };
+    case "pressure":
+      return {
+        context: "weather maps, aviation references, tire and gauge checks, and industrial pressure readings",
+        heading: "When this conversion is useful",
+      };
+    case "rainfall":
+      return {
+        context: "forecast summaries, storm reports, hydrology references, and comparing rain totals across regions",
+        heading: "When this conversion is useful",
+      };
     case "data":
       return {
         context: "storage planning, upload limits, backups, and file transfer estimates",

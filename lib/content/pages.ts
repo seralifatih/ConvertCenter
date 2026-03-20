@@ -20,6 +20,11 @@ import {
   type UnitKey,
 } from "@/lib/config/conversion-registry";
 import { transformText, type TextMode } from "@/lib/conversion/text";
+import {
+  getInteractiveToolSearchEntries,
+  interactiveToolPages,
+  type InteractiveToolPageDefinition,
+} from "@/lib/content/interactive-tools";
 import { standaloneToolPages } from "@/lib/content/standalone-pages";
 import { getMathSearchEntries, mathToolPages } from "@/lib/content/math-tools";
 import { convertValue, formatNumber, getUnitFactor, units } from "@/lib/conversion/units";
@@ -67,10 +72,21 @@ export type TextPageDefinition = {
 };
 
 export type LaunchPage = UnitPageDefinition | TextPageDefinition;
+export type SiteToolPage = LaunchPage | InteractiveToolPageDefinition;
 
 function uniqueStrings(values: readonly string[]) {
   return [...new Set(values)];
 }
+
+const caseStyleModes = new Set<TextMode>([
+  "uppercase",
+  "lowercase",
+  "title",
+  "sentence",
+  "camel",
+  "snake",
+  "kebab",
+]);
 
 function isCookingVolumePage(page: UnitPageDefinition) {
   const cookingUnits: UnitKey[] = ["cup", "ml", "tbsp", "tsp"];
@@ -131,14 +147,19 @@ const rawTextPages = launchToolRegistry.filter(
 export const unitPages = rawUnitPages.map(adaptUnitPage);
 export const textPages = rawTextPages.map(adaptTextPage);
 export const launchPages: LaunchPage[] = [...unitPages, ...textPages];
+export const interactivePages = [...interactiveToolPages];
 export const launchPageCount = new Set([
   ...launchPages.map((page) => page.slug),
+  ...interactivePages.map((page) => page.slug),
   ...mathToolPages.map((page) => page.slug),
   ...standaloneToolPages.map((page) => page.slug),
 ]).size;
 
 const unitPageBySlug = new Map(unitPages.map((page) => [page.slug, page] as const));
 const textPageBySlug = new Map(textPages.map((page) => [page.slug, page] as const));
+const interactivePageBySlug = new Map(
+  interactivePages.map((page) => [page.slug, page] as const),
+);
 
 export function getUnitPage(slug: string) {
   return unitPageBySlug.get(slug);
@@ -150,6 +171,14 @@ export function getTextPage(slug: string) {
 
 export function getLaunchPage(slug: string) {
   return getUnitPage(slug) ?? getTextPage(slug);
+}
+
+export function getInteractivePage(slug: string) {
+  return interactivePageBySlug.get(slug);
+}
+
+export function getSiteToolPage(slug: string) {
+  return getLaunchPage(slug) ?? getInteractivePage(slug);
 }
 
 export function getLaunchPageCount() {
@@ -256,9 +285,21 @@ export function getRelatedUnitPages(page: UnitPageDefinition) {
 }
 
 export function getCategoryPages(category: CategoryKey) {
-  return getCategoryTools(category)
+  const launchCategoryPages = getCategoryTools(category)
     .map((tool) => getLaunchPage(tool.slug))
     .filter((page): page is LaunchPage => Boolean(page));
+  const categoryInteractivePages = interactivePages.filter((page) => page.categoryKey === category);
+  const curatedPages = (getCategoryConfig(category).curatedPageSlugs ?? [])
+    .map((slug) => getSiteToolPage(slug))
+    .filter((page): page is SiteToolPage => Boolean(page));
+
+  const pageBySlug = new Map<string, SiteToolPage>();
+
+  [...launchCategoryPages, ...categoryInteractivePages, ...curatedPages].forEach((page) => {
+    pageBySlug.set(page.slug, page);
+  });
+
+  return [...pageBySlug.values()];
 }
 
 export function getCategoryStandalonePages(category: CategoryKey) {
@@ -284,12 +325,17 @@ function uniqueLinkTargets(
 }
 
 function resolveCrossLinkEntry(slug: string) {
-  const launchPage = getLaunchPage(slug);
+  const page = getSiteToolPage(slug);
 
-  if (launchPage) {
+  if (page) {
     return {
-      href: getPageHref(launchPage),
-      label: launchPage.kind === "text" ? launchPage.title : getUnitPageTitle(launchPage),
+      href: getPageHref(page),
+      label:
+        page.kind === "text"
+          ? page.title
+          : page.kind === "unit"
+            ? getUnitPageTitle(page)
+            : page.title,
     };
   }
 
@@ -320,6 +366,21 @@ export function getCrossLinkEntries(page: LaunchPage) {
   return uniqueLinkTargets(entries);
 }
 
+export function getRelatedPageLinks(relatedSlugs: readonly string[]) {
+  return uniqueLinkTargets(
+    relatedSlugs
+      .map((slug) => resolveCrossLinkEntry(slug))
+      .filter(
+        (
+          entry,
+        ): entry is {
+          href: `/${string}`;
+          label: string;
+        } => Boolean(entry),
+      ),
+  );
+}
+
 export function getCategoryHighlights(category: CategoryKey) {
   return getConfigCategoryHighlights(category);
 }
@@ -334,11 +395,22 @@ export function getTextPageKeywords(page: TextPageDefinition) {
     ]);
   }
 
+  if (caseStyleModes.has(page.mode)) {
+    return uniqueStrings([
+      ...page.aliases,
+      "text case converter",
+      `${page.mode} case`,
+      "developer text tools",
+      page.title.toLowerCase(),
+    ]);
+  }
+
   return uniqueStrings([
     ...page.aliases,
-    "text case converter",
-    `${page.mode} case`,
-    "developer text tools",
+    "text cleaning tools",
+    "text utilities",
+    "online text tool",
+    page.title.toLowerCase(),
   ]);
 }
 
@@ -371,16 +443,24 @@ export function getRelatedTextPages(page: TextPageDefinition) {
     .filter((entry): entry is TextPageDefinition => Boolean(entry));
 }
 
-export function getPageHref(page: LaunchPage) {
-  return getToolPath(page.slug);
+export function getPageHref(page: SiteToolPage) {
+  return page.kind === "unit" || page.kind === "text" ? getToolPath(page.slug) : page.route;
 }
 
-export function getLaunchPageLabel(page: LaunchPage) {
+export function getLaunchPageLabel(page: SiteToolPage) {
+  if (page.kind === "interactive-tool") {
+    return page.title;
+  }
+
   const rawPage = getLaunchToolConfig(page.slug);
   return rawPage ? getToolLabel(rawPage) : page.kind === "text" ? page.title : page.slug;
 }
 
-export function getHomepagePopularLabel(page: LaunchPage) {
+export function getHomepagePopularLabel(page: SiteToolPage) {
+  if (page.kind === "interactive-tool") {
+    return page.title;
+  }
+
   if (page.kind === "text") {
     return page.title;
   }
@@ -396,7 +476,11 @@ export function getUnitPageRelatedLabel(page: UnitPageDefinition) {
   return `${units[page.from].shortLabel.toLowerCase()} to ${units[page.to].shortLabel.toLowerCase()}`;
 }
 
-export function getLaunchPageSummary(page: LaunchPage) {
+export function getLaunchPageSummary(page: SiteToolPage) {
+  if (page.kind === "interactive-tool") {
+    return page.description;
+  }
+
   if (page.kind === "text") {
     return page.description;
   }
@@ -409,6 +493,7 @@ export function getLaunchPageSummary(page: LaunchPage) {
 export function getSearchEntries() {
   const registryEntries = getSearchSuggestionEntries();
   const mathEntries = getMathSearchEntries();
+  const interactiveEntries = getInteractiveToolSearchEntries();
   const standaloneEntries: SearchEntry[] = standaloneToolPages.map((page) => ({
     category: page.category,
     entryType: "page",
@@ -417,5 +502,5 @@ export function getSearchEntries() {
     title: page.title,
   }));
 
-  return [...registryEntries, ...mathEntries, ...standaloneEntries];
+  return [...registryEntries, ...mathEntries, ...interactiveEntries, ...standaloneEntries];
 }

@@ -5,13 +5,25 @@ export type NumericCategoryKey =
   | "length"
   | "volume"
   | "temperature"
+  | "wind"
+  | "pressure"
+  | "rainfall"
   | "data";
 
 export type TextualCategoryKey = "text" | "encoding" | "color" | "dev-data";
+export type InteractiveCategoryKey =
+  | "generator"
+  | "seo"
+  | "social"
+  | "utility"
+  | "science"
+  | "weather"
+  | "image"
+  | "file";
 export type LaunchCategoryKey = NumericCategoryKey | TextualCategoryKey;
 export type FutureCategoryKey = "dev";
-export type CategoryKey = LaunchCategoryKey;
-export type ToolCategoryKey = LaunchCategoryKey | FutureCategoryKey;
+export type CategoryKey = LaunchCategoryKey | InteractiveCategoryKey;
+export type ToolCategoryKey = CategoryKey | FutureCategoryKey;
 
 export type UnitKey =
   | "byte"
@@ -24,10 +36,14 @@ export type UnitKey =
   | "tsp"
   | "km"
   | "mile"
+  | "yd"
   | "cm"
   | "inch"
   | "m"
   | "ft"
+  | "mph"
+  | "kmh"
+  | "knot"
   | "l"
   | "gal"
   | "ml"
@@ -35,13 +51,20 @@ export type UnitKey =
   | "c"
   | "f"
   | "k"
+  | "hpa"
+  | "mmhg"
+  | "bar"
+  | "psi"
+  | "rainmm"
+  | "raininch"
   | "kb"
   | "mb"
   | "gb"
   | "tb";
 
-export type BaseCategorySchema<K extends ToolCategoryKey, Kind extends string> = {
+export type BaseCategorySchema<K extends CategoryKey, Kind extends string> = {
   aliases: readonly string[];
+  curatedPageSlugs?: readonly string[];
   description: string;
   featuredSlug: string;
   featuredStandaloneSlugs?: readonly string[];
@@ -51,7 +74,7 @@ export type BaseCategorySchema<K extends ToolCategoryKey, Kind extends string> =
   label: string;
   metaDescription?: string;
   relatedTopics?: readonly string[];
-  relatedCategoryKeys: readonly LaunchCategoryKey[];
+  relatedCategoryKeys: readonly CategoryKey[];
   route: `/${string}`;
   slug: string;
   title: string;
@@ -162,10 +185,18 @@ export type NumericCategorySchema<K extends NumericCategoryKey = NumericCategory
 
 export type TextCategorySchema<K extends TextualCategoryKey = TextualCategoryKey> =
   BaseCategorySchema<K, "text"> & {
-  futureTools: readonly DevToolPageSchema[];
-  transforms: readonly TextTransformPageSchema[];
+    futureTools: readonly DevToolPageSchema[];
+    transforms: readonly TextTransformPageSchema[];
   };
 
+export type InteractiveCategorySchema<
+  K extends InteractiveCategoryKey = InteractiveCategoryKey,
+> = BaseCategorySchema<K, "interactive">;
+
+export type CategorySchema =
+  | NumericCategorySchema
+  | TextCategorySchema
+  | InteractiveCategorySchema;
 export type LaunchCategorySchema = NumericCategorySchema | TextCategorySchema;
 export type LaunchToolPageSchema = NumericPairPageSchema | TextTransformPageSchema;
 

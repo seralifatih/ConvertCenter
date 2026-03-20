@@ -47,6 +47,7 @@ const ingredientTools = [
   "/cups-to-grams-sugar",
   "/grams-to-cups-sugar",
   "/tsp-to-grams-sugar",
+  "/tbsp-to-grams-sugar",
   "/grams-to-tsp-sugar",
 ] as const;
 
