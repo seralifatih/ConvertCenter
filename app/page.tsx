@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import faviconIco from "@/app/assets/favicon.ico";
+import { HomeRecentToolsSlot } from "@/components/home-recent-tools-slot";
 import { HomeSearch } from "@/components/home-search";
 import { HomeUniversalConverter } from "@/components/home-universal-converter";
 import { PageContainer } from "@/components/page-container";
@@ -20,11 +20,6 @@ import {
   getSiteToolPage,
 } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo";
-
-const RecentToolsSection = dynamic(
-  () => import("@/components/recent-tools-section").then((module) => module.RecentToolsSection),
-  { ssr: false },
-);
 
 export const metadata: Metadata = buildMetadata({
   title: "Math Calculators, Unit Converter & Developer Tools",
@@ -104,7 +99,7 @@ export default function Home() {
         </div>
       </section>
 
-      <RecentToolsSection />
+      <HomeRecentToolsSlot />
 
       <section className="space-y-3" id="popular">
         <div className="flex items-center gap-3">

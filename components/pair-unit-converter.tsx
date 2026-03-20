@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { startTransition, useEffect, useRef, useState } from "react";
+import { Suspense, startTransition, useEffect, useRef, useState } from "react";
 import { ConverterErrorBoundary } from "@/components/converter-error-boundary";
 import {
   ConverterActions,
@@ -30,6 +30,58 @@ type PairUnitConverterProps = {
 };
 
 export function PairUnitConverter({
+  category,
+  defaultFrom,
+  defaultTo,
+  defaultValue = 10,
+  swapHref,
+}: PairUnitConverterProps) {
+  return (
+    <Suspense
+      fallback={
+        <PairUnitConverterFallback
+          category={category}
+          defaultFrom={defaultFrom}
+          defaultTo={defaultTo}
+          defaultValue={defaultValue}
+          swapHref={swapHref}
+        />
+      }
+    >
+      <PairUnitConverterClient
+        category={category}
+        defaultFrom={defaultFrom}
+        defaultTo={defaultTo}
+        defaultValue={defaultValue}
+        swapHref={swapHref}
+      />
+    </Suspense>
+  );
+}
+
+function PairUnitConverterFallback({
+  category,
+  defaultFrom,
+  defaultTo,
+  defaultValue = 10,
+  swapHref,
+}: PairUnitConverterProps) {
+  return (
+    <PairUnitConverterContent
+      category={category}
+      defaultValue={defaultValue}
+      fromUnit={defaultFrom}
+      onChangeRawValue={() => {}}
+      rawValue={String(defaultValue)}
+      routerPush={() => {}}
+      searchValue={String(defaultValue)}
+      swapHref={swapHref}
+      toUnit={defaultTo}
+    />
+  );
+}
+
+function PairUnitConverterClient({
   category,
   defaultFrom,
   defaultTo,
