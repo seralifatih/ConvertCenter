@@ -73,7 +73,7 @@ export default function Home() {
               />
               <span>convertcenter</span>
             </div>
-            <h1 className="max-w-2xl font-medium tracking-[-0.05em] [font-size:clamp(1.5rem,5vw,2.5rem)] [word-break:break-word] sm:text-[58px]">
+            <h1 className="max-w-full font-medium leading-tight tracking-[-0.02em] [font-size:clamp(1.5rem,5vw,2.5rem)] [overflow-wrap:anywhere] [word-break:break-word] sm:max-w-2xl sm:tracking-[-0.05em] sm:text-[58px]">
               Calculate and convert anything, instantly
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
