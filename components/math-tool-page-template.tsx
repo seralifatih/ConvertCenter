@@ -1,6 +1,8 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { FaqStructuredData } from "@/components/faq-structured-data";
 import { MathToolRenderer } from "@/components/math-tool-renderer";
 import { PageContainer } from "@/components/page-container";
+import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
@@ -12,12 +14,11 @@ import {
 } from "@/lib/content/math-tools";
 import {
   makeBreadcrumbSchema,
-  makeFaqSchemaIfPresent,
   makeSoftwareApplicationSchema,
 } from "@/lib/seo";
 
 export function MathToolPageTemplate({ page }: { page: MathToolPageDefinition }) {
-  const faqSchema = makeFaqSchemaIfPresent([...page.faq]);
+  const faqItems = page.faq.map((item) => ({ a: item.answer, q: item.question }));
   const appSchema = makeSoftwareApplicationSchema({
     applicationCategory: "CalculatorApplication",
     description: page.metaDescription ?? page.description,
@@ -28,6 +29,7 @@ export function MathToolPageTemplate({ page }: { page: MathToolPageDefinition })
 
   return (
     <PageContainer className="space-y-5 pb-4">
+      <RecentToolTracker href={page.route} title={page.title} />
       <StructuredData
         data={makeBreadcrumbSchema([
           { name: "ConvertCenter", path: "/" },
@@ -36,7 +38,7 @@ export function MathToolPageTemplate({ page }: { page: MathToolPageDefinition })
         ])}
       />
       <StructuredData data={appSchema} />
-      {faqSchema ? <StructuredData data={faqSchema} /> : null}
+      <FaqStructuredData faqItems={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

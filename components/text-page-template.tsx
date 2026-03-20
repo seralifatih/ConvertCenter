@@ -1,8 +1,10 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DevToolPageWidget } from "@/components/dev-tool-page-widget";
+import { FaqStructuredData } from "@/components/faq-structured-data";
 import { MarkdownToolWidget } from "@/components/markdown-tool-widget";
 import { PageContainer } from "@/components/page-container";
 import { PillButton } from "@/components/pill";
+import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
@@ -19,11 +21,11 @@ import {
   type TextPageDefinition,
 } from "@/lib/content/pages";
 import { getTextModeOption, textSampleHelpers } from "@/lib/conversion/text";
-import { makeBreadcrumbSchema, makeFaqSchemaIfPresent } from "@/lib/seo";
+import { makeBreadcrumbSchema } from "@/lib/seo";
 
 export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
   const faqs = getTextPageFaqs(page);
-  const faqSchema = makeFaqSchemaIfPresent(faqs);
+  const faqItems = faqs.map((item) => ({ a: item.answer, q: item.question }));
   const relatedPages = getRelatedTextPages(page);
   const crossLinkEntries = getCrossLinkEntries(page);
   const modeOption = getTextModeOption(page.mode);
@@ -33,6 +35,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
 
   return (
     <PageContainer className="space-y-5 pb-4">
+      <RecentToolTracker href={getPageHref(page)} title={page.title} />
       <StructuredData
         data={makeBreadcrumbSchema([
           { name: "ConvertCenter", path: "/" },
@@ -40,7 +43,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
           { name: page.title, path: getPageHref(page) },
         ])}
       />
-      {faqSchema ? <StructuredData data={faqSchema} /> : null}
+      <FaqStructuredData faqItems={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

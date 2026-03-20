@@ -1,13 +1,15 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CookingIngredientConverterWidget } from "@/components/cooking-ingredient-converter-widget";
+import { FaqStructuredData } from "@/components/faq-structured-data";
 import { PageContainer } from "@/components/page-container";
+import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
 import { UtilityCard } from "@/components/utility-card";
 import { cookingIngredients } from "@/lib/cooking";
 import { ingredientCookingPages, type CookingPageDefinition } from "@/lib/cooking-pages";
-import { buildMetadata, makeBreadcrumbSchema, makeFaqSchemaIfPresent } from "@/lib/seo";
+import { buildMetadata, makeBreadcrumbSchema } from "@/lib/seo";
 
 export function getCookingPageMetadata(page: CookingPageDefinition) {
   return buildMetadata({
@@ -23,17 +25,18 @@ export function CookingPageTemplate({ page }: { page: CookingPageDefinition }) {
   const relatedPages = ingredientCookingPages
     .filter((entry) => entry.slug !== page.slug && entry.ingredient === page.ingredient)
     .slice(0, 4);
-  const faqSchema = makeFaqSchemaIfPresent(page.faq ? [...page.faq] : []);
+  const faqItems = (page.faq ?? []).map((item) => ({ a: item.answer, q: item.question }));
 
   return (
     <PageContainer className="space-y-5 pb-4">
+      <RecentToolTracker href={page.path} title={page.title} />
       <StructuredData
         data={makeBreadcrumbSchema([
           { name: "ConvertCenter", path: "/" },
           { name: page.title, path: page.path },
         ])}
       />
-      {faqSchema ? <StructuredData data={faqSchema} /> : null}
+      <FaqStructuredData faqItems={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

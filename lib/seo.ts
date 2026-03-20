@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/site";
 
+export type FaqSchemaItem = {
+  a?: string;
+  answer?: string;
+  q?: string;
+  question?: string;
+};
+
 type BuildMetadataInput = {
   title: string;
   description: string;
@@ -62,30 +69,24 @@ export function makeBreadcrumbSchema(
 }
 
 export function makeFaqSchema(
-  entries: Array<{
-    question: string;
-    answer: string;
-  }>,
+  entries: readonly FaqSchemaItem[],
 ) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: entries.map((entry) => ({
       "@type": "Question",
-      name: entry.question,
+      name: entry.q ?? entry.question ?? "",
       acceptedAnswer: {
         "@type": "Answer",
-        text: entry.answer,
+        text: entry.a ?? entry.answer ?? "",
       },
     })),
   };
 }
 
 export function makeFaqSchemaIfPresent(
-  entries: Array<{
-    question: string;
-    answer: string;
-  }>,
+  entries: readonly FaqSchemaItem[],
 ) {
   return entries.length ? makeFaqSchema(entries) : null;
 }

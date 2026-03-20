@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import faviconIco from "@/app/assets/favicon.ico";
@@ -19,6 +20,11 @@ import {
   getSiteToolPage,
 } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo";
+
+const RecentToolsSection = dynamic(
+  () => import("@/components/recent-tools-section").then((module) => module.RecentToolsSection),
+  { ssr: false },
+);
 
 export const metadata: Metadata = buildMetadata({
   title: "Math Calculators, Unit Converter & Developer Tools",
@@ -54,7 +60,7 @@ export default function Home() {
       />
 
       <section className="homepage-hero shell-card px-5 py-5 sm:px-7 sm:py-6">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(420px,0.92fr)] lg:items-start">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,0.92fr)] lg:items-start">
           <div className="max-w-2xl">
             <div className="mb-4 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-[color:var(--muted-strong)]">
               <Image
@@ -67,7 +73,7 @@ export default function Home() {
               />
               <span>convertcenter</span>
             </div>
-            <h1 className="max-w-2xl text-4xl font-medium tracking-[-0.05em] sm:text-[58px]">
+            <h1 className="max-w-2xl font-medium tracking-[-0.05em] [font-size:clamp(1.5rem,5vw,2.5rem)] [word-break:break-word] sm:text-[58px]">
               Calculate and convert anything, instantly
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
@@ -97,6 +103,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <RecentToolsSection />
 
       <section className="space-y-3" id="popular">
         <div className="flex items-center gap-3">

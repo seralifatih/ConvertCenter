@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { startTransition, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { startTransition, useEffect, useRef, useState } from "react";
 import { ConverterErrorBoundary } from "@/components/converter-error-boundary";
 import {
   ConverterActions,
@@ -37,9 +37,38 @@ export function PairUnitConverter({
   swapHref,
 }: PairUnitConverterProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const queryValue = searchParams.get("v");
   const [fromUnit, setFromUnit] = useState(defaultFrom);
   const [toUnit, setToUnit] = useState(defaultTo);
-  const [rawValue, setRawValue] = useState(String(defaultValue));
+  const [rawValue, setRawValue] = useState(() => queryValue ?? String(defaultValue));
+  const hasSyncedInitialUrlRef = useRef(false);
+
+  useEffect(() => {
+    if (!hasSyncedInitialUrlRef.current) {
+      hasSyncedInitialUrlRef.current = true;
+      return;
+    }
+
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+
+    if (rawValue.trim()) {
+      nextSearchParams.set("v", rawValue);
+    } else {
+      nextSearchParams.delete("v");
+    }
+
+    const nextQuery = nextSearchParams.toString();
+    const nextHref = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+    const currentHref = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname;
+
+    if (nextHref !== currentHref) {
+      startTransition(() => {
+        router.replace(nextHref, { scroll: false });
+      });
+    }
+  }, [pathname, rawValue, router, searchParams]);
 
   function resetConverter() {
     setFromUnit(defaultFrom);
@@ -56,6 +85,7 @@ export function PairUnitConverter({
         onChangeRawValue={setRawValue}
         rawValue={rawValue}
         routerPush={router.push.bind(router)}
+        searchValue={rawValue}
         swapHref={swapHref}
         toUnit={toUnit}
       />
@@ -70,6 +100,7 @@ function PairUnitConverterContent({
   onChangeRawValue,
   rawValue,
   routerPush,
+  searchValue,
   swapHref,
   toUnit,
 }: Readonly<{
@@ -79,6 +110,7 @@ function PairUnitConverterContent({
   onChangeRawValue: (value: string) => void;
   rawValue: string;
   routerPush: (href: string) => void;
+  searchValue: string;
   swapHref?: string;
   toUnit: UnitKey;
 }>) {
@@ -98,8 +130,18 @@ function PairUnitConverterContent({
 
   function handleSwap() {
     if (swapHref) {
+      const nextSearchParams = new URLSearchParams();
+
+      if (searchValue.trim()) {
+        nextSearchParams.set("v", searchValue);
+      }
+
+      const nextHref = nextSearchParams.toString()
+        ? `${swapHref}?${nextSearchParams.toString()}`
+        : swapHref;
+
       startTransition(() => {
-        routerPush(swapHref);
+        routerPush(nextHref);
       });
     }
   }

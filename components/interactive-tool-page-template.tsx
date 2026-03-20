@@ -1,6 +1,8 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { FaqStructuredData } from "@/components/faq-structured-data";
 import { InteractiveToolRenderer } from "@/components/interactive-tool-renderer";
 import { PageContainer } from "@/components/page-container";
+import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
@@ -10,7 +12,6 @@ import { getBrowseCategory } from "@/lib/content/categories";
 import { getRelatedPageLinks } from "@/lib/content/pages";
 import {
   makeBreadcrumbSchema,
-  makeFaqSchemaIfPresent,
   makeSoftwareApplicationSchema,
 } from "@/lib/seo";
 
@@ -20,11 +21,12 @@ export function InteractiveToolPageTemplate({
   page: InteractiveToolPageDefinition;
 }) {
   const category = getBrowseCategory(page.categoryKey);
-  const faqSchema = makeFaqSchemaIfPresent([...page.faq]);
+  const faqItems = page.faq.map((item) => ({ a: item.answer, q: item.question }));
   const relatedLinks = getRelatedPageLinks(page.relatedSlugs);
 
   return (
     <PageContainer className="space-y-5 pb-4">
+      <RecentToolTracker href={page.route} title={page.title} />
       <StructuredData
         data={makeBreadcrumbSchema([
           { name: "ConvertCenter", path: "/" },
@@ -40,7 +42,7 @@ export function InteractiveToolPageTemplate({
           path: page.route,
         })}
       />
-      {faqSchema ? <StructuredData data={faqSchema} /> : null}
+      <FaqStructuredData faqItems={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

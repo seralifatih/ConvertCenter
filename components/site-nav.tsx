@@ -18,6 +18,11 @@ const textToolPaths = new Set([
 const navItems = [
   { href: "/", label: "home", match: (pathname: string) => pathname === "/" },
   {
+    href: "/math-calculators",
+    label: "math",
+    match: (pathname: string) => pathname === "/math-calculators",
+  },
+  {
     href: "/weight-converter",
     label: "category hubs",
     match: (pathname: string) =>

@@ -1,6 +1,8 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { FaqStructuredData } from "@/components/faq-structured-data";
 import { PageContainer } from "@/components/page-container";
 import { PairUnitConverter } from "@/components/pair-unit-converter";
+import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
@@ -21,12 +23,12 @@ import {
   type UnitPageDefinition,
 } from "@/lib/content/pages";
 import { getUnitFormula, units } from "@/lib/conversion/units";
-import { makeBreadcrumbSchema, makeFaqSchemaIfPresent } from "@/lib/seo";
+import { makeBreadcrumbSchema } from "@/lib/seo";
 
 export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
   const category = getBrowseCategory(page.category);
   const faqs = getUnitPageFaqs(page);
-  const faqSchema = makeFaqSchemaIfPresent(faqs);
+  const faqItems = faqs.map((item) => ({ a: item.answer, q: item.question }));
   const reverseSlug = getReverseUnitPageSlug(page);
   const relatedPages = getRelatedUnitPages(page);
   const crossLinkEntries = getCrossLinkEntries(page);
@@ -34,6 +36,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
 
   return (
     <PageContainer className="space-y-5 pb-4">
+      <RecentToolTracker href={getPageHref(page)} title={getUnitPageTitle(page)} />
       <StructuredData
         data={makeBreadcrumbSchema([
           { name: "ConvertCenter", path: "/" },
@@ -41,7 +44,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
           { name: getUnitPageTitle(page), path: getPageHref(page) },
         ])}
       />
-      {faqSchema ? <StructuredData data={faqSchema} /> : null}
+      <FaqStructuredData faqItems={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

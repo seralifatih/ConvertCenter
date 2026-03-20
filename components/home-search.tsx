@@ -131,7 +131,7 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
           </div>
         ) : null}
       </div>
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 home-chip-scroll">
+      <div className="flex flex-wrap items-center gap-2 overflow-hidden pb-1 sm:flex-nowrap sm:overflow-x-auto home-chip-scroll">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--muted-strong)]">
           try:
         </span>

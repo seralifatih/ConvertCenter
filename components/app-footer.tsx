@@ -7,13 +7,16 @@ export function AppFooter() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-xl">
           <p className="text-sm leading-7">
-            Static-first utility shell for fast conversions, clean SEO pages, and repeatable
-            internal navigation.
+            Free calculators, converters, and developer tools — no sign-up, no ads, instant
+            results.
           </p>
         </div>
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-2">
           <Link className="utility-chip font-mono uppercase tracking-[0.14em]" href="/">
             home
+          </Link>
+          <Link className="utility-chip font-mono uppercase tracking-[0.14em]" href="/math-calculators">
+            math
           </Link>
           {browseCategories.map((category) => (
             <Link
