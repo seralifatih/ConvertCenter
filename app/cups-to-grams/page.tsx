@@ -37,7 +37,12 @@ export default function CupsToGramsPage() {
           </div>
         </div>
       </section>
-      <CookingIngredientConverterWidget defaultIngredient="flour" defaultValue="1" mode="cupsToGrams" />
+      <CookingIngredientConverterWidget
+        defaultIngredient="flour"
+        defaultValue="1"
+        mode="cupsToGrams"
+        toolLabel="Cups to Grams Converter"
+      />
       <section className="grid gap-5 lg:grid-cols-[1fr_1fr]">
         <UtilityCard>
           <h2 className="section-title">Why ingredient matters</h2>
@@ -59,4 +64,3 @@ export default function CupsToGramsPage() {
     </PageContainer>
   );
 }
-

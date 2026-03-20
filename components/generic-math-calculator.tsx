@@ -159,7 +159,7 @@ export function GenericMathCalculator({
                 <button
                   aria-pressed={entry.id === variant.id}
                   className={clsx(
-                    "rounded-full border px-3 py-2 text-sm transition",
+                    "rounded-full border px-3 py-2 text-sm motion-safe:transition",
                     entry.id === variant.id
                       ? "border-[color:var(--accent)] bg-[color:var(--accent-surface)] text-[color:var(--accent)]"
                       : "border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--muted)] hover:border-[color:var(--border-strong)] hover:text-[color:var(--foreground)]",

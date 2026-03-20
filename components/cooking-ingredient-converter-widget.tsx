@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { CopyButton } from "@/components/copy-button";
 import { PillButton } from "@/components/pill";
 import {
@@ -11,12 +11,14 @@ import {
   type CookingIngredientKey,
 } from "@/lib/cooking";
 import { formatNumber } from "@/lib/conversion/units";
+import { useConversionHistory } from "@/hooks/use-conversion-history";
 
 type CookingIngredientConverterWidgetProps = {
   defaultIngredient: CookingIngredientKey;
   defaultValue: string;
   fixedIngredient?: CookingIngredientKey;
   mode: CookingConversionMode;
+  toolLabel?: string;
 };
 
 export function CookingIngredientConverterWidget({
@@ -24,7 +26,10 @@ export function CookingIngredientConverterWidget({
   defaultValue,
   fixedIngredient,
   mode,
+  toolLabel,
 }: CookingIngredientConverterWidgetProps) {
+  const { pushEntry } = useConversionHistory();
+  const lastSavedEntryRef = useRef<string>("");
   const valueId = useId();
   const ingredientId = useId();
   const [rawValue, setRawValue] = useState(defaultValue);
@@ -55,6 +60,48 @@ export function CookingIngredientConverterWidget({
         : labels.unitHint === "cups"
           ? `${formatNumber(convertedValue, 4)} cups`
           : `${formatNumber(convertedValue, 4)} tsp`;
+  const isDirty =
+    rawValue.trim() !== defaultValue.trim() ||
+    resolvedIngredient !== (fixedIngredient ?? defaultIngredient);
+
+  useEffect(() => {
+    if (!toolLabel || convertedValue === null || !isDirty) {
+      return;
+    }
+
+    const entry = {
+      from: labels.inputLabel.replace(/^value in /, ""),
+      result: outputText.replace(/\s+(g|cups|tsp)$/u, ""),
+      to: labels.unitHint,
+      tool: toolLabel,
+      value: rawValue.trim(),
+    };
+    const entryKey = JSON.stringify({ ...entry, ingredient: resolvedIngredient });
+
+    if (!entry.value || lastSavedEntryRef.current === entryKey) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      pushEntry({
+        ...entry,
+        from: `${entry.from} (${cookingIngredients[resolvedIngredient].label})`,
+      });
+      lastSavedEntryRef.current = entryKey;
+    }, 600);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [
+    convertedValue,
+    isDirty,
+    labels.inputLabel,
+    labels.unitHint,
+    outputText,
+    pushEntry,
+    rawValue,
+    resolvedIngredient,
+    toolLabel,
+  ]);
 
   return (
     <section className="shell-card p-4 sm:p-5">

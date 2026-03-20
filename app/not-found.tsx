@@ -1,4 +1,14 @@
 import Link from "next/link";
+import { browseCategories } from "@/lib/content/categories";
+import { getCategoryPages } from "@/lib/content/pages";
+
+const prioritizedCategories = [...browseCategories]
+  .map((category) => ({
+    ...category,
+    toolCount: getCategoryPages(category.key).length,
+  }))
+  .sort((left, right) => right.toolCount - left.toolCount || left.title.localeCompare(right.title))
+  .slice(0, 8);
 
 export default function NotFound() {
   return (
@@ -13,17 +23,24 @@ export default function NotFound() {
         <Link className="utility-chip font-mono uppercase tracking-[0.12em]" href="/">
           home
         </Link>
-        <Link
-          className="utility-chip font-mono uppercase tracking-[0.12em]"
-          href="/weight-converter"
-        >
-          weight hub
-        </Link>
-        <Link
-          className="utility-chip font-mono uppercase tracking-[0.12em]"
-          href="/text-converter"
-        >
-          text hub
+      </div>
+      <div className="mt-6 grid gap-3 text-left sm:grid-cols-2 xl:grid-cols-4">
+        {prioritizedCategories.map((category) => (
+          <Link
+            className="utility-chip flex min-h-24 flex-col items-start justify-between rounded-[18px] px-4 py-4"
+            href={category.route}
+            key={category.route}
+          >
+            <span className="text-sm font-medium text-[color:var(--text)]">{category.title}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--muted)]">
+              {category.slug}
+            </span>
+          </Link>
+        ))}
+      </div>
+      <div className="mt-6">
+        <Link className="utility-chip font-mono uppercase tracking-[0.12em]" href="/">
+          Browse all tools →
         </Link>
       </div>
     </section>

@@ -399,7 +399,7 @@ export function FileToolWidget({ toolId }: FileToolWidgetProps) {
         />
 
         <label
-          className={`flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed px-5 py-6 text-center transition ${
+          className={`flex min-h-40 cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed px-5 py-6 text-center motion-safe:transition ${
             isDragging
               ? "border-[color:var(--accent)] bg-[color:var(--accent-surface)]"
               : "border-[color:var(--border)] bg-[color:var(--surface)] hover:border-[color:var(--accent)]"

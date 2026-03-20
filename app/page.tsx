@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import faviconIco from "@/app/assets/favicon.ico";
+import { HomeRecentConversionsSlot } from "@/components/home-recent-conversions-slot";
 import { HomeRecentToolsSlot } from "@/components/home-recent-tools-slot";
 import { HomeSearch } from "@/components/home-search";
 import { HomeUniversalConverter } from "@/components/home-universal-converter";
@@ -100,6 +101,7 @@ export default function Home() {
       </section>
 
       <HomeRecentToolsSlot />
+      <HomeRecentConversionsSlot />
 
       <section className="space-y-3" id="popular">
         <div className="flex items-center gap-3">

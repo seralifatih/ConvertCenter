@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { ConverterErrorBoundary } from "@/components/converter-error-boundary";
 import {
@@ -15,11 +16,13 @@ import {
   getUnitReferenceLine,
   type NumericCategoryKey,
   type UnitKey,
+  units,
 } from "@/lib/conversion/units";
 import {
   getConverterInputMessage,
   getConverterInputState,
 } from "@/lib/conversion/converter-input";
+import { useConversionHistory } from "@/hooks/use-conversion-history";
 
 type FreeUnitConverterProps = {
   category: NumericCategoryKey;
@@ -27,6 +30,9 @@ type FreeUnitConverterProps = {
   defaultFrom: UnitKey;
   defaultTo: UnitKey;
   defaultValue?: number;
+  historyTool?: string;
+  hubHref?: `/${string}`;
+  hubLabel?: string;
 };
 
 export function FreeUnitConverter({
@@ -35,6 +41,9 @@ export function FreeUnitConverter({
   defaultFrom,
   defaultTo,
   defaultValue = 10,
+  historyTool,
+  hubHref,
+  hubLabel,
 }: FreeUnitConverterProps) {
   const resetKey = `${category}:${defaultFrom}:${defaultTo}:${defaultValue}`;
   const [draftState, setDraftState] = useState({
@@ -78,6 +87,14 @@ export function FreeUnitConverter({
         onChangeToUnit={(value) => setDraftState({ ...activeState, toUnit: value })}
         rawValue={activeState.rawValue}
         toUnit={activeState.toUnit}
+        historyTool={historyTool}
+        hubHref={hubHref}
+        hubLabel={hubLabel}
+        isDirty={
+          activeState.rawValue.trim() !== String(defaultValue).trim() ||
+          activeState.fromUnit !== defaultFrom ||
+          activeState.toUnit !== defaultTo
+        }
       />
     </ConverterErrorBoundary>
   );
@@ -93,17 +110,27 @@ function FreeUnitConverterContent({
   onChangeToUnit,
   rawValue,
   toUnit,
+  historyTool,
+  hubHref,
+  hubLabel,
+  isDirty,
 }: Readonly<{
   category: NumericCategoryKey;
   compact: boolean;
   defaultValue: number;
   fromUnit: UnitKey;
+  historyTool?: string;
+  isDirty: boolean;
   onChangeFromUnit: (value: UnitKey) => void;
   onChangeRawValue: (value: string) => void;
   onChangeToUnit: (value: UnitKey) => void;
   rawValue: string;
   toUnit: UnitKey;
+  hubHref?: `/${string}`;
+  hubLabel?: string;
 }>) {
+  const { pushEntry } = useConversionHistory();
+  const lastSavedEntryRef = useRef<string>("");
   const fromUnitControlId = `free-converter-from-unit-${category}`;
   const fromValueControlId = `free-converter-from-value-${category}`;
   const toUnitControlId = `free-converter-to-unit-${category}`;
@@ -117,6 +144,32 @@ function FreeUnitConverterContent({
   const formulaLine = getUnitReferenceLine(fromUnit, toUnit, "auto");
   const helperMessage =
     inputState.kind === "valid" ? undefined : getConverterInputMessage(inputState);
+
+  useEffect(() => {
+    if (!historyTool || !formattedResult || inputState.kind !== "valid" || !isDirty) {
+      return;
+    }
+
+    const entry = {
+      from: units[fromUnit].pluralLabel,
+      result: formattedResult,
+      to: units[toUnit].pluralLabel,
+      tool: historyTool,
+      value: rawValue.trim(),
+    };
+    const entryKey = JSON.stringify(entry);
+
+    if (!entry.value || lastSavedEntryRef.current === entryKey) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      pushEntry(entry);
+      lastSavedEntryRef.current = entryKey;
+    }, 600);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [formattedResult, fromUnit, historyTool, inputState.kind, isDirty, pushEntry, rawValue, toUnit]);
 
   function handleSwap() {
     onChangeFromUnit(toUnit);
@@ -163,6 +216,16 @@ function FreeUnitConverterContent({
         helperMessage={helperMessage}
         onClear={() => onChangeRawValue(String(defaultValue))}
       />
+      {formattedResult && hubHref && hubLabel ? (
+        <div className="mt-2">
+          <Link
+            className="text-xs text-[color:var(--muted)] underline-offset-4 hover:text-[color:var(--text)] hover:underline"
+            href={hubHref}
+          >
+            {hubLabel}
+          </Link>
+        </div>
+      ) : null}
     </section>
   );
 }

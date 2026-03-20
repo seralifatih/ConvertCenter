@@ -21,7 +21,6 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  manifest: "/site.webmanifest",
   title: {
     default: siteConfig.name,
     template: `%s | ${siteConfig.name}`,
@@ -51,6 +50,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f5f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f1115" },
+  ],
 };
 
 const themeScript = `
@@ -76,6 +79,12 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} antialiased`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-background focus:text-foreground focus:rounded focus:border"
+        >
+          Skip to main content
+        </a>
         <Script id="theme-init" strategy="beforeInteractive">
           {themeScript}
         </Script>
@@ -86,7 +95,7 @@ export default function RootLayout({
             style={{ height: "var(--site-top-bar-height, 0px)" }}
           />
           <SiteNav />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1" id="main-content">{children}</main>
           <AppFooter />
         </div>
         {shouldLoadCloudflareAnalytics ? (

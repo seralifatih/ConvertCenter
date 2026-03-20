@@ -37,7 +37,12 @@ export default function GramsToCupsPage() {
           </div>
         </div>
       </section>
-      <CookingIngredientConverterWidget defaultIngredient="sugar" defaultValue="200" mode="gramsToCups" />
+      <CookingIngredientConverterWidget
+        defaultIngredient="sugar"
+        defaultValue="200"
+        mode="gramsToCups"
+        toolLabel="Grams to Cups Converter"
+      />
       <section className="grid gap-5 lg:grid-cols-[1fr_1fr]">
         <UtilityCard>
           <h2 className="section-title">Weight to volume in the kitchen</h2>
@@ -59,4 +64,3 @@ export default function GramsToCupsPage() {
     </PageContainer>
   );
 }
-

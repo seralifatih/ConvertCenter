@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PillLink } from "@/components/pill";
+import { browseCategories } from "@/lib/content/categories";
+import { launchToolRegistry } from "@/lib/config/conversion-registry";
 
-const textToolPaths = new Set([
-  "/text-converter",
-  "/uppercase-converter",
-  "/lowercase-converter",
-  "/title-case-converter",
-  "/sentence-case-converter",
-  "/camelcase-converter",
-  "/snake-case-converter",
-  "/kebab-case-converter",
+const categoryHubPaths = new Set<string>(browseCategories.map((category) => category.route));
+const textCategoryRoute = browseCategories.find((category) => category.key === "text")?.route ?? "/text-converter";
+const textToolPaths = new Set<string>([
+  textCategoryRoute,
+  ...launchToolRegistry
+    .filter((tool) => tool.kind === "text-transform" && tool.categoryKey === "text")
+    .map((tool) => `/${tool.slug}` as const),
 ]);
 
 const navItems = [
@@ -25,15 +25,7 @@ const navItems = [
   {
     href: "/weight-converter",
     label: "category hubs",
-    match: (pathname: string) =>
-      [
-        "/weight-converter",
-        "/length-converter",
-        "/volume-converter",
-        "/temperature-converter",
-        "/data-converter",
-        "/encoding-tools",
-      ].includes(pathname),
+    match: (pathname: string) => categoryHubPaths.has(pathname),
   },
   {
     href: "/text-converter",
@@ -91,7 +83,7 @@ export function SiteNav() {
               className="theme-toggle-track relative inline-flex h-[18px] w-8 rounded-full border border-[color:var(--border-strong)] bg-[color:var(--surface)]"
             >
               <span
-                className="theme-toggle-thumb absolute top-[2px] h-[12px] w-[12px] rounded-full bg-[color:var(--accent)] transition-transform"
+                className="theme-toggle-thumb absolute top-[2px] h-[12px] w-[12px] rounded-full bg-[color:var(--accent)] motion-safe:transition-transform"
               />
             </span>
             <span aria-hidden="true">dark</span>

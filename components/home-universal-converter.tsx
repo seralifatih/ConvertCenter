@@ -35,6 +35,8 @@ export function HomeUniversalConverter() {
         defaultFrom={featuredPage.from}
         defaultTo={featuredPage.to}
         defaultValue={featuredPage.exampleValue}
+        hubHref={category.route}
+        hubLabel={`Open full ${category.label} tool \u2192`}
       />
       <div className="flex flex-wrap gap-2">
         {numericHomeCategories.map((categoryKey) => {

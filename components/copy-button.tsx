@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { PillButton } from "@/components/pill";
+import { useCopy } from "@/hooks/use-copy";
 
 type CopyButtonProps = {
   text: string;
@@ -16,6 +17,7 @@ export function CopyButton({
   copiedLabel = "copied",
   failedLabel = "failed",
 }: CopyButtonProps) {
+  const { copied, copy } = useCopy();
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
   const resetTimeoutRef = useRef<number | null>(null);
 
@@ -27,7 +29,7 @@ export function CopyButton({
     resetTimeoutRef.current = window.setTimeout(() => {
       setStatus("idle");
       resetTimeoutRef.current = null;
-    }, 1200);
+    }, 1800);
   }
 
   function fallbackCopy(value: string) {
@@ -69,20 +71,22 @@ export function CopyButton({
   }
 
   async function handleCopy() {
-    let didCopy = false;
+    setStatus("idle");
 
-    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+    if (
+      typeof navigator !== "undefined" &&
+      navigator.clipboard &&
+      typeof navigator.clipboard.writeText === "function"
+    ) {
       try {
-        await navigator.clipboard.writeText(text);
-        didCopy = true;
+        await copy(text);
+        return;
       } catch {
-        didCopy = false;
+        // Fall through to the legacy DOM-based fallback when the Clipboard API fails.
       }
     }
 
-    if (!didCopy && typeof document !== "undefined") {
-      didCopy = fallbackCopy(text);
-    }
+    const didCopy = typeof document !== "undefined" ? fallbackCopy(text) : false;
 
     setStatus(didCopy ? "copied" : "failed");
     resetStatusLater();
@@ -90,7 +94,7 @@ export function CopyButton({
 
   return (
     <PillButton aria-label={`Copy ${text}`} onClick={handleCopy}>
-      {status === "copied"
+      {(copied || status === "copied")
         ? copiedLabel
         : status === "failed"
           ? failedLabel

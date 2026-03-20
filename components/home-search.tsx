@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useDeferredValue, useId, useState } from "react";
+import { useDeferredValue, useEffect, useId, useRef, useState } from "react";
 import { PillButton } from "@/components/pill";
 import {
   findExactSearchMatch,
@@ -17,14 +17,79 @@ type HomeSearchProps = {
 export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
   const router = useRouter();
   const listboxId = useId();
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [shortcutLabel, setShortcutLabel] = useState("Ctrl+K");
   const deferredQuery = useDeferredValue(query);
   const matches = rankSearchEntries(searchEntries, deferredQuery);
   const dropdownIsOpen = isFocused && matches.length > 0;
   const activeOptionId =
     dropdownIsOpen && activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined;
+
+  useEffect(() => {
+    const updateLabelTimer = window.setTimeout(() => {
+      if (navigator.platform.includes("Mac")) {
+        setShortcutLabel("⌘K");
+      }
+    }, 0);
+
+    return () => {
+      window.clearTimeout(updateLabelTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    function isEditableElement(element: Element | null) {
+      return (
+        element instanceof HTMLElement &&
+        (element.isContentEditable ||
+          element.tagName === "INPUT" ||
+          element.tagName === "TEXTAREA" ||
+          element.tagName === "SELECT")
+      );
+    }
+
+    function handleShortcut(event: KeyboardEvent) {
+      const input = inputRef.current;
+
+      if (!input || input.getClientRects().length === 0) {
+        return;
+      }
+
+      if (event.key === "Escape" && document.activeElement === input) {
+        setIsFocused(false);
+        setActiveIndex(-1);
+        input.blur();
+        return;
+      }
+
+      if (isEditableElement(document.activeElement)) {
+        return;
+      }
+
+      const slashShortcut =
+        event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey;
+      const commandPaletteShortcut =
+        event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey);
+
+      if (!slashShortcut && !commandPaletteShortcut) {
+        return;
+      }
+
+      event.preventDefault();
+      input.focus();
+      setIsFocused(true);
+      setActiveIndex(-1);
+    }
+
+    window.addEventListener("keydown", handleShortcut);
+
+    return () => {
+      window.removeEventListener("keydown", handleShortcut);
+    };
+  }, []);
 
   function handleExampleChip(value: string) {
     const directMatch = findExactSearchMatch(searchEntries, value);
@@ -59,6 +124,12 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
         >
           {"\u2315"}
         </span>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-[color:var(--border)] px-2 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--muted-strong)] sm:inline-flex"
+        >
+          {shortcutLabel}
+        </span>
         <input
           aria-activedescendant={activeOptionId}
           aria-label="Search converters"
@@ -66,7 +137,8 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
           aria-controls={dropdownIsOpen ? listboxId : undefined}
           aria-expanded={dropdownIsOpen}
           autoComplete="off"
-          className="hero-search-input w-full px-11 py-4 text-base placeholder:text-[color:var(--muted-strong)]"
+          className="hero-search-input w-full px-11 py-4 pr-11 text-base placeholder:text-[color:var(--muted-strong)] sm:pr-24"
+          ref={inputRef}
           onBlur={() => {
             window.setTimeout(() => setIsFocused(false), 120);
           }}
@@ -96,6 +168,7 @@ export function HomeSearch({ quickSearches, searchEntries }: HomeSearchProps) {
             if (event.key === "Escape") {
               setIsFocused(false);
               setActiveIndex(-1);
+              event.currentTarget.blur();
             }
           }}
           placeholder="Search converters..."

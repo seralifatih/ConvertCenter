@@ -1,9 +1,9 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { FaqStructuredData } from "@/components/faq-structured-data";
 import { PageContainer } from "@/components/page-container";
 import { PairUnitConverter } from "@/components/pair-unit-converter";
 import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
+import { FaqSchema } from "@/components/seo/faq-schema";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
 import { UtilityCard } from "@/components/utility-card";
@@ -44,7 +44,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
           { name: getUnitPageTitle(page), path: getPageHref(page) },
         ])}
       />
-      <FaqStructuredData faqItems={faqItems} />
+      <FaqSchema items={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">
@@ -73,6 +73,7 @@ export function UnitPageTemplate({ page }: { page: UnitPageDefinition }) {
         defaultTo={page.to}
         defaultValue={page.exampleValue}
         swapHref={reverseSlug ? `/${reverseSlug}` : undefined}
+        toolLabel={getUnitPageTitle(page)}
       />
 
       {page.longDescription ? (

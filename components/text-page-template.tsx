@@ -1,11 +1,11 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DevToolPageWidget } from "@/components/dev-tool-page-widget";
-import { FaqStructuredData } from "@/components/faq-structured-data";
 import { MarkdownToolWidget } from "@/components/markdown-tool-widget";
 import { PageContainer } from "@/components/page-container";
 import { PillButton } from "@/components/pill";
 import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
+import { FaqSchema } from "@/components/seo/faq-schema";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
 import { TextTransformWidget } from "@/components/text-transform-widget";
@@ -43,7 +43,7 @@ export function TextPageTemplate({ page }: { page: TextPageDefinition }) {
           { name: page.title, path: getPageHref(page) },
         ])}
       />
-      <FaqStructuredData faqItems={faqItems} />
+      <FaqSchema items={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

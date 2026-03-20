@@ -60,7 +60,6 @@ html[data-theme="light"] {
 html {
   background: var(--page);
   color: var(--text);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -73,17 +72,23 @@ body {
   font-family: var(--font-space-grotesk), sans-serif;
 }
 
-a,
-button,
-input,
-textarea,
-select {
-  transition:
-    color 140ms ease,
-    background-color 140ms ease,
-    border-color 140ms ease,
-    transform 140ms ease,
-    opacity 140ms ease;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    transition:
+      color 140ms ease,
+      background-color 140ms ease,
+      border-color 140ms ease,
+      transform 140ms ease,
+      opacity 140ms ease;
+  }
 }
 
 ::selection {

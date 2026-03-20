@@ -41,13 +41,9 @@
   ],
   "exclude": [
     "node_modules",
-    "calculator-registry.ts",
-    "conversion-registry.ts",
     "conversions.test.ts",
-    "cooking-conversions.ts",
     "cooking-density-converter.tsx",
     "file-size-conversions.ts",
-    "file-transfer-time.test.ts",
     "generic-calculator.tsx",
     "ingredients.ts",
     "lib/content/file-size-intent-pages.ts",

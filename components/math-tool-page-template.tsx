@@ -1,9 +1,9 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { FaqStructuredData } from "@/components/faq-structured-data";
 import { MathToolRenderer } from "@/components/math-tool-renderer";
 import { PageContainer } from "@/components/page-container";
 import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
+import { FaqSchema } from "@/components/seo/faq-schema";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
 import { UtilityCard } from "@/components/utility-card";
@@ -38,7 +38,7 @@ export function MathToolPageTemplate({ page }: { page: MathToolPageDefinition })
         ])}
       />
       <StructuredData data={appSchema} />
-      <FaqStructuredData faqItems={faqItems} />
+      <FaqSchema items={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">

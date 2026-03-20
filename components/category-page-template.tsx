@@ -91,6 +91,7 @@ export function CategoryPageTemplate({ categoryKey }: { categoryKey: string }) {
               defaultFrom={featuredUnitPage.from}
               defaultTo={featuredUnitPage.to}
               defaultValue={featuredUnitPage.exampleValue}
+              historyTool={category.title}
             />
           ) : null}
           {featuredTextPage ? (

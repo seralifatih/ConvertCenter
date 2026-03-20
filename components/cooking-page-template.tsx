@@ -1,9 +1,9 @@
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CookingIngredientConverterWidget } from "@/components/cooking-ingredient-converter-widget";
-import { FaqStructuredData } from "@/components/faq-structured-data";
 import { PageContainer } from "@/components/page-container";
 import { RecentToolTracker } from "@/components/recent-tool-tracker";
 import { RelatedLinks } from "@/components/related-links";
+import { FaqSchema } from "@/components/seo/faq-schema";
 import { StructuredContentView } from "@/components/structured-content";
 import { StructuredData } from "@/components/structured-data";
 import { UtilityCard } from "@/components/utility-card";
@@ -36,7 +36,7 @@ export function CookingPageTemplate({ page }: { page: CookingPageDefinition }) {
           { name: page.title, path: page.path },
         ])}
       />
-      <FaqStructuredData faqItems={faqItems} />
+      <FaqSchema items={faqItems} />
 
       <section className="shell-card px-5 py-6 sm:px-7 sm:py-8">
         <div className="space-y-4">
@@ -54,6 +54,7 @@ export function CookingPageTemplate({ page }: { page: CookingPageDefinition }) {
         defaultValue={page.defaultValue}
         fixedIngredient={page.ingredient}
         mode={page.mode}
+        toolLabel={page.title}
       />
 
       {page.longDescription ? (

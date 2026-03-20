@@ -43,6 +43,7 @@ export default function TeaspoonsToGramsPage() {
         defaultIngredient="butter"
         defaultValue="3"
         mode="teaspoonsToGrams"
+        toolLabel="Teaspoons to Grams Converter"
       />
       <section className="grid gap-5 lg:grid-cols-[1fr_1fr]">
         <UtilityCard>

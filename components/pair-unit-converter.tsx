@@ -15,11 +15,13 @@ import {
   getUnitReferenceLine,
   type NumericCategoryKey,
   type UnitKey,
+  units,
 } from "@/lib/conversion/units";
 import {
   getConverterInputMessage,
   getConverterInputState,
 } from "@/lib/conversion/converter-input";
+import { useConversionHistory } from "@/hooks/use-conversion-history";
 
 type PairUnitConverterProps = {
   category: NumericCategoryKey;
@@ -27,6 +29,7 @@ type PairUnitConverterProps = {
   defaultTo: UnitKey;
   defaultValue?: number;
   swapHref?: string;
+  toolLabel?: string;
 };
 
 export function PairUnitConverter({
@@ -35,6 +38,7 @@ export function PairUnitConverter({
   defaultTo,
   defaultValue = 10,
   swapHref,
+  toolLabel,
 }: PairUnitConverterProps) {
   return (
     <Suspense
@@ -45,6 +49,7 @@ export function PairUnitConverter({
           defaultTo={defaultTo}
           defaultValue={defaultValue}
           swapHref={swapHref}
+          toolLabel={toolLabel}
         />
       }
     >
@@ -54,6 +59,7 @@ export function PairUnitConverter({
         defaultTo={defaultTo}
         defaultValue={defaultValue}
         swapHref={swapHref}
+        toolLabel={toolLabel}
       />
     </Suspense>
   );
@@ -65,18 +71,21 @@ function PairUnitConverterFallback({
   defaultTo,
   defaultValue = 10,
   swapHref,
+  toolLabel,
 }: PairUnitConverterProps) {
   return (
     <PairUnitConverterContent
       category={category}
       defaultValue={defaultValue}
       fromUnit={defaultFrom}
+      isDirty={false}
       onChangeRawValue={() => {}}
       rawValue={String(defaultValue)}
       routerPush={() => {}}
       searchValue={String(defaultValue)}
       swapHref={swapHref}
       toUnit={defaultTo}
+      toolLabel={toolLabel}
     />
   );
 }
@@ -87,6 +96,7 @@ function PairUnitConverterClient({
   defaultTo,
   defaultValue = 10,
   swapHref,
+  toolLabel,
 }: PairUnitConverterProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -134,12 +144,14 @@ function PairUnitConverterClient({
         category={category}
         defaultValue={defaultValue}
         fromUnit={fromUnit}
+        isDirty={rawValue.trim() !== String(defaultValue).trim()}
         onChangeRawValue={setRawValue}
         rawValue={rawValue}
         routerPush={router.push.bind(router)}
         searchValue={rawValue}
         swapHref={swapHref}
         toUnit={toUnit}
+        toolLabel={toolLabel}
       />
     </ConverterErrorBoundary>
   );
@@ -149,23 +161,29 @@ function PairUnitConverterContent({
   category,
   defaultValue,
   fromUnit,
+  isDirty,
   onChangeRawValue,
   rawValue,
   routerPush,
   searchValue,
   swapHref,
   toUnit,
+  toolLabel,
 }: Readonly<{
   category: NumericCategoryKey;
   defaultValue: number;
   fromUnit: UnitKey;
+  isDirty: boolean;
   onChangeRawValue: (value: string) => void;
   rawValue: string;
   routerPush: (href: string) => void;
   searchValue: string;
   swapHref?: string;
   toUnit: UnitKey;
+  toolLabel?: string;
 }>) {
+  const { pushEntry } = useConversionHistory();
+  const lastSavedEntryRef = useRef<string>("");
   const fromUnitControlId = `pair-converter-from-unit-${category}`;
   const fromValueControlId = `pair-converter-from-value-${category}`;
   const toUnitControlId = `pair-converter-to-unit-${category}`;
@@ -179,6 +197,32 @@ function PairUnitConverterContent({
   const formulaLine = getUnitReferenceLine(fromUnit, toUnit, "formula");
   const helperMessage =
     inputState.kind === "valid" ? undefined : getConverterInputMessage(inputState);
+
+  useEffect(() => {
+    if (!toolLabel || !formattedResult || inputState.kind !== "valid" || !isDirty) {
+      return;
+    }
+
+    const entry = {
+      from: units[fromUnit].pluralLabel,
+      result: formattedResult,
+      to: units[toUnit].pluralLabel,
+      tool: toolLabel,
+      value: rawValue.trim(),
+    };
+    const entryKey = JSON.stringify(entry);
+
+    if (!entry.value || lastSavedEntryRef.current === entryKey) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      pushEntry(entry);
+      lastSavedEntryRef.current = entryKey;
+    }, 600);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [formattedResult, fromUnit, inputState.kind, isDirty, pushEntry, rawValue, toUnit, toolLabel]);
 
   function handleSwap() {
     if (swapHref) {
