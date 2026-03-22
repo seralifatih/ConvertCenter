@@ -1346,6 +1346,7 @@ export const dataPairPages = [
         "Because 1 MB equals 1024 KB and each KB equals 1024 bytes, so 1024 x 1024 bytes make 1 MB.",
       ),
     ),
+    formulaLabel: "MB = bytes / 1,048,576",
     metaDescription:
       "Convert bytes to MB with binary data sizing for files, payloads, exports, and storage estimates, including examples and a quick formula.",
   }),
@@ -1385,6 +1386,7 @@ export const dataPairPages = [
       ),
     ),
     featured: true,
+    formulaLabel: "GB = MB / 1024",
     metaDescription:
       "Convert megabytes to gigabytes for file sizes, uploads, and storage planning with a quick MB to GB calculator and reference table.",
     popular: true,
@@ -1410,6 +1412,7 @@ export const dataPairPages = [
         "This helps when checking small file sizes, export settings, and attachment limits.",
       ),
     ),
+    formulaLabel: "KB = MB x 1024",
     metaDescription:
       "Convert MB to KB quickly for file sizing, exports, and upload checks, with binary conversion math, examples, and reference values.",
   }),
@@ -1428,6 +1431,7 @@ export const dataPairPages = [
         "Yes. It is often used for attachments, images, exports, and lightweight downloads.",
       ),
     ),
+    formulaLabel: "MB = KB / 1024",
     metaDescription:
       "Need kilobytes in megabytes? This KB to MB converter helps with small files, attachment limits, and binary size calculations.",
     popular: true,
@@ -1448,6 +1452,7 @@ export const dataPairPages = [
         "It helps when checking exact attachment sizes, image exports, and technical file limits that are shown in raw bytes.",
       ),
     ),
+    formulaLabel: "bytes = KB x 1024",
     metaDescription:
       "Convert KB to bytes instantly for exact file-size checks, attachments, and binary storage math with formula and example values.",
   }),
@@ -1467,6 +1472,7 @@ export const dataPairPages = [
         "This is useful for making raw byte counts easier to read when reviewing downloads, logs, exports, or file metadata.",
       ),
     ),
+    formulaLabel: "KB = bytes / 1024",
     metaDescription:
       "Convert bytes to KB for easier file-size reading, storage estimates, and technical data checks with binary formulas and examples.",
   }),
@@ -1486,6 +1492,7 @@ export const dataPairPages = [
         "It is helpful for backup estimates, cloud storage planning, and comparing large drive capacities.",
       ),
     ),
+    formulaLabel: "TB = GB / 1024",
     metaDescription:
       "Convert gigabytes to terabytes for storage planning, backups, and cloud estimates with quick math, examples, and a handy reference table.",
   }),
@@ -1504,6 +1511,7 @@ export const dataPairPages = [
         "People use it for drive sizes, backup plans, hosting limits, and cloud storage estimates.",
       ),
     ),
+    formulaLabel: "GB = TB x 1024",
     metaDescription:
       "Use this TB to GB converter to estimate drives, backups, and cloud usage with straightforward binary conversions and common values.",
   }),
