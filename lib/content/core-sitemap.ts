@@ -1,5 +1,7 @@
 import { topPriorityNumericSlugs } from "@/lib/config/registry/priority-numeric-content";
+import { bestOfPages } from "@/lib/content/best-of-pages";
 import { homePopularSlugs } from "@/lib/content/categories";
+import { comparisonPages } from "@/lib/content/comparison-pages";
 import { interactiveToolPages } from "@/lib/content/interactive-tools";
 import { mathToolPages } from "@/lib/content/math-tools";
 import { getPageHref, getSiteToolPage } from "@/lib/content/pages";
@@ -49,5 +51,7 @@ export function getCoreSitemapRoutes() {
       )
       .map((page) => page.route),
     ...priorityToolRoutes,
+    ...comparisonPages.map((page) => page.route),
+    ...bestOfPages.map((page) => page.route),
   ]);
 }

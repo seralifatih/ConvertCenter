@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BestOfPageTemplate } from "@/components/best-of-page-template";
 import { CategoryPageTemplate } from "@/components/category-page-template";
+import { ComparisonPageTemplate } from "@/components/comparison-page-template";
 import { InteractiveToolPageTemplate } from "@/components/interactive-tool-page-template";
 import { MathToolPageTemplate } from "@/components/math-tool-page-template";
 import { TextPageTemplate } from "@/components/text-page-template";
 import { UnitPageTemplate } from "@/components/unit-page-template";
+import { bestOfPages, getBestOfPage } from "@/lib/content/best-of-pages";
 import {
   browseCategories,
   getBrowseCategory,
@@ -12,6 +15,7 @@ import {
   getBrowseCategoryMetaDescription,
   getBrowseCategoryMetaTitle,
 } from "@/lib/content/categories";
+import { comparisonPages, getComparisonPage } from "@/lib/content/comparison-pages";
 import {
   getMathToolPage,
   mathToolPages,
@@ -42,8 +46,17 @@ export function generateStaticParams() {
   const launchPageParams = launchPages.map((page) => ({ category: page.slug }));
   const interactivePageParams = interactiveToolPages.map((page) => ({ category: page.slug }));
   const mathPageParams = mathToolPages.map((page) => ({ category: page.slug }));
+  const comparisonPageParams = comparisonPages.map((page) => ({ category: page.slug }));
+  const bestOfPageParams = bestOfPages.map((page) => ({ category: page.slug }));
 
-  return [...categoryParams, ...launchPageParams, ...interactivePageParams, ...mathPageParams];
+  return [
+    ...categoryParams,
+    ...launchPageParams,
+    ...interactivePageParams,
+    ...mathPageParams,
+    ...comparisonPageParams,
+    ...bestOfPageParams,
+  ];
 }
 
 export async function generateMetadata({ params }: DynamicPageProps): Promise<Metadata> {
@@ -106,6 +119,28 @@ export async function generateMetadata({ params }: DynamicPageProps): Promise<Me
     });
   }
 
+  const comparisonPage = getComparisonPage(category);
+
+  if (comparisonPage) {
+    return buildMetadata({
+      title: comparisonPage.metaTitle,
+      description: comparisonPage.metaDescription,
+      path: comparisonPage.route,
+      keywords: comparisonPage.keywords,
+    });
+  }
+
+  const bestOfPage = getBestOfPage(category);
+
+  if (bestOfPage) {
+    return buildMetadata({
+      title: bestOfPage.metaTitle,
+      description: bestOfPage.metaDescription,
+      path: bestOfPage.route,
+      keywords: bestOfPage.keywords,
+    });
+  }
+
   return {};
 }
 
@@ -137,6 +172,18 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 
   if (interactiveToolPage) {
     return <InteractiveToolPageTemplate page={interactiveToolPage} />;
+  }
+
+  const comparisonPage = getComparisonPage(category);
+
+  if (comparisonPage) {
+    return <ComparisonPageTemplate page={comparisonPage} />;
+  }
+
+  const bestOfPage = getBestOfPage(category);
+
+  if (bestOfPage) {
+    return <BestOfPageTemplate page={bestOfPage} />;
   }
 
   notFound();
