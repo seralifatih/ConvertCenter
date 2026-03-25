@@ -164,7 +164,7 @@ body {
   }
 
   .link-tile-popular {
-    @apply flex min-h-18 flex-col justify-between rounded-[18px] border border-[color:var(--border-strong)] bg-[color:var(--card)] px-4 py-3 hover:border-[color:var(--accent)] hover:bg-[color:var(--card)];
+    @apply flex min-h-[7rem] flex-col rounded-[18px] border border-[color:var(--border-strong)] bg-[color:var(--card)] px-4 py-3 hover:border-[color:var(--accent)] hover:bg-[color:var(--card)];
   }
 
   .link-tile-hub {

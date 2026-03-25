@@ -22,6 +22,29 @@ import {
 } from "@/lib/content/pages";
 import { buildMetadata } from "@/lib/seo";
 
+const categoryIconMap: Record<string, string> = {
+  weight: "⚖",
+  length: "↔",
+  volume: "💧",
+  temperature: "🌡",
+  wind: "💨",
+  pressure: "🔵",
+  rainfall: "🌧",
+  data: "💾",
+  text: "✏",
+  encoding: "🔤",
+  color: "🎨",
+  "dev-data": "{ }",
+  generator: "✨",
+  seo: "🔍",
+  social: "🔗",
+  utility: "🛠",
+  science: "⚗",
+  weather: "🌤",
+  image: "🖼",
+  file: "📄",
+};
+
 export const metadata: Metadata = buildMetadata({
   title: "Math Calculators, Unit Converter & Developer Tools",
   description:
@@ -70,20 +93,15 @@ export default function Home() {
               <span>convertcenter</span>
             </div>
             <h1 className="max-w-full font-medium leading-tight tracking-[-0.02em] [font-size:clamp(1.5rem,5vw,2.5rem)] [overflow-wrap:anywhere] [word-break:break-word] sm:max-w-2xl sm:tracking-[-0.05em] sm:text-[58px]">
-              Calculate and convert anything, instantly
+              Convert anything, instantly
             </h1>
             <p className="mt-3 max-w-xl text-sm leading-7 text-[color:var(--muted)] sm:text-base">
               Search, calculate, convert, copy. No sign-up needed.
             </p>
-            <div className="mt-4 lg:hidden">
-              <HomeSearch quickSearches={homeQuickSearches} searchEntries={searchEntries} />
-            </div>
           </div>
 
           <div className="space-y-3 text-left">
-            <div className="hidden lg:block">
-              <HomeSearch quickSearches={homeQuickSearches} searchEntries={searchEntries} />
-            </div>
+            <HomeSearch quickSearches={homeQuickSearches} searchEntries={searchEntries} />
             <div className="hero-converter-card">
               <div className="mb-2.5 flex items-center justify-between gap-3">
                 <div>
@@ -105,7 +123,7 @@ export default function Home() {
 
       <section className="space-y-3" id="popular">
         <div className="flex items-center gap-3">
-          <h2 className="section-title">Popular conversions</h2>
+          <h2 className="section-title">Popular Tools</h2>
           <span className="section-badge">{featuredPopularCount} featured tools</span>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -116,13 +134,19 @@ export default function Home() {
               return null;
             }
 
+            const categoryKey = page.kind === "interactive-tool" ? page.categoryKey : page.category;
+            const icon = categoryIconMap[categoryKey] ?? "⚙";
+
             return (
               <Link className="link-tile-popular" href={getPageHref(page)} key={page.slug}>
-                <span className="text-[13px] leading-5 text-[color:var(--text)] sm:text-sm">
+                <span className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-[10px] bg-[color:var(--surface)] text-base leading-none">
+                  {icon}
+                </span>
+                <span className="text-[13px] font-medium leading-5 text-[color:var(--text)] sm:text-sm">
                   {getHomepagePopularLabel(page)}
                 </span>
-                <span className="text-xs text-[color:var(--muted)]">
-                  Open the dedicated {page.kind === "interactive-tool" ? page.categoryKey : page.category} tool
+                <span className="mt-1 text-xs text-[color:var(--muted)]">
+                  Open the dedicated {categoryKey} tool
                 </span>
               </Link>
             );
