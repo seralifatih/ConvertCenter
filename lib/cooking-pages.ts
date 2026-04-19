@@ -170,11 +170,57 @@ export const ingredientCookingPages: CookingPageDefinition[] = [
   {
     defaultValue: "200",
     description:
-      "Convert grams to cups for granulated sugar using an ingredient-specific baking reference.",
+      "Convert grams to cups for granulated sugar — 200g = 1 cup, 80g = ⅖ cup, 100g = ½ cup. Ingredient-specific baking reference for recipe prep.",
+    faq: defineFaqs(
+      defineFaq(
+        "How many cups is 80 grams of sugar?",
+        "80 grams of granulated sugar is about 0.4 cups (just under half a cup), using the standard reference of 200 grams per cup.",
+      ),
+      defineFaq(
+        "How many cups is 100 grams of sugar?",
+        "100 grams of granulated sugar is about 0.5 cups (half a cup).",
+      ),
+      defineFaq(
+        "How many cups is 125 grams of sugar?",
+        "125 grams of granulated sugar is about 0.625 cups (a little over half a cup).",
+      ),
+      defineFaq(
+        "How many cups is 160 grams of sugar?",
+        "160 grams of granulated sugar is about 0.8 cups (four fifths of a cup).",
+      ),
+      defineFaq(
+        "How many cups is 200 grams of sugar?",
+        "200 grams of granulated sugar equals approximately 1 US cup.",
+      ),
+      defineFaq(
+        "How many cups is 20 grams of sugar?",
+        "20 grams of granulated sugar is about 0.1 cups (roughly 1 tablespoon and 1 teaspoon).",
+      ),
+      defineFaq(
+        "How many cups is 70 grams of sugar?",
+        "70 grams of granulated sugar is about 0.35 cups (just over a third of a cup).",
+      ),
+      defineFaq(
+        "Why does grams to cups sugar differ from flour conversions?",
+        "Granulated sugar is denser than flour. This page uses 200 grams per cup for sugar, while flour uses about 120 grams per cup.",
+      ),
+    ),
     ingredient: "sugar",
     intro:
       "This sugar page is specific to granulated sugar and uses a standard kitchen assumption of roughly 200 grams per US cup. That makes it useful for baking and dessert prep, while still clearly signaling that weight-to-volume cooking conversions are approximate and ingredient-dependent.",
-    keywords: ["grams to cups sugar", "gram sugar to cup", "granulated sugar cups", "baking sugar conversion"],
+    keywords: ["grams to cups sugar", "gram sugar to cup", "granulated sugar cups", "80 grams sugar to cups", "100 grams sugar to cups", "baking sugar conversion"],
+    longDescription: defineStructuredContent(
+      "About converting grams to cups for sugar",
+      defineContentSection("Why sugar needs its own grams to cups reference", [
+        "Granulated sugar is much denser than flour or other baking ingredients, so a cup of sugar weighs significantly more than a cup of flour. That is why this page is specific to granulated sugar rather than offering a generic grams to cups table. Using the wrong conversion for the wrong ingredient leads to noticeably different results in baking.",
+      ]),
+      defineContentSection("Kitchen formula and assumption", [
+        "This converter uses a practical baking reference of 1 US cup of granulated sugar being about 200 grams. That means 80 grams is about 0.4 cups, 100 grams is about 0.5 cups, 125 grams is about 0.625 cups, and 160 grams is about 0.8 cups. These are the values that come up most often in cakes, cookies, syrups, and dessert recipes.",
+      ]),
+      defineContentSection("When this page is useful", [
+        "Use this page when a metric recipe lists sugar in grams but you need cup-based measurements, or when a US cup recipe needs to be scaled and weighed. It is especially helpful for baking where sugar directly affects browning, moisture, and texture, making rough estimates riskier than in other types of cooking.",
+      ]),
+    ),
     mode: "gramsToCups",
     path: "/grams-to-cups-sugar",
     slug: "grams-to-cups-sugar",

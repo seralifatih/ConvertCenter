@@ -984,7 +984,22 @@ export const volumePairPages = [
       "Convert liters to milliliters for bottles, recipes, and packaging with a quick metric volume calculator and reference table.",
   }),
   defineNumericPairPage("volume", "ml", "l", 750, [100, 250, 500, 750, 1000, 2000], {
-    aliases: ["ml to liters", "milliliters to liters", "ml to l"],
+    aliases: ["ml to liters", "milliliters to liters", "ml to l", "ml to liter", "ml in liter", "ml to liters conversion"],
+    customLongDescription: defineStructuredContent(
+      "About converting milliliters to liters",
+      defineContentSection("Why ml to liters is such a common lookup", [
+        "Milliliters and liters are both metric volume units, but they appear at very different scales. Bottles, cartons, and measuring tools often display milliliters, while recipes, nutrition tables, and daily intake guidelines use liters. That is why ml to liters is one of the most searched volume conversions — the same liquid can be described in either unit depending on whether you are reading a label or following a guideline.",
+      ]),
+      defineContentSection("Conversion formula", [
+        "The relationship is simple: divide milliliters by 1000 to get liters. So 1 ml equals 0.001 liters, 500 ml equals 0.5 liters, and 1000 ml equals exactly 1 liter. That fixed ratio makes the math predictable once you know the base rule.",
+      ]),
+      defineContentSection("Common ml to liter values", [
+        "A 250 ml glass is 0.25 liters. A standard 500 ml water bottle is 0.5 liters. A 750 ml wine bottle is 0.75 liters. A 1000 ml carton equals exactly 1 liter. These are the everyday reference points people use when comparing drinks, reading nutrition facts, or checking recipe liquid totals.",
+      ]),
+      defineContentSection("When this conversion is useful", [
+        "Ml to liters is useful in cooking, fitness tracking, product comparisons, and hydration goals. A recipe may call for 0.5 liters of stock while you only have a 750 ml bottle. A nutrition label might show 330 ml per serving while a daily target is stated in liters. A clean converter helps translate between the two without mental arithmetic.",
+      ]),
+    ),
     faq: defineFaqs(
       defineFaq("How many liters are in 1 milliliter?", "1 milliliter equals 0.001 liters."),
       defineFaq(
@@ -992,12 +1007,28 @@ export const volumePairPages = [
         "Divide milliliters by 1000 to convert them to liters.",
       ),
       defineFaq(
+        "How many ml is 1 liter?",
+        "1 liter equals exactly 1000 milliliters.",
+      ),
+      defineFaq(
+        "How many liters is 500 ml?",
+        "500 ml equals 0.5 liters.",
+      ),
+      defineFaq(
+        "How many liters is 750 ml?",
+        "750 ml equals 0.75 liters.",
+      ),
+      defineFaq(
+        "How many liters is 250 ml?",
+        "250 ml equals 0.25 liters.",
+      ),
+      defineFaq(
         "Why convert milliliters to liters?",
-        "It helps compare smaller liquid amounts with bottle sizes, storage containers, and recipe totals.",
+        "It helps compare smaller liquid amounts with bottle sizes, storage containers, recipe totals, and daily hydration targets.",
       ),
     ),
     metaDescription:
-      "Convert milliliters to liters for recipes, bottle sizing, and liquid totals with a simple metric volume reference.",
+      "Convert ml to liters instantly — 1000 ml = 1 L, 500 ml = 0.5 L, 750 ml = 0.75 L. Simple milliliters to liters calculator with formula and common values.",
   }),
   defineNumericPairPage("volume", "cup", "tbsp", 1, [0.25, 0.5, 1, 2, 3, 4], {
     aliases: ["cups to tbsp", "cups to tablespoons", "cup to tablespoons"],
@@ -1129,8 +1160,23 @@ export const temperaturePairPages = [
 ] as const;
 
 export const windPairPages = [
-  defineNumericPairPage("wind", "mph", "kmh", 60, [5, 10, 20, 30, 60, 100], {
+  defineNumericPairPage("wind", "mph", "kmh", 60, [30, 60, 65, 80, 100, 110], {
     aliases: ["mph to kmh", "mph to km/h", "miles per hour to kmh", "miles per hour to km/h"],
+    customLongDescription: defineStructuredContent(
+      "About converting mph to kmh",
+      defineContentSection("Why mph to km/h comes up so often", [
+        "Miles per hour is the standard speed unit in the United States and the United Kingdom for road signs, weather forecasts, and vehicle speedometers. Kilometers per hour is used in most other countries for the same purposes. That means mph to kmh is one of the most common speed conversions for travel, driving abroad, and reading international weather or sport reports.",
+      ]),
+      defineContentSection("Conversion formula", [
+        "To convert miles per hour to kilometers per hour, multiply by 1.609344. So 60 mph becomes about 96.56 km/h, 80 mph is about 128.75 km/h, and 110 mph is about 177.03 km/h. Because the factor is just above 1.6, a rough estimate is to multiply by 1.6 and add a small amount.",
+      ]),
+      defineContentSection("Common mph to kmh values", [
+        "A 30 mph town speed limit is about 48.28 km/h. A 65 mph highway speed is about 104.61 km/h. An 80 mph motorway cruise is about 128.75 km/h. A 110 mph speed is about 177.03 km/h. These are reference points that come up constantly for drivers, cyclists, pilots, and weather readers who work across both systems.",
+      ]),
+      defineContentSection("When this conversion is useful", [
+        "Use this converter for road travel abroad, weather report interpretation, vehicle speedometer reading, aviation, and comparing race or sport speeds. It is especially useful when a US or UK speed reference needs to be understood in a metric context, or when international speed limits need to be checked quickly.",
+      ]),
+    ),
     faq: defineFaqs(
       defineFaq("How many kilometers per hour are in 1 mph?", "1 mph equals exactly 1.609344 km/h."),
       defineFaq(
@@ -1138,13 +1184,29 @@ export const windPairPages = [
         "Multiply miles per hour by 1.609344 to convert them to kilometers per hour.",
       ),
       defineFaq(
+        "How many km/h is 60 mph?",
+        "60 mph equals about 96.56 km/h.",
+      ),
+      defineFaq(
+        "How many km/h is 65 mph?",
+        "65 mph equals about 104.61 km/h.",
+      ),
+      defineFaq(
+        "How many km/h is 80 mph?",
+        "80 mph equals about 128.75 km/h.",
+      ),
+      defineFaq(
+        "How many km/h is 110 mph?",
+        "110 mph equals about 177.03 km/h.",
+      ),
+      defineFaq(
         "When is mph to kmh conversion useful?",
-        "It is useful for forecasts, road speeds, marine conditions, and comparing speed references across countries.",
+        "It is useful for travel abroad, forecasts, road speeds, and comparing speed references across countries.",
       ),
     ),
     featured: true,
     metaDescription:
-      "Convert mph to kmh quickly for weather, road speeds, and route planning with a precise formula and common speed references.",
+      "Convert mph to km/h instantly — 60 mph = 96.56 km/h, 65 mph = 104.61 km/h, 110 mph = 177.03 km/h. Fast miles per hour to kilometers per hour calculator.",
     popular: true,
   }),
   defineNumericPairPage("wind", "kmh", "mph", 100, [10, 20, 40, 60, 100, 120], {
@@ -1231,7 +1293,7 @@ export const pressurePairPages = [
       ),
     ),
     metaDescription:
-      "Convert mmhg to hpa quickly for weather, lab, and gauge comparisons with a simple calculator and common reference points.",
+      "Convert mmHg to hPa instantly — 760 mmHg = 1013.25 hPa, 1 mmHg = 1.33322 hPa. Fast millimeters of mercury to hectopascals calculator for weather and lab use.",
   }),
   defineNumericPairPage("pressure", "bar", "psi", 1, [0.5, 1, 2, 5, 10, 20], {
     aliases: ["bar to psi", "bars to psi", "bar into psi", "bar pressure to psi"],
@@ -1296,7 +1358,7 @@ export const rainfallPairPages = [
     ),
     featured: true,
     metaDescription:
-      "Convert mm to inches rain for forecast comparisons, storm totals, and weather reports with a clear rainfall calculator and examples.",
+      "Convert mm to inches of rain instantly — 25.4 mm = 1 inch, 50 mm = 1.97 in, 100 mm = 3.94 in. Rainfall mm to inches calculator for forecasts and storm totals.",
     popular: true,
   }),
   defineNumericPairPage("rainfall", "raininch", "rainmm", 1, [0.1, 0.25, 0.5, 1, 2, 4], {
@@ -1369,7 +1431,7 @@ export const dataPairPages = [
     metaDescription:
       "Convert MB to bytes for exact file sizes, API payload checks, and binary storage calculations with formula, examples, and reference values.",
   }),
-  defineNumericPairPage("data", "mb", "gb", 5120, [16, 64, 128, 256, 1024, 5120], {
+  defineNumericPairPage("data", "mb", "gb", 12288, [1024, 2048, 6144, 12288, 51200, 102400], {
     customLongDescription: mbToGbStructuredContent,
     faq: defineFaqs(
       defineFaq(
@@ -1384,11 +1446,31 @@ export const dataPairPages = [
         "Why does MB to GB use 1024 instead of 1000?",
         "This converter follows binary storage units, where 1 GB equals 1024 MB.",
       ),
+      defineFaq(
+        "How many GB is 6144 MB?",
+        "6144 MB equals exactly 6 GB (6144 ÷ 1024 = 6).",
+      ),
+      defineFaq(
+        "How many GB is 12288 MB?",
+        "12288 MB equals exactly 12 GB (12288 ÷ 1024 = 12).",
+      ),
+      defineFaq(
+        "How many GB is 51200 MB?",
+        "51200 MB equals exactly 50 GB (51200 ÷ 1024 = 50).",
+      ),
+      defineFaq(
+        "How many GB is 102400 MB?",
+        "102400 MB equals exactly 100 GB (102400 ÷ 1024 = 100).",
+      ),
+      defineFaq(
+        "How many GB is 20480 MB?",
+        "20480 MB equals exactly 20 GB (20480 ÷ 1024 = 20).",
+      ),
     ),
     featured: true,
     formulaLabel: "GB = MB / 1024",
     metaDescription:
-      "Convert megabytes to gigabytes for file sizes, uploads, and storage planning with a quick MB to GB calculator and reference table.",
+      "Convert MB to GB instantly — 6144 MB = 6 GB, 12288 MB = 12 GB, 51200 MB = 50 GB. Binary MB to GB calculator with formula and common storage values.",
     popular: true,
   }),
   defineNumericPairPage("data", "gb", "mb", 5, [0.5, 1, 2, 5, 10, 25], {
